@@ -32,18 +32,14 @@ export default function Nav() {
         <ul className="zh-nav-links">
           {!loading && user ? (
             <>
-              <li><Link href="/dashboard"   className={pathname === '/dashboard'    ? 'active' : ''}>Dashboard</Link></li>
-              <li><Link href="/events"      className={pathname.startsWith('/events') ? 'active' : ''}>Events</Link></li>
-              <li><Link href="/clubs"       className={pathname.startsWith('/clubs')  ? 'active' : ''}>Clubs</Link></li>
-              <li><Link href="/feed"        className={pathname === '/feed'           ? 'active' : ''}>Feed</Link></li>
-              <li><Link href="/profiles"    className={pathname === '/profiles'       ? 'active' : ''}>Community</Link></li>
+              <li><Link href="/events"      className={pathname.startsWith('/events')  ? 'active' : ''}>Events</Link></li>
+              <li><Link href="/vehicles"    className={pathname.startsWith('/vehicles') ? 'active' : ''}>Garage</Link></li>
+              <li><Link href="/profile/edit" className={pathname.startsWith('/profile') ? 'active' : ''}>Profil</Link></li>
             </>
           ) : !loading ? (
             <>
-              <li><Link href="/events"   className={pathname.startsWith('/events') ? 'active' : ''}>Events</Link></li>
-              <li><Link href="/clubs"    className={pathname.startsWith('/clubs')  ? 'active' : ''}>Clubs</Link></li>
-              <li><Link href="/profiles" className={pathname === '/profiles'       ? 'active' : ''}>Community</Link></li>
-              <li><Link href="/auth/login" className={pathname === '/auth/login'   ? 'active' : ''}>Anmelden</Link></li>
+              <li><Link href="/events"      className={pathname.startsWith('/events') ? 'active' : ''}>Events</Link></li>
+              <li><Link href="/auth/login"  className={pathname === '/auth/login'     ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
         </ul>
@@ -77,23 +73,18 @@ export default function Nav() {
       <div id="mobile-menu" className={`zh-mobile-menu${open ? ' open' : ''}`} aria-hidden={!open}>
         {!loading && user ? (
           <>
-            <Link href="/dashboard"    onClick={close}>Dashboard</Link>
             <Link href="/events"       onClick={close}>Events</Link>
-            <Link href="/clubs"        onClick={close}>Clubs</Link>
-            <Link href="/feed"         onClick={close}>Feed</Link>
-            <Link href="/profiles"     onClick={close}>Community</Link>
-            <Link href="/profile/edit" onClick={close}>Profil</Link>
-            <button className="mm-cta" onClick={handleLogout} style={{fontFamily:'var(--display)',fontSize:'22px',textAlign:'center',borderBottom:0}}>
+            <Link href="/vehicles"     onClick={close}>Garage</Link>
+            <Link href="/profile/edit" onClick={close}>Profil bearbeiten</Link>
+            <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
               Abmelden →
             </button>
           </>
         ) : (
           <>
-            <Link href="/events"         onClick={close}>Events</Link>
-            <Link href="/clubs"          onClick={close}>Clubs</Link>
-            <Link href="/profiles"       onClick={close}>Community</Link>
-            <Link href="/auth/login"     onClick={close}>Anmelden</Link>
-            <Link href="/auth/register"  onClick={close} className="mm-cta">Dabei sein →</Link>
+            <Link href="/events"        onClick={close}>Events</Link>
+            <Link href="/auth/login"    onClick={close}>Anmelden</Link>
+            <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein →</Link>
           </>
         )}
       </div>

@@ -33,19 +33,13 @@ export default async function Home() {
 
   const [
     { data: members },
-    { data: clubs },
     { data: events },
     { count: memberCount },
-    { count: clubCount },
+    { count: eventCount },
   ] = await Promise.all([
     supabase
       .from('profiles')
       .select('id, name, avatar_url, location, created_at, vehicles(id, make, model, title, year, displacement_cc)')
-      .order('created_at', { ascending: false })
-      .limit(4),
-    supabase
-      .from('clubs')
-      .select('id, name, description, location, created_at, club_members(count)')
       .order('created_at', { ascending: false })
       .limit(4),
     supabase
@@ -55,7 +49,7 @@ export default async function Home() {
       .order('start_date', { ascending: true })
       .limit(3),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase.from('clubs').select('*', { count: 'exact', head: true }),
+    supabase.from('rides').select('*', { count: 'exact', head: true }),
   ])
 
   return (
@@ -80,8 +74,8 @@ export default async function Home() {
             <div className="zh-stat-label">Schrauber</div>
           </div>
           <div className="zh-stat">
-            <div className="zh-stat-num">{clubCount > 0 ? <>{clubCount}<em>+</em></> : '—'}</div>
-            <div className="zh-stat-label">Clubs</div>
+            <div className="zh-stat-num">{eventCount > 0 ? <>{eventCount}<em>+</em></> : '—'}</div>
+            <div className="zh-stat-label">Events</div>
           </div>
         </div>
       </section>
@@ -166,61 +160,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── CLUBS PREVIEW ── */}
-      <section className="zh-preview">
-        <div className="zh-preview-head">
-          <div>
-            <div className="mark zh-clubs-mark">Im Rampenlicht</div>
-            <h2>crews der <em>woche.</em></h2>
-          </div>
-          <Link href="/clubs" className="all">Alle Clubs →</Link>
-        </div>
-
-        {clubs && clubs.length > 0 ? (
-          <div className="zh-clubs-grid">
-            {clubs.map((club) => {
-              const memberCount = club.club_members?.[0]?.count ?? 0
-              const initial = club.name.charAt(0).toUpperCase()
-              return (
-                <Link key={club.id} href={`/clubs/${club.id}`} className="zh-club-card" style={{ textDecoration: 'none' }}>
-                  <div className="zh-club-img">
-                    <span className="zh-club-badge">Aktiv</span>
-                    {club.logo_url
-                      ? <img src={club.logo_url} alt={club.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      : (
-                        <div className="zh-club-stamp">
-                          {initial}<small>{club.location || 'Community'}</small>
-                        </div>
-                      )
-                    }
-                    {club.location && <span className="zh-club-plate">{club.location}</span>}
-                  </div>
-                  <div className="zh-club-body">
-                    <h4>{club.name}</h4>
-                    {club.description && (
-                      <div className="meta">
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {club.description}
-                        </span>
-                      </div>
-                    )}
-                    <div className="row">
-                      <span>Mitglieder</span>
-                      <strong>{memberCount}</strong>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '48px', border: '2px dashed var(--hairline)', borderRadius: '18px' }}>
-            <p style={{ fontFamily: 'var(--display)', fontSize: '24px', color: 'var(--ink-muted)' }}>Noch keine Clubs — sei der Erste!</p>
-            <Link href="/clubs/new" className="zh-btn" style={{ display: 'inline-flex', marginTop: '20px' }}>Club gründen →</Link>
-          </div>
-        )}
-      </section>
-
       {/* ── EVENTS PREVIEW ── */}
       {events && events.length > 0 && (
         <section className="zh-preview">
@@ -265,7 +204,6 @@ export default async function Home() {
             <div className="mark zh-members-mark">Frisch aus der Garage</div>
             <h2>neu in der <em>crew.</em></h2>
           </div>
-          <Link href="/profiles" className="all">Alle Schrauber →</Link>
         </div>
 
         {members && members.length > 0 ? (
@@ -323,30 +261,19 @@ export default async function Home() {
 
       {/* ── TEASER ── */}
       <div className="zh-teaser">
-        <Link href="/clubs" className="zh-teaser-item">
+        <Link href="/vehicles" className="zh-teaser-item">
           <span className="zh-teaser-num">01</span>
           <div className="zh-teaser-icon">
-            <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="4"/><circle cx="18" cy="17" r="4"/><path d="M6 17l4-8h6l2 4M10 9h4"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
           </div>
           <div className="zh-teaser-text">
-            <h3>Clubs</h3>
-            <p>{clubCount ?? '—'} Clubs aus D, A und CH</p>
-          </div>
-          <div className="zh-teaser-arrow">→</div>
-        </Link>
-        <Link href="/profiles" className="zh-teaser-item">
-          <span className="zh-teaser-num">02</span>
-          <div className="zh-teaser-icon">
-            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 00-5.4 5.4l-6 6 2 2 6-6a4 4 0 005.4-5.4L14 9l-2-2 2.7-.7z"/></svg>
-          </div>
-          <div className="zh-teaser-text">
-            <h3>Schrauber</h3>
-            <p>Zeig deine Garage &amp; Projekte</p>
+            <h3>Garage</h3>
+            <p>Zeig deine Bikes &amp; Projekte</p>
           </div>
           <div className="zh-teaser-arrow">→</div>
         </Link>
         <Link href="/events" className="zh-teaser-item">
-          <span className="zh-teaser-num">03</span>
+          <span className="zh-teaser-num">02</span>
           <div className="zh-teaser-icon">
             <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
           </div>
@@ -356,16 +283,26 @@ export default async function Home() {
           </div>
           <div className="zh-teaser-arrow">→</div>
         </Link>
+        <Link href="/auth/register" className="zh-teaser-item">
+          <span className="zh-teaser-num">03</span>
+          <div className="zh-teaser-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div className="zh-teaser-text">
+            <h3>Mitmachen</h3>
+            <p>Kostenlos registrieren</p>
+          </div>
+          <div className="zh-teaser-arrow">→</div>
+        </Link>
       </div>
 
       {/* ── FOOTER ── */}
       <footer className="zh-footer">
         <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
         <ul className="zh-footer-links">
-          <li><Link href="/clubs">Clubs</Link></li>
-          <li><Link href="/profiles">Schrauber</Link></li>
           <li><Link href="/events">Events</Link></li>
-          <li><Link href="/feed">Feed</Link></li>
+          <li><Link href="/vehicles">Garage</Link></li>
+          <li><Link href="/auth/register">Registrieren</Link></li>
         </ul>
         <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
       </footer>

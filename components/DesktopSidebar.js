@@ -18,9 +18,7 @@ function getActive(pathname) {
   if (pathname.startsWith('/events')) return 'rides'
   if (pathname.startsWith('/vehicles')) return 'garage'
   if (pathname.startsWith('/profile')) return 'garage'
-  if (pathname.startsWith('/clubs')) return 'club'
-  if (pathname === '/feed' || pathname === '/profiles') return 'community'
-  return 'feed'
+  return ''
 }
 
 export default function DesktopSidebar() {
@@ -59,13 +57,6 @@ export default function DesktopSidebar() {
       </Link>
 
       <nav className="zd-nav" aria-label="Hauptnavigation">
-        <Link href="/dashboard" className={active === 'feed' ? 'on' : ''} aria-current={active === 'feed' ? 'page' : undefined}>
-          <NavIcon>
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-            <path d="M9 22V12h6v10"/>
-          </NavIcon>
-          <span>Was geht</span>
-        </Link>
         <Link href="/events" className={active === 'rides' ? 'on' : ''} aria-current={active === 'rides' ? 'page' : undefined}>
           <NavIcon>
             <circle cx="12" cy="12" r="3"/>
@@ -81,21 +72,6 @@ export default function DesktopSidebar() {
             <line x1="10" y1="14" x2="14" y2="14"/>
           </NavIcon>
           <span>Garage</span>
-        </Link>
-        <Link href="/clubs" className={active === 'club' ? 'on' : ''} aria-current={active === 'club' ? 'page' : undefined}>
-          <NavIcon>
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-            <path d="M16 3.13a4 4 0 010 7.75"/>
-          </NavIcon>
-          <span>Mein Club</span>
-        </Link>
-        <Link href="/feed" className={active === 'community' ? 'on' : ''} aria-current={active === 'community' ? 'page' : undefined}>
-          <NavIcon>
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-          </NavIcon>
-          <span>Community</span>
         </Link>
 
         <div className="grp">Konto</div>
