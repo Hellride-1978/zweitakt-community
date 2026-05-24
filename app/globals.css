@@ -424,7 +424,7 @@ body::before {
   padding-right: 12px;
   border-right: 1px solid var(--hairline);
 }
-.zh-manifest .zh-section-mark::before { content: "01"; }
+.zh-manifest .zh-section-mark::before { content: none; }
 .zh-manifest-headline {
   font-family: var(--display);
   font-size: clamp(40px, 6.5vw, 92px);
@@ -531,7 +531,7 @@ body::before {
   margin: 0 auto;
 }
 .zh-closing .zh-section-mark { color: var(--accent-3); }
-.zh-closing .zh-section-mark::before { content: "04"; color: var(--cream); border-right-color: color-mix(in oklab, var(--cream) 30%, transparent); }
+.zh-closing .zh-section-mark::before { content: none; }
 .zh-closing h2 {
   font-family: var(--display);
   font-size: clamp(40px, 7vw, 100px);
@@ -602,7 +602,7 @@ body::before {
 .zh-preview-head .all:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ─── CLUBS ─── */
-.zh-clubs-mark::before { content: "05"; }
+.zh-clubs-mark::before { content: none; }
 .zh-clubs-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -742,7 +742,7 @@ body::before {
 
 /* ─── MEMBERS ─── */
 .zh-members { background: color-mix(in oklab, var(--accent-3) 12%, var(--cream)); }
-.zh-members-mark::before { content: "06"; }
+.zh-members-mark::before { content: none; }
 .zh-members-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

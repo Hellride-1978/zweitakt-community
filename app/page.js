@@ -82,23 +82,11 @@ export default async function Home() {
       </section>
 
 
-      {/* ── MANIFEST ── */}
-      <section className="zh-manifest">
-        <div className="zh-section-mark">Das Statement</div>
-        <h2 className="zh-manifest-headline">
-          Zweitakt&nbsp;Hoden ist kein Begriff.<br />
-          <em>Das ist ein Bauchgefühl.</em>
-        </h2>
-        <p className="zh-manifest-lead">
-          Ein Name mit Augenzwinkern für alle, die Gemisch lieber riechen als erklären —
-          auch wenn sie noch nicht genau wissen, was sie da eigentlich tun.
-        </p>
-      </section>
 
       {/* ── CREDO ── */}
       <section className="zh-credo">
         <article className="zh-credo-card">
-          <span className="num">02 —Worum geht&rsquo;s hier?</span>
+          <span className="num">Worum geht&rsquo;s hier?</span>
           <h3>Schrauben.<br />Fahren.<br />Bock haben.</h3>
           <p className="lede">Kurz gesagt: Zweitakt, Schrauben und gemeinsam Bock haben. Bei Zweitakt Hoden treffen sich Leute, die —</p>
           <ul>
@@ -109,7 +97,7 @@ export default async function Home() {
           <p className="kicker">Marke, Hubraum, Erfahrung? Zweitrangig. Hauptsache Zweitakt.</p>
         </article>
         <article className="zh-credo-card">
-          <span className="num">03 —Keine Szene. Keine Show.</span>
+          <span className="num">Keine Szene. Keine Show.</span>
           <h3>Garage statt Gallery.</h3>
           <p className="lede">Bei Zweitakt Hoden geht&rsquo;s <strong>nicht</strong> um —</p>
           <ul>
@@ -120,7 +108,7 @@ export default async function Home() {
           <p className="kicker">Sondern um Garage, Austausch und ehrliches Schrauben.</p>
         </article>
         <article className="zh-credo-card">
-          <span className="num">04 —Mitmachen ist einfach.</span>
+          <span className="num">Mitmachen ist einfach.</span>
           <h3>Wenn du<br />… dann komm.</h3>
           <p className="lede">Wenn du —</p>
           <ul>
@@ -156,7 +144,7 @@ export default async function Home() {
         <section className="zh-preview">
           <div className="zh-preview-head">
             <div>
-              <div className="mark" style={{ '--num': '"07 —"' }}>Nächste Termine</div>
+              <div className="mark">Nächste Termine</div>
               <h2>bald <em>unterwegs.</em></h2>
             </div>
             <Link href="/events" className="all">Alle Events →</Link>
