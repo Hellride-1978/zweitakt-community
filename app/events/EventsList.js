@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 
+
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371
   const dLat = (lat2 - lat1) * Math.PI / 180
@@ -28,6 +29,7 @@ export default function EventsList({ events, filter }) {
   const [userLon, setUserLon] = useState(null)
   const [plz, setPlz] = useState('')
   const [locStatus, setLocStatus] = useState('idle') // idle | loading | ready | error
+  const [radius, setRadius] = useState(null) // null = kein Filter, Zahl = km
   const [pinAddresses, setPinAddresses] = useState({}) // eventId → address string
 
   useEffect(() => {
@@ -98,6 +100,13 @@ export default function EventsList({ events, filter }) {
       })
     : events
 
+  const filteredEvents = (radius != null && userLat != null)
+    ? sortedEvents.filter(ev =>
+        ev.location_lat && ev.location_lng &&
+        haversine(userLat, userLon, ev.location_lat, ev.location_lng) <= radius
+      )
+    : sortedEvents
+
   return (
     <>
       {/* ── Sort controls ── */}
@@ -133,6 +142,19 @@ export default function EventsList({ events, filter }) {
             value={plz}
             onChange={e => setPlz(e.target.value.replace(/\D/g, '').slice(0, 5))}
           />
+          <select
+            value={radius ?? ''}
+            onChange={e => setRadius(e.target.value ? Number(e.target.value) : null)}
+            className="zh-input"
+            style={{ width: 'auto', padding: '7px 10px', fontSize: 13 }}
+            aria-label="Umkreis"
+          >
+            <option value="">Alle km</option>
+            <option value="10">10 km</option>
+            <option value="25">25 km</option>
+            <option value="50">50 km</option>
+            <option value="100">100 km</option>
+          </select>
           <button type="submit" className="zd-btn-sm" disabled={locStatus === 'loading'}>
             {locStatus === 'loading' ? '…' : 'Los'}
           </button>
@@ -153,11 +175,10 @@ export default function EventsList({ events, filter }) {
             Nicht gefunden
           </span>
         )}
-        {locStatus === 'ready' && (
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: 1.4, color: 'var(--ink-muted)', textTransform: 'uppercase' }}>
-            Sortiert nach Entfernung
-          </span>
-        )}
+
+        <Link href="/events/new" className="zd-btn accent" style={{ marginLeft: 'auto', fontSize: 15, padding: '9px 18px', textDecoration: 'none', flexShrink: 0 }}>
+          + Termin
+        </Link>
       </div>
 
       {/* ── Event list ── */}
@@ -171,8 +192,18 @@ export default function EventsList({ events, filter }) {
             Ersten Termin erstellen →
           </Link>
         </div>
+      ) : filteredEvents.length === 0 ? (
+        <div className="zd-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+          <div style={{ fontFamily: 'var(--display)', fontSize: 40, marginBottom: 12, opacity: 0.3 }}>📍</div>
+          <p style={{ fontFamily: 'var(--display)', fontSize: 24, color: 'var(--ink-muted)' }}>
+            Keine Termine im gewählten Umkreis.
+          </p>
+          <button onClick={() => setRadius(null)} className="zd-btn accent" style={{ display: 'inline-flex', marginTop: 20 }}>
+            Filter aufheben
+          </button>
+        </div>
       ) : (
-        sortedEvents.map((event) => {
+        filteredEvents.map((event) => {
           const participantCount = event.ride_participants?.[0]?.count ?? 0
           const date = new Date(event.start_date)
           const time = formatTime(event.start_date)
