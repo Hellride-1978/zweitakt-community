@@ -220,42 +220,6 @@ export default async function Home() {
         )}
       </section>
 
-      {/* ── TEASER ── */}
-      <div className="zh-teaser">
-        <Link href="/vehicles" className="zh-teaser-item">
-          <span className="zh-teaser-num">01</span>
-          <div className="zh-teaser-icon">
-            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-          </div>
-          <div className="zh-teaser-text">
-            <h3>Garage</h3>
-            <p>Zeig deine Bikes &amp; Projekte</p>
-          </div>
-          <div className="zh-teaser-arrow">→</div>
-        </Link>
-        <Link href="/events" className="zh-teaser-item">
-          <span className="zh-teaser-num">02</span>
-          <div className="zh-teaser-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
-          </div>
-          <div className="zh-teaser-text">
-            <h3>Events</h3>
-            <p>Treffen, Ausfahrten &amp; Rallyes</p>
-          </div>
-          <div className="zh-teaser-arrow">→</div>
-        </Link>
-        <Link href="/auth/register" className="zh-teaser-item">
-          <span className="zh-teaser-num">03</span>
-          <div className="zh-teaser-icon">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div className="zh-teaser-text">
-            <h3>Mitmachen</h3>
-            <p>Kostenlos registrieren</p>
-          </div>
-          <div className="zh-teaser-arrow">→</div>
-        </Link>
-      </div>
 
       {/* ── FOOTER ── */}
       <footer className="zh-footer">
