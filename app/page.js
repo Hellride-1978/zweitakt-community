@@ -81,16 +81,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── TICKER ── */}
-      <div className="zh-ticker" aria-hidden="true">
-        <div className="zh-ticker-inner">
-          {tickerItems.map((item, i) => (
-            <span key={i} className={`zh-ticker-item${item.hot ? ' hot' : ''}`}>
-              {item.label}
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* ── MANIFEST ── */}
       <section className="zh-manifest">
