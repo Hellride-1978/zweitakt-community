@@ -63,9 +63,8 @@ export default async function Home() {
         </div>
 
         <p className="zh-hero-tagline">
-          Keiner schraubt, keiner fährt mit? Hol dir Beistand von den Zweitakthoden!<br />
-          Schluss mit der Einsamkeit in der Garage. Bei uns triffst du die Leute, die deine Leidenschaft teilen.<br /><br />
-          Völlig egal wer du bist, woher du kommst oder an wen du glaubst: Uns verbindet der <em>Zündfunke!</em>
+          Weil viele Zweitakt-Fans alleine vor sich hin schrauben — und das verdammt schade ist.<br /><br />
+          Unsere Community soll Leute zusammenbringen, die das gleiche Hobby teilen. Locker, offen und ohne Verpflichtung.
         </p>
 
         <HeroActions />
