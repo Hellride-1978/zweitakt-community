@@ -34,23 +34,19 @@ export default function RegisterPage() {
     }
 
     try {
-      const { data, error: signUpError } = await supabase.auth.signUp({ email: formData.email, password: formData.password })
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+            description: formData.description,
+            user_type: userType,
+          },
+        },
+      })
       if (signUpError) throw signUpError
-
-      const userId = data?.user?.id || data?.session?.user?.id
-      if (userId) {
-        const { error: insertError } = await supabase.from('profiles').insert({
-          id: userId,
-          name: formData.name,
-          description: formData.description,
-          user_type: userType,
-          created_at: new Date(),
-        })
-        if (insertError) throw insertError
-        alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
-      } else {
-        alert('Registrierung erfolgreich! Bitte bestätige deine E-Mail.')
-      }
+      alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
       router.push('/auth/login')
     } catch (err) {
       setError(err.message || 'Registrierungsfehler')
