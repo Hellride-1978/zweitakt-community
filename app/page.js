@@ -63,7 +63,9 @@ export default async function Home() {
         </div>
 
         <p className="zh-hero-tagline">
-          kein stress. kein szene-ding. <em>einfach schrauben.</em>
+          Keiner schraubt, keiner fährt mit? Hol dir Beistand von den Zweitakthoden!<br />
+          Schluss mit der Einsamkeit in der Garage. Bei uns triffst du die Leute, die deine Leidenschaft teilen.<br /><br />
+          Völlig egal wer du bist, woher du kommst oder an wen du glaubst: Uns verbindet der <em>Zündfunke!</em>
         </p>
 
         <HeroActions />

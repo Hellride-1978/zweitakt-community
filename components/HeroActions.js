@@ -26,7 +26,6 @@ export default function HeroActions() {
               <path d="M1 5h13M10 1l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </Link>
-          <Link href="/clubs" className="zh-btn zh-btn-outline">Clubs entdecken</Link>
         </>
       )}
     </div>

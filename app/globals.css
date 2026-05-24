@@ -14,6 +14,7 @@
   --accent-2:     #6b7280;
   --accent-3:     #9ca3af;
   --accent-ink:   #374151;
+  --shadow:       rgba(26,17,8,0.18);
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
   --sans:         var(--font-sans, 'DM Sans'), system-ui, sans-serif;
@@ -508,6 +509,8 @@ body::before {
   color: var(--cream);
   position: relative;
   overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 .zh-closing::before {
   content: "";
@@ -615,7 +618,7 @@ body::before {
   position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.zh-club-card:hover { transform: translate(-2px, -3px); box-shadow: 6px 6px 0 var(--ink); }
+.zh-club-card:hover { transform: translate(-2px, -3px); box-shadow: 6px 6px 0 var(--shadow); }
 .zh-club-img {
   aspect-ratio: 4 / 3;
   border-bottom: 1.5px solid var(--ink);
