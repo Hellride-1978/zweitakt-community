@@ -1,0 +1,111 @@
+import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
+import DesktopLayout from '@/components/DesktopLayout'
+import VehicleGallery from '@/components/VehicleGallery'
+
+export default async function VehiclePage({ params }) {
+  const { id } = await params
+
+  const { data: vehicle, error } = await supabase
+    .from('vehicles')
+    .select('*, profiles(id, name, avatar_url, location)')
+    .eq('id', id)
+    .single()
+
+  if (error || !vehicle) {
+    return (
+      <DesktopLayout crumb="Nicht gefunden">
+        <div style={{ padding: '40px 0' }}>
+          <div className="zd-card">
+            <h1 className="zh-page-title" style={{ fontSize: 36 }}>Fahrzeug nicht gefunden.</h1>
+            <Link href="/profiles" className="zd-btn outline" style={{ display: 'inline-flex', marginTop: 20 }}>← Community</Link>
+          </div>
+        </div>
+      </DesktopLayout>
+    )
+  }
+
+  const owner = vehicle.profiles
+
+  return (
+    <DesktopLayout crumb={`${vehicle.make} ${vehicle.model}`}>
+      <div className="bike-detail-grid">
+        {/* ── Left: hero + thumbs ── */}
+        <div style={{ minWidth: 0 }}>
+          <VehicleGallery
+            images={[vehicle.image_url, vehicle.image_url_2, vehicle.image_url_3, vehicle.image_url_4]}
+            make={vehicle.make}
+            model={vehicle.model}
+          />
+
+          {owner && (
+            <Link href={`/profile/${owner.id}`} className="zd-card" style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none', marginTop: 14 }}>
+              <div className="zh-avatar offline" style={{ width: 44, height: 44, fontSize: 18, flexShrink: 0 }}>
+                {owner.avatar_url
+                  ? <img src={owner.avatar_url} alt={owner.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  : (owner.name || '?').charAt(0).toUpperCase()
+                }
+              </div>
+              <div>
+                <div className="zd-mono accent">Schrauber</div>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 20, marginTop: 4, letterSpacing: 0.3 }}>{owner.name || 'Unbekannt'}</div>
+                {owner.location && <div className="zd-mono" style={{ marginTop: 2 }}>📍 {owner.location}</div>}
+              </div>
+              <span style={{ marginLeft: 'auto', color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: 18 }}>→</span>
+            </Link>
+          )}
+        </div>
+
+        {/* ── Right: specs + info ── */}
+        <div style={{ minWidth: 0, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
+            <h1 className="zd-h1" style={{ fontSize: 44 }}>
+              {vehicle.make} <em>{vehicle.model}</em>
+            </h1>
+            {vehicle.year && <span className="zh-pill" style={{ background: 'var(--ink)' }}>BJ {vehicle.year}</span>}
+          </div>
+
+          {vehicle.title && (
+            <div className="zd-mono accent" style={{ marginBottom: 14 }}>· {vehicle.title}</div>
+          )}
+
+          {/* Spec grid */}
+          <div className="spec-grid-d" style={{ marginBottom: 18 }}>
+            {vehicle.year && (
+              <div className="s"><div className="lbl">Baujahr</div><div className="v">{vehicle.year}</div></div>
+            )}
+            {vehicle.displacement_cc && (
+              <div className="s"><div className="lbl">Hubraum</div><div className="v">{vehicle.displacement_cc} cc</div></div>
+            )}
+            <div className="s">
+              <div className="lbl">Eingetragen</div>
+              <div className="v" style={{ fontSize: 14 }}>{new Date(vehicle.created_at).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            </div>
+          </div>
+
+          {/* Description / notes */}
+          {vehicle.description && (
+            <>
+              <div className="zd-mono accent" style={{ marginBottom: 10 }}>Beschreibung</div>
+              <div className="zd-card" style={{ marginBottom: 18 }}>
+                <p style={{ fontSize: 14, color: 'var(--ink-soft)', lineHeight: 1.6, margin: 0, whiteSpace: 'pre-wrap' }}>
+                  {vehicle.description}
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Link href={`/vehicles/${vehicle.id}/edit`} className="zd-btn accent" style={{ flex: 1 }}>
+              Bearbeiten
+            </Link>
+            <Link href="/vehicles/new" className="zd-btn outline">
+              + Weiteres Bike
+            </Link>
+          </div>
+        </div>
+      </div>
+    </DesktopLayout>
+  )
+}
