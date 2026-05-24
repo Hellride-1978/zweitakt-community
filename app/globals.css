@@ -1266,6 +1266,7 @@ body::before {
 }
 @media (max-width: 720px) {
   .zh-page-inner-sm { max-width: 100%; }
+  main#main-content { max-width: 90%; }
 }
 
 /* ═══════════════════════════════════════════════════════
