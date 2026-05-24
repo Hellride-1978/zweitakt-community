@@ -448,7 +448,6 @@ body::before {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding: clamp(40px, 6vw, 80px) var(--gutter);
-  background: var(--cream-2);
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
 }
