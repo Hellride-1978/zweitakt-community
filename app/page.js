@@ -120,24 +120,6 @@ export default async function Home() {
         </article>
       </section>
 
-      {/* ── CLOSING ── */}
-      <section className="zh-closing">
-        <div className="zh-closing-wrap">
-          <div>
-            <div className="zh-section-mark">Warum das Ganze?</div>
-            <h2>Weil keiner<br />allein <em>knattern</em><br />sollte.</h2>
-          </div>
-          <div>
-            <p>Weil viele Zweitakt-Fans alleine vor sich hin schrauben — und das verdammt schade ist.</p>
-            <p>Unsere Community soll Leute zusammenbringen, die das gleiche Hobby teilen. Locker, offen und ohne Verpflichtung.</p>
-            <p style={{ marginTop: '28px' }}>
-              <Link href="/auth/register" className="zh-btn zh-btn-accent">
-                Komm in die Crew →
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* ── EVENTS PREVIEW ── */}
       {events && events.length > 0 && (
