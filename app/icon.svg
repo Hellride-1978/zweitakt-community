@@ -1,19 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Hintergrund -->
   <rect width="32" height="32" rx="7" fill="#1a1108"/>
-
-  <!-- Kolbenkrone (oben, volle Breite) -->
-  <rect x="5" y="4" width="22" height="11" rx="2.5" fill="#f2f2f2"/>
-
-  <!-- Kolbenring 1 -->
-  <rect x="5" y="16" width="22" height="2.5" rx="1.25" fill="#9ca3af"/>
-
-  <!-- Kolbenring 2 -->
-  <rect x="5" y="19.5" width="22" height="2.5" rx="1.25" fill="#4b5563"/>
-
-  <!-- Kolbenhemd (schmaler → deutet Überströmkanäle an) -->
-  <rect x="9" y="22.5" width="14" height="5.5" rx="2" fill="#f2f2f2"/>
-
-  <!-- Bolzenauge -->
-  <circle cx="16" cy="25.5" r="2" fill="#1a1108"/>
+  <path d="M 7,8 H 25 L 7,24 H 25" stroke="#f2f2f2" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="25" cy="24" r="2.5" fill="#4b5563"/>
 </svg>
