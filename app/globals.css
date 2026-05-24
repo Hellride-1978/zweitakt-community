@@ -264,9 +264,9 @@ body::before {
   animation: zh-pop 0.65s cubic-bezier(.2,.9,.2,1.05) forwards;
   white-space: nowrap;
 }
-.zh-bubble-stack .l1 { font-size: clamp(72px, 16vw, 208px); color: var(--accent-3); animation-delay: 0.18s; }
-.zh-bubble-stack .l2 { font-size: clamp(64px, 14vw, 176px); color: var(--accent-2); animation-delay: 0.30s; }
-.zh-bubble-stack .l3 { font-size: clamp(48px, 11vw, 144px); color: var(--accent);   animation-delay: 0.42s; }
+.zh-bubble-stack .l1 { font-size: clamp(72px, 12.8vw, 166px); color: var(--accent-3); animation-delay: 0.18s; }
+.zh-bubble-stack .l2 { font-size: clamp(64px, 11.2vw, 141px); color: var(--accent-2); animation-delay: 0.30s; }
+.zh-bubble-stack .l3 { font-size: clamp(48px,  8.8vw, 115px); color: var(--accent);   animation-delay: 0.42s; }
 
 .zh-hero-tagline {
   font-size: clamp(17px, 1.7vw, 22px);
