@@ -5,15 +5,36 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+
+const RULES = [
+  { id: 'len',     label: 'Mindestens 8 Zeichen',       test: (p) => p.length >= 8 },
+  { id: 'upper',   label: 'Einen Großbuchstaben',        test: (p) => /[A-Z]/.test(p) },
+  { id: 'number',  label: 'Eine Zahl',                   test: (p) => /[0-9]/.test(p) },
+  { id: 'special', label: 'Ein Sonderzeichen (!@#$…)',   test: (p) => /[^A-Za-z0-9]/.test(p) },
+]
+
+function getStrength(password) {
+  if (!password) return 0
+  return RULES.filter((r) => r.test(password)).length
+}
+
+const STRENGTH_LABEL = ['', 'Schwach', 'Mittel', 'Gut', 'Stark']
+const STRENGTH_COLOR = ['', '#ef4444', '#f59e0b', '#84cc16', '#22c55e']
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ email: '', password: '', passwordConfirm: '', name: '' })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOauthLoading] = useState(null)
   const router = useRouter()
+
+  const strength = getStrength(formData.password)
+  const passedRules = RULES.map((r) => r.test(formData.password))
+  const isStrong = strength === RULES.length
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -33,19 +54,17 @@ export default function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault()
     setError(null)
-    setLoading(true)
 
+    if (!isStrong) {
+      setError('Bitte wähle ein sicheres Passwort (alle Kriterien erfüllen).')
+      return
+    }
     if (formData.password !== formData.passwordConfirm) {
-      setError('Passwörter stimmen nicht überein')
-      setLoading(false)
-      return
-    }
-    if (formData.password.length < 6) {
-      setError('Passwort muss mindestens 6 Zeichen lang sein')
-      setLoading(false)
+      setError('Passwörter stimmen nicht überein.')
       return
     }
 
+    setLoading(true)
     try {
       const { error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
@@ -75,11 +94,9 @@ export default function RegisterPage() {
         </div>
 
         <div className="zh-card">
-          {error && (
-            <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>
-          )}
+          {error && <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>}
 
-          {/* OAuth buttons */}
+          {/* OAuth */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
             <button
               onClick={() => handleOAuth('google')}
@@ -109,21 +126,99 @@ export default function RegisterPage() {
               <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="zh-input" placeholder="dein@email.com" />
             </div>
 
+            {/* Passwort mit Toggle + Stärke-Anzeige */}
             <div>
               <label htmlFor="password" className="zh-label">Passwort</label>
-              <input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required className="zh-input" placeholder="••••••••" />
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="zh-input"
+                  placeholder="••••••••"
+                  style={{ paddingRight: '44px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)', fontSize: '15px', padding: 0 }}
+                  aria-label={showPassword ? 'Passwort verbergen' : 'Passwort anzeigen'}
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
+
+              {/* Stärke-Balken */}
+              {formData.password && (
+                <div style={{ marginTop: '10px' }}>
+                  <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                    {RULES.map((_, i) => (
+                      <div key={i} style={{
+                        flex: 1, height: '4px', borderRadius: '2px',
+                        background: i < strength ? STRENGTH_COLOR[strength] : 'var(--parchment)',
+                        transition: 'background 0.2s',
+                      }} />
+                    ))}
+                  </div>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase', color: STRENGTH_COLOR[strength], marginBottom: '8px' }}>
+                    {STRENGTH_LABEL[strength]}
+                  </div>
+                  <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {RULES.map((rule, i) => (
+                      <li key={rule.id} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1px', color: passedRules[i] ? '#22c55e' : 'var(--ink-muted)' }}>
+                        <span style={{ fontSize: '11px' }}>{passedRules[i] ? '✓' : '○'}</span>
+                        {rule.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
+            {/* Passwort bestätigen */}
             <div>
               <label htmlFor="passwordConfirm" className="zh-label">Passwort wiederholen</label>
-              <input id="passwordConfirm" name="passwordConfirm" type="password" value={formData.passwordConfirm} onChange={handleChange} required className="zh-input" placeholder="••••••••" />
+              <div style={{ position: 'relative' }}>
+                <input
+                  id="passwordConfirm"
+                  name="passwordConfirm"
+                  type={showConfirm ? 'text' : 'password'}
+                  value={formData.passwordConfirm}
+                  onChange={handleChange}
+                  required
+                  className="zh-input"
+                  placeholder="••••••••"
+                  style={{ paddingRight: '44px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(v => !v)}
+                  style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)', fontSize: '15px', padding: 0 }}
+                  aria-label={showConfirm ? 'Passwort verbergen' : 'Passwort anzeigen'}
+                >
+                  <FontAwesomeIcon icon={showConfirm ? faEyeSlash : faEye} />
+                </button>
+              </div>
+              {formData.passwordConfirm && formData.password !== formData.passwordConfirm && (
+                <div style={{ marginTop: '6px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1px', color: '#ef4444' }}>
+                  Passwörter stimmen nicht überein.
+                </div>
+              )}
+              {formData.passwordConfirm && formData.password === formData.passwordConfirm && (
+                <div style={{ marginTop: '6px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1px', color: '#22c55e' }}>
+                  ✓ Passwörter stimmen überein.
+                </div>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !isStrong}
               className="zh-btn"
-              style={{ justifyContent: 'center', gap: '8px', marginTop: '8px', opacity: loading ? 0.6 : 1 }}
+              style={{ justifyContent: 'center', gap: '8px', marginTop: '8px', opacity: (loading || !isStrong) ? 0.5 : 1 }}
             >
               {loading ? 'Wird registriert…' : <><span>Jetzt mitmachen</span><FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '13px' }} /></>}
             </button>
