@@ -216,7 +216,15 @@ body::before {
   padding: 13px 0;
   border-bottom: 1px solid var(--hairline);
 }
-.zh-mobile-menu a::after { content: "↗"; color: var(--accent); font-size: 16px; }
+.zh-mobile-menu a::after {
+  content: "";
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-top: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
 .zh-mobile-menu .mm-cta {
   margin-top: 12px;
   background: var(--ink);
