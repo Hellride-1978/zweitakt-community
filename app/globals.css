@@ -1762,6 +1762,10 @@ body::before {
 .spec-grid-d .s .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-muted); }
 .spec-grid-d .s .v { font-family: var(--display); font-size: 20px; line-height: 1; margin-top: 4px; letter-spacing: 0.3px; }
 
+/* ─── Vehicle form ─── */
+.vehicle-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.vehicle-form-actions { display: flex; gap: 12px; padding-top: 8px; }
+
 /* ─── Club layout ─── */
 .club-grid { display: grid; grid-template-columns: 1fr 320px; gap: 26px; height: 100%; min-height: 0; }
 .club-cover-d { border-radius: 18px; overflow: hidden; border: 1.5px solid var(--ink); height: 200px; position: relative; box-shadow: 5px 5px 0 var(--ink); margin-bottom: 18px; background: repeating-linear-gradient(135deg, var(--parchment) 0 12px, color-mix(in oklab, var(--parchment) 88%, var(--ink)) 12px 13px); display: flex; align-items: center; justify-content: center; }
@@ -1841,6 +1845,9 @@ body::before {
 
   /* Form-Rows */
   .form-row-2 { grid-template-columns: 1fr !important; }
+  .vehicle-form-row { grid-template-columns: 1fr !important; }
+  .vehicle-form-actions { flex-direction: column; align-items: stretch; }
+  .vehicle-form-actions .zh-btn { justify-content: center; }
 
   /* Garage-Grid */
   .garage-grid { grid-template-columns: 1fr !important; }

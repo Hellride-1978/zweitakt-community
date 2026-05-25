@@ -183,7 +183,7 @@ export default function NewVehiclePage() {
               <input id="title" name="title" value={form.title} onChange={handleChange} className="zh-input" placeholder="z.B. S51 Restomod, Vergaser-Reha…" />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="vehicle-form-row">
               <div>
                 <label htmlFor="make" className="zh-label">Marke *</label>
                 <input id="make" name="make" value={form.make} onChange={handleChange} className="zh-input" placeholder="z.B. Simson" />
@@ -194,7 +194,7 @@ export default function NewVehiclePage() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="vehicle-form-row">
               <div>
                 <label htmlFor="year" className="zh-label">Baujahr</label>
                 <input id="year" name="year" type="number" min="1900" max={new Date().getFullYear()} value={form.year} onChange={handleChange} className="zh-input" placeholder="z.B. 1985" />
@@ -278,7 +278,7 @@ export default function NewVehiclePage() {
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
+            <div className="vehicle-form-actions">
               <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
                 {saving ? 'Speichert…' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Speichern <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}
               </button>
