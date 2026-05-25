@@ -1281,9 +1281,6 @@ body::before {
 @media (max-width: 560px) {
   .zh-clubs-grid, .zh-members-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 720px) {
-  .zh-page-inner-sm { max-width: 100%; }
-}
 
 /* ═══════════════════════════════════════════════════════
    DESKTOP APP LAYOUT — sidebar shell + zd-* components
@@ -1807,8 +1804,9 @@ body::before {
   :root { --gutter: 8px; }
   main#main-content { max-width: 100%; }
   .zd-inner { padding: 12px var(--gutter) 80px; }
+  .zh-page-inner-sm { max-width: 100%; }
   .zd-inner .zh-page { padding-left: 0; padding-right: 0; padding-top: 16px; }
-  .zh-page { padding-top: 16px; }
+  .zh-page { padding-top: 16px; padding-left: var(--gutter); padding-right: var(--gutter); }
   .zh-card { padding: 14px 12px; }
 
   /* Alle Grids auf eine Spalte */
