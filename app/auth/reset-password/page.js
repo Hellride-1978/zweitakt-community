@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,20 +10,20 @@ function ResetPasswordForm() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
-  const [exchanging, setExchanging] = useState(true)
+  const [ready, setReady] = useState(false)
   const [error, setError] = useState(null)
   const [done, setDone] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   useEffect(() => {
-    const code = searchParams.get('code')
-    if (!code) { setError('Kein gültiger Reset-Link.'); setExchanging(false); return }
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) setError('Link ungültig oder abgelaufen. Bitte neu anfordern.')
-      setExchanging(false)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setReady(true)
+      } else {
+        setError('Kein gültiger Reset-Link. Bitte erneut anfordern.')
+      }
     })
-  }, [searchParams])
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -50,11 +50,7 @@ function ResetPasswordForm() {
         </div>
 
         <div className="zh-card">
-          {exchanging ? (
-            <p style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
-              Link wird geprüft…
-            </p>
-          ) : done ? (
+          {done ? (
             <div style={{ textAlign: 'center', padding: '16px 0' }}>
               <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>
                 Passwort gespeichert.
@@ -63,47 +59,53 @@ function ResetPasswordForm() {
                 Du wirst gleich weitergeleitet…
               </p>
             </div>
+          ) : error ? (
+            <div>
+              <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>
+              <a href="/auth/forgot-password" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+                Neuen Link anfordern →
+              </a>
+            </div>
+          ) : !ready ? (
+            <p style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+              Wird geprüft…
+            </p>
           ) : (
-            <>
-              {error && <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>}
-              {!error && (
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div>
-                    <label htmlFor="password" className="zh-label">Neues Passwort</label>
-                    <input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={6}
-                      className="zh-input"
-                      placeholder="Mindestens 6 Zeichen"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="confirm" className="zh-label">Passwort bestätigen</label>
-                    <input
-                      id="confirm"
-                      type="password"
-                      value={confirm}
-                      onChange={(e) => setConfirm(e.target.value)}
-                      required
-                      className="zh-input"
-                      placeholder="Nochmal eingeben"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="zh-btn"
-                    style={{ justifyContent: 'center', gap: '8px', opacity: loading ? 0.6 : 1 }}
-                  >
-                    {loading ? 'Wird gespeichert…' : <><span>Passwort speichern</span><FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '13px' }} /></>}
-                  </button>
-                </form>
-              )}
-            </>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <label htmlFor="password" className="zh-label">Neues Passwort</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="zh-input"
+                  placeholder="Mindestens 6 Zeichen"
+                />
+              </div>
+              <div>
+                <label htmlFor="confirm" className="zh-label">Passwort bestätigen</label>
+                <input
+                  id="confirm"
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  required
+                  className="zh-input"
+                  placeholder="Nochmal eingeben"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="zh-btn"
+                style={{ justifyContent: 'center', gap: '8px', opacity: loading ? 0.6 : 1 }}
+              >
+                {loading ? 'Wird gespeichert…' : <><span>Passwort speichern</span><FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '13px' }} /></>}
+              </button>
+            </form>
           )}
         </div>
       </div>
