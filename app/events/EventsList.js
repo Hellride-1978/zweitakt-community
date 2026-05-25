@@ -66,7 +66,19 @@ export default function EventsList({ events, filter }) {
     if (!navigator.geolocation) { setLocStatus('error'); return }
     setLocStatus('loading')
     navigator.geolocation.getCurrentPosition(
-      (pos) => applyCoords(pos.coords.latitude, pos.coords.longitude),
+      async (pos) => {
+        const { latitude, longitude } = pos.coords
+        applyCoords(latitude, longitude)
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+            { headers: { 'Accept-Language': 'de' } }
+          )
+          const data = await res.json()
+          const code = data?.address?.postcode
+          if (code) setPlz(code.replace(/\D/g, '').slice(0, 5))
+        } catch { /* ignore */ }
+      },
       () => setLocStatus('error')
     )
   }, [applyCoords])
