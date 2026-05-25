@@ -6,7 +6,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import IconBurger from './IconBurger'
+import IconBurgerFries from './IconBurgerFries'
 
 export default function Nav() {
   const { user, loading } = useAuth()
@@ -66,8 +68,8 @@ export default function Nav() {
           aria-controls="mobile-menu"
         >
           <span className="burger-icon-wrap">
-            <FontAwesomeIcon icon={faBars} className="i-burger" />
-            <FontAwesomeIcon icon={faXmark} className="i-close" />
+            <IconBurger className="i-burger" />
+            <IconBurgerFries className="i-close" />
           </span>
           <span className="burger-label">{open ? 'schließen' : 'menu'}</span>
         </button>
