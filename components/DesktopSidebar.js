@@ -16,8 +16,9 @@ function NavIcon({ children }) {
 
 function getActive(pathname) {
   if (pathname.startsWith('/events')) return 'rides'
-  if (pathname.startsWith('/vehicles')) return 'garage'
-  if (pathname.startsWith('/profile')) return 'garage'
+  if (pathname.startsWith('/profiles')) return 'schrauber'
+  if (pathname.startsWith('/profile')) return 'schrauber'
+  if (pathname.startsWith('/vehicles')) return 'schrauber'
   return ''
 }
 
@@ -45,8 +46,6 @@ export default function DesktopSidebar() {
 
   const displayName = profile?.name || user?.email?.split('@')[0] || '—'
   const initials = displayName.substring(0, 2).toUpperCase()
-  const garageHref = user ? `/profile/${user.id}` : '/profiles'
-
   return (
     <aside className="zd-side">
       <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -64,14 +63,14 @@ export default function DesktopSidebar() {
           </NavIcon>
           <span>Ausfahrten</span>
         </Link>
-        <Link href={garageHref} className={active === 'garage' ? 'on' : ''} aria-current={active === 'garage' ? 'page' : undefined}>
+        <Link href="/profiles" className={active === 'schrauber' ? 'on' : ''} aria-current={active === 'schrauber' ? 'page' : undefined}>
           <NavIcon>
-            <rect x="2" y="7" width="20" height="14" rx="2"/>
-            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-            <line x1="12" y1="12" x2="12" y2="16"/>
-            <line x1="10" y1="14" x2="14" y2="14"/>
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
           </NavIcon>
-          <span>Garage</span>
+          <span>Schrauber</span>
         </Link>
 
         <div className="grp">Konto</div>

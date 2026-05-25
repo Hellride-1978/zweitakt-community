@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import VehicleGallery from '@/components/VehicleGallery'
+import VehicleOwnerActions from '@/components/VehicleOwnerActions'
 
 export default async function VehiclePage({ params }) {
   const { id } = await params
@@ -95,15 +96,8 @@ export default async function VehiclePage({ params }) {
             </>
           )}
 
-          {/* Actions */}
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Link href={`/vehicles/${vehicle.id}/edit`} className="zd-btn accent" style={{ flex: 1 }}>
-              Bearbeiten
-            </Link>
-            <Link href="/vehicles/new" className="zd-btn outline">
-              + Weiteres Bike
-            </Link>
-          </div>
+          {/* Actions — nur für Besitzer */}
+          <VehicleOwnerActions vehicleId={vehicle.id} ownerId={vehicle.user_id} />
         </div>
       </div>
     </DesktopLayout>
