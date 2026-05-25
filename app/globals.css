@@ -761,7 +761,7 @@ body::before {
 }
 
 /* ─── MEMBERS ─── */
-.zh-members { background: color-mix(in oklab, var(--accent-3) 12%, var(--cream)); }
+.zh-members { padding-top: clamp(32px, 4vw, 48px); }
 .zh-members-mark::before { content: none; }
 .zh-members-grid {
   display: grid;

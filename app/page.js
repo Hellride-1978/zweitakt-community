@@ -220,6 +220,7 @@ export default async function Home() {
             <div className="mark zh-members-mark">Frisch aus der Garage</div>
             <h2>neu in der <em>crew.</em></h2>
           </div>
+          <Link href="/profiles" className="all">Alle Schrauber →</Link>
         </div>
 
         {members && members.length > 0 ? (
