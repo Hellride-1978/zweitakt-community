@@ -62,9 +62,28 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
           </button>
         </div>
       ) : isJoined ? (
-        <button onClick={handleLeave} disabled={working} className="zh-btn zh-btn-outline" style={{ opacity: working ? 0.6 : 1 }}>
-          {working ? 'Lädt…' : '✓ Angemeldet — Abmelden'}
-        </button>
+        <>
+          <div style={{
+            background: 'color-mix(in oklab, #22c55e 14%, var(--cream))',
+            border: '1.5px solid #22c55e',
+            borderRadius: 10,
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            fontFamily: 'var(--mono)',
+            fontSize: 11,
+            letterSpacing: '1.8px',
+            textTransform: 'uppercase',
+            color: '#16a34a',
+          }}>
+            <span style={{ fontSize: 16, lineHeight: 1 }}>✓</span>
+            Du bist dabei!
+          </div>
+          <button onClick={handleLeave} disabled={working} className="zh-btn zh-btn-outline" style={{ opacity: working ? 0.6 : 1, fontSize: 13 }}>
+            {working ? 'Lädt…' : 'Abmelden'}
+          </button>
+        </>
       ) : (
         <button onClick={handleJoin} disabled={working || isFull} className="zh-btn" style={{ opacity: (working || isFull) ? 0.6 : 1 }}>
           {working ? 'Lädt…' : isFull ? 'Ausgebucht' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Ich bin dabei <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}

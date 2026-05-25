@@ -1,19 +1,28 @@
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import ProfileActions from '@/components/ProfileActions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMotorcycle, faArrowRight, faArrowLeft, faImage } from '@fortawesome/free-solid-svg-icons'
+import { faMotorcycle, faArrowRight, faArrowLeft, faImage, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
 
 export default async function ProfilePage({ params }) {
   const { id } = await params
+  const supabase = createServerClient()
   const [
     { data: profile, error },
     { data: vehicles },
+    { data: participations },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', id).single(),
     supabase.from('vehicles').select('*').eq('user_id', id).order('created_at', { ascending: false }),
+    supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
   ])
+
+  const now = new Date().toISOString()
+  const upcomingEvents = (participations ?? [])
+    .map((p) => p.rides)
+    .filter((r) => r && r.start_date >= now)
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))
 
   if (error || !profile) {
     return (
@@ -33,6 +42,7 @@ export default async function ProfilePage({ params }) {
 
   return (
     <DesktopLayout crumb={profile.name || 'Profil'}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
       <div className="profile-grid">
         {/* ── Left: ID card + bio + activity ── */}
         <div className="profile-left">
@@ -63,8 +73,8 @@ export default async function ProfilePage({ params }) {
                 <div className="k">Bikes</div>
               </div>
               <div className="s">
-                <div className="n">—</div>
-                <div className="k">Touren</div>
+                <div className="n"><em>{upcomingEvents.length}</em></div>
+                <div className="k">Termine</div>
               </div>
             </div>
           </div>
@@ -139,6 +149,47 @@ export default async function ProfilePage({ params }) {
             </div>
           )}
         </div>
+      </div>
+
+      {/* ── Angemeldete Termine ── */}
+      {upcomingEvents.length > 0 && (
+        <div>
+          <div style={{ marginBottom: 16 }}>
+            <div className="zd-mono accent" style={{ marginBottom: 6 }}>
+              <FontAwesomeIcon icon={faCalendarCheck} style={{ marginRight: 6 }} />
+              Kommende Termine
+            </div>
+            <h2 className="zd-h2">angemeldet <em>dabei.</em></h2>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {upcomingEvents.map((ev) => {
+              const d = new Date(ev.start_date)
+              const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' }).toUpperCase()
+              const month = d.toLocaleDateString('de-DE', { month: 'short' }).toUpperCase()
+              const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
+              const time = hasTime ? d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : null
+              return (
+                <Link key={ev.id} href={`/events/${ev.id}`} className="zd-ride" style={{ textDecoration: 'none' }}>
+                  <div className="when-block">
+                    <div className="day">{weekday}</div>
+                    <div className="num">{d.getDate()}</div>
+                    <div className="mon">{month}</div>
+                    {time && <div className="tm">{time}</div>}
+                  </div>
+                  <div className="body">
+                    <div className="title">{ev.title}</div>
+                    {ev.location && <div className="meta">{ev.location}</div>}
+                  </div>
+                  <div className="cta-col">
+                    <span className="zd-mono accent">→</span>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       </div>
     </DesktopLayout>
   )
