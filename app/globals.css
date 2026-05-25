@@ -1806,7 +1806,8 @@ body::before {
 @media (max-width: 767px) {
   :root { --gutter: 8px; }
   .zd-inner { padding: 16px var(--gutter) 80px; }
-  .zh-card { padding: 16px; }
+  .zd-inner .zh-page { padding-left: 0; padding-right: 0; }
+  .zh-card { padding: 14px 12px; }
 
   /* Alle Grids auf eine Spalte */
   .feed-grid,
