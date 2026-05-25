@@ -133,15 +133,28 @@ export default function EventsList({ events, filter }) {
 
         <form onSubmit={lookupPlz} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <label htmlFor="plz-input" className="zh-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>PLZ</label>
-          <input
-            id="plz-input"
-            className="zh-input"
-            style={{ width: 88, padding: '7px 10px', fontSize: 13 }}
-            placeholder="12345"
-            aria-label="Postleitzahl für Entfernungssuche"
-            value={plz}
-            onChange={e => setPlz(e.target.value.replace(/\D/g, '').slice(0, 5))}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <input
+              id="plz-input"
+              className="zh-input"
+              style={{ width: 88, padding: '7px 30px 7px 10px', fontSize: 13 }}
+              placeholder="12345"
+              aria-label="Postleitzahl für Entfernungssuche"
+              value={plz}
+              onChange={e => setPlz(e.target.value.replace(/\D/g, '').slice(0, 5))}
+            />
+            <button
+              type="button"
+              onClick={useGeolocation}
+              disabled={locStatus === 'loading'}
+              title="Aktuellen Standort verwenden"
+              style={{ position: 'absolute', right: 7, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', color: locStatus === 'ready' ? 'var(--accent)' : 'var(--ink-muted)', opacity: locStatus === 'loading' ? 0.4 : 1 }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
+              </svg>
+            </button>
+          </div>
           <select
             value={radius ?? ''}
             onChange={e => setRadius(e.target.value ? Number(e.target.value) : null)}
@@ -159,16 +172,6 @@ export default function EventsList({ events, filter }) {
             {locStatus === 'loading' ? '…' : 'Los'}
           </button>
         </form>
-
-        <button
-          className="zd-btn-sm"
-          onClick={useGeolocation}
-          disabled={locStatus === 'loading'}
-          style={{ display: 'flex', alignItems: 'center', gap: 5 }}
-          title="Aktuellen Standort verwenden"
-        >
-          ◎ Standort
-        </button>
 
         {locStatus === 'error' && (
           <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: 1.4, color: '#c55a3c', textTransform: 'uppercase' }}>
