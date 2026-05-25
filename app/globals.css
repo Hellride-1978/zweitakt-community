@@ -1804,7 +1804,7 @@ body::before {
 
 /* ─── MOBILE: alle Desktop-Grids auf 1 Spalte ─── */
 @media (max-width: 767px) {
-  :root { --gutter: 14px; }
+  :root { --gutter: 8px; }
   .zd-inner { padding: 16px var(--gutter) 80px; }
   .zh-card { padding: 16px; }
 
