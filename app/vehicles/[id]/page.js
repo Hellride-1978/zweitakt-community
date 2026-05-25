@@ -65,7 +65,7 @@ export default async function VehiclePage({ params }) {
             <h1 className="zd-h1" style={{ fontSize: 44 }}>
               {vehicle.make} <em>{vehicle.model}</em>
             </h1>
-            {vehicle.year && <span className="zh-pill" style={{ background: 'var(--ink)' }}>BJ {vehicle.year}</span>}
+            {vehicle.year && <span className="zh-pill bike-detail-pill" style={{ background: 'var(--ink)' }}>BJ {vehicle.year}</span>}
           </div>
 
           {vehicle.title && (

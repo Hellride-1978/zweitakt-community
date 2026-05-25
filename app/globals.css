@@ -1829,6 +1829,10 @@ body::before {
   .bike-thumbs { grid-template-columns: repeat(3, 1fr); }
   .bike-hero-big { height: 240px; }
 
+  /* Bike-Detail: Titel+Specs vor den Bildern */
+  .bike-detail-grid > div:nth-child(2) { order: -1; }
+  .bike-detail-pill { display: none; }
+
   /* Attendee-Grid */
   .att-grid { grid-template-columns: repeat(4, 1fr) !important; }
 
