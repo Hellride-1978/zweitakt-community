@@ -1631,11 +1631,10 @@ body::before {
   border: 1.5px solid var(--ink); border-radius: 14px; background: var(--ink); color: var(--cream);
   padding: 12px 8px; text-align: center;
 }
-.zd-ride .when-block .day { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-3); }
-.zd-ride.hot .when-block .day { color: var(--cream); }
-.zd-ride .when-block .num { font-family: var(--display); font-size: 36px; line-height: 0.9; margin-top: 2px; }
-.zd-ride .when-block .mon { font-family: var(--mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; margin-top: 2px; }
-.zd-ride .when-block .tm { font-family: var(--display); font-size: 18px; color: var(--accent); margin-top: 6px; border-top: 1px dashed color-mix(in oklab, var(--cream) 35%, transparent); padding-top: 6px; }
+.zd-ride .when-block .day { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--cream); }
+.zd-ride .when-block .num { font-family: var(--display); font-size: 36px; line-height: 0.9; margin-top: 2px; color: var(--cream); }
+.zd-ride .when-block .mon { font-family: var(--mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; margin-top: 2px; color: var(--cream); }
+.zd-ride .when-block .tm { font-family: var(--display); font-size: 18px; color: var(--cream); margin-top: 6px; border-top: 1px dashed color-mix(in oklab, var(--cream) 35%, transparent); padding-top: 6px; }
 .zd-ride.hot .when-block .tm { color: var(--ink); }
 .zd-ride .body { min-width: 0; }
 .zd-ride .body .title { font-family: var(--display); font-size: 24px; line-height: 1; letter-spacing: 0.3px; }
