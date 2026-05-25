@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import HeroActions from '@/components/HeroActions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -52,6 +52,7 @@ function formatTimeAgo(dateStr) {
 }
 
 export default async function Home() {
+  const supabase = createServerClient()
   const tickerItems = [...TICKER_ITEMS, ...TICKER_ITEMS]
 
   const [

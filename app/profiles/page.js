@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,6 +20,7 @@ function formatTimeAgo(dateStr) {
 }
 
 export default async function ProfilesPage() {
+  const supabase = createServerClient()
   const { data: members } = await supabase
     .from('profiles')
     .select('id, name, avatar_url, location, created_at, vehicles(id, make, model, title, year)')
