@@ -103,7 +103,7 @@ export default function EditProfilePage() {
         id: user.id, name: form.name, description: form.description, avatar_url: avatarUrl, location: form.location || null,
       })
       if (upsertError) throw upsertError
-      router.push('/dashboard')
+      router.push(`/profile/${user.id}`)
     } catch (err) {
       setError(err?.message || 'Fehler beim Speichern')
     } finally {
@@ -192,7 +192,7 @@ export default function EditProfilePage() {
               <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
                 {saving ? 'Speichert…' : 'Speichern →'}
               </button>
-              <button type="button" onClick={() => router.push('/dashboard')} className="zh-btn zh-btn-outline">
+              <button type="button" onClick={() => router.push(`/profile/${user.id}`)} className="zh-btn zh-btn-outline">
                 Abbrechen
               </button>
             </div>

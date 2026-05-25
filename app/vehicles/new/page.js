@@ -282,7 +282,7 @@ export default function NewVehiclePage() {
               <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
                 {saving ? 'Speichert…' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Speichern <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}
               </button>
-              <button type="button" onClick={() => router.push('/dashboard')} className="zh-btn zh-btn-outline">
+              <button type="button" onClick={() => router.push(`/profile/${user.id}`)} className="zh-btn zh-btn-outline">
                 Abbrechen
               </button>
             </div>

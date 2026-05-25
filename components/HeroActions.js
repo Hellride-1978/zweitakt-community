@@ -12,8 +12,8 @@ export default function HeroActions() {
     <div className="zh-hero-actions">
       {user ? (
         <>
-          <Link href="/dashboard" className="zh-btn">
-            Mein Dashboard
+          <Link href={`/profile/${user.id}`} className="zh-btn">
+            Mein Profil
             <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '14px' }} />
           </Link>
           <Link href="/events" className="zh-btn zh-btn-outline">Termine & Ausfahrten</Link>
