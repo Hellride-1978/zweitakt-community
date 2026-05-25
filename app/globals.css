@@ -132,7 +132,8 @@ body::before {
 .zh-nav-cta-dot {
   width: 7px; height: 7px;
   border-radius: 50%;
-  background: var(--cream);
+  background: #22c55e;
+  box-shadow: 0 0 6px 1px #22c55e;
   animation: zh-blink 1.6s ease-in-out infinite;
   flex-shrink: 0;
 }
