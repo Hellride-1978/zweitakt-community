@@ -36,7 +36,6 @@ export default function Nav() {
             <>
               <li><Link href="/events"       className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
               <li><Link href="/profiles"     className={pathname.startsWith('/profiles') || pathname.startsWith('/profile') ? 'active' : ''}>Schrauber</Link></li>
-              <li><Link href="/vehicles"     className={pathname.startsWith('/vehicles') ? 'active' : ''}>Garage</Link></li>
               <li><Link href="/profile/edit" className={pathname === '/profile/edit'     ? 'active' : ''}>Profil</Link></li>
             </>
           ) : !loading ? (
