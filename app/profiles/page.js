@@ -5,10 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function formatTimeAgo(dateStr) {
-  const diff = Date.now() - new Date(dateStr).getTime()
-  const days = Math.floor(diff / 86400000)
+  const now = new Date()
+  const date = new Date(dateStr)
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const dateStart = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const days = Math.round((todayStart - dateStart) / 86400000)
   if (days === 0) return 'Heute'
-  if (days === 1) return '1 Tag'
+  if (days === 1) return 'Gestern'
   if (days < 30) return `${days} Tage`
   const months = Math.floor(days / 30)
   if (months === 1) return '1 Mon.'
