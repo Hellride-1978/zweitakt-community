@@ -8,6 +8,7 @@ import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { validateImageFile } from '@/lib/validateImage'
 
 const SLOT_COUNT = 4
 const URL_KEYS = ['image_url', 'image_url_2', 'image_url_3', 'image_url_4']
@@ -127,8 +128,10 @@ export default function EditVehiclePage({ params }) {
       for (let i = 0; i < SLOT_COUNT; i++) {
         const img = images[i]
         if (img.file) {
+          const validationError = validateImageFile(img.file)
+          if (validationError) throw new Error(`Bild ${i + 1}: ${validationError}`)
           const filePath = `vehicles/${user.id}/${vehicleId}_${i + 1}.jpg`
-          const { error: uploadError } = await supabase.storage.from('vehicles').upload(filePath, img.file, { upsert: true })
+          const { error: uploadError } = await supabase.storage.from('vehicles').upload(filePath, img.file, { upsert: true, contentType: 'image/jpeg' })
           if (uploadError) throw new Error(`Bild ${i + 1} Upload fehlgeschlagen: ${uploadError.message}`)
           const { data: pub } = supabase.storage.from('vehicles').getPublicUrl(filePath)
           urlUpdates[URL_KEYS[i]] = pub?.publicUrl ? `${pub.publicUrl}?t=${Date.now()}` : img.dbUrl

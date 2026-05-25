@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
+import { validateImageFile } from '@/lib/validateImage'
 
 export default function EditProfilePage() {
   const { user, loading } = useAuth()
@@ -88,9 +89,10 @@ export default function EditProfilePage() {
     try {
       let avatarUrl = form.avatar_url
       if (file && user) {
-        const fileExt = file.name.split('.').pop()
-        const filePath = `avatars/${user.id}.${fileExt}`
-        const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true })
+        const validationError = validateImageFile(file)
+        if (validationError) { setError(validationError); setSaving(false); return }
+        const filePath = `avatars/${user.id}.jpg`
+        const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true, contentType: 'image/jpeg' })
         if (uploadError) {
           setError(`Upload fehlgeschlagen: ${uploadError.message}`)
           setSaving(false)

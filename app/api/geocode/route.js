@@ -6,7 +6,7 @@ export async function GET(request) {
   const res = await fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=de,at,ch&limit=5&accept-language=de&addressdetails=1`,
     {
-      headers: { 'User-Agent': 'zweitakthoden/1.0 (martin@delavega.de)' },
+      headers: { 'User-Agent': 'zweitakthoden/1.0' },
       next: { revalidate: 300 },
     }
   )
