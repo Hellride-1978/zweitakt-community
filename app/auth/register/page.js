@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { faGoogle, faApple } from '@fortawesome/free-brands-svg-icons'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ email: '', password: '', passwordConfirm: '', name: '' })
@@ -89,15 +89,6 @@ export default function RegisterPage() {
             >
               <FontAwesomeIcon icon={faGoogle} style={{ fontSize: '16px' }} />
               {oauthLoading === 'google' ? 'Weiterleitung…' : 'Mit Google registrieren'}
-            </button>
-            <button
-              onClick={() => handleOAuth('apple')}
-              disabled={!!oauthLoading}
-              className="zh-btn"
-              style={{ justifyContent: 'center', gap: '10px', opacity: oauthLoading === 'apple' ? 0.6 : 1 }}
-            >
-              <FontAwesomeIcon icon={faApple} style={{ fontSize: '16px' }} />
-              {oauthLoading === 'apple' ? 'Weiterleitung…' : 'Mit Apple registrieren'}
             </button>
           </div>
 

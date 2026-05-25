@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { faGoogle, faApple } from '@fortawesome/free-brands-svg-icons'
+import { faGoogle } from '@fortawesome/free-brands-svg-icons'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -68,15 +68,6 @@ export default function LoginPage() {
             >
               <FontAwesomeIcon icon={faGoogle} style={{ fontSize: '16px' }} />
               {oauthLoading === 'google' ? 'Weiterleitung…' : 'Mit Google anmelden'}
-            </button>
-            <button
-              onClick={() => handleOAuth('apple')}
-              disabled={!!oauthLoading}
-              className="zh-btn"
-              style={{ justifyContent: 'center', gap: '10px', opacity: oauthLoading === 'apple' ? 0.6 : 1 }}
-            >
-              <FontAwesomeIcon icon={faApple} style={{ fontSize: '16px' }} />
-              {oauthLoading === 'apple' ? 'Weiterleitung…' : 'Mit Apple anmelden'}
             </button>
           </div>
 
