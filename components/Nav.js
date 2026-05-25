@@ -79,7 +79,6 @@ export default function Nav() {
           <>
             <Link href="/events"       onClick={close}>Termine</Link>
             <Link href="/profiles"     onClick={close}>Schrauber</Link>
-            <Link href="/vehicles"     onClick={close}>Garage</Link>
             <Link href={`/profile/${user.id}`} onClick={close}>Profil</Link>
             <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
               Abmelden <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} />
