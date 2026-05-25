@@ -2,6 +2,24 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import HeroActions from '@/components/HeroActions'
 
+async function getReverseGeocode(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+      { headers: { 'User-Agent': 'zweitakthoden/1.0' }, next: { revalidate: 86400 } }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    const a = data.address || {}
+    const street = [a.road, a.house_number].filter(Boolean).join(' ')
+    const place = [a.postcode, a.city || a.town || a.village || a.municipality].filter(Boolean).join(' ')
+    const parts = [street, place].filter(Boolean)
+    return parts.length ? parts.join(', ') : (data.display_name?.split(',').slice(0, 2).join(',').trim() || null)
+  } catch {
+    return null
+  }
+}
+
 const TICKER_ITEMS = [
   { label: 'Simson S51',        hot: true  },
   { label: 'Puch Maxi',         hot: false },
@@ -44,13 +62,24 @@ export default async function Home() {
       .limit(4),
     supabase
       .from('rides')
-      .select('id, title, start_date, location, profiles(id, name), ride_participants(count)')
+      .select('id, title, start_date, location, location_lat, location_lng, description, max_participants, profiles(id, name), ride_participants(count)')
       .gte('start_date', new Date().toISOString())
       .order('start_date', { ascending: true })
       .limit(3),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('rides').select('*', { count: 'exact', head: true }),
   ])
+
+  const eventAddresses = {}
+  if (events) {
+    await Promise.all(
+      events.map(async (ev) => {
+        if (ev.location_lat && ev.location_lng) {
+          eventAddresses[ev.id] = await getReverseGeocode(ev.location_lat, ev.location_lng)
+        }
+      })
+    )
+  }
 
   return (
     <>
@@ -135,22 +164,44 @@ export default async function Home() {
             {events.map((ev) => {
               const participantCount = ev.ride_participants?.[0]?.count ?? 0
               const d = new Date(ev.start_date)
+              const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' }).toUpperCase()
+              const month = d.toLocaleDateString('de-DE', { month: 'short' }).toUpperCase()
+              const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
+              const time = hasTime ? d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : null
               return (
-                <Link key={ev.id} href={`/events/${ev.id}`} className="zh-event-card" style={{ textDecoration: 'none' }}>
-                  <div className="zh-event-date">
-                    <div className="day">{d.toLocaleDateString('de-DE', { day: 'numeric' })}</div>
-                    <div className="month">{d.toLocaleDateString('de-DE', { month: 'short' })}</div>
+                <Link key={ev.id} href={`/events/${ev.id}`} className="zd-ride" style={{ textDecoration: 'none' }}>
+                  <div className="when-block">
+                    <div className="day">{weekday}</div>
+                    <div className="num">{d.getDate()}</div>
+                    <div className="mon">{month}</div>
+                    {time && <div className="tm">{time}</div>}
                   </div>
-                  <div className="zh-event-body">
-                    <div style={{ fontFamily: 'var(--display)', fontSize: 'clamp(18px, 2.2vw, 24px)', lineHeight: 1.1, color: 'var(--ink)', marginBottom: '4px' }}>
-                      {ev.title}
+                  <div className="body">
+                    <div className="title">{ev.title}</div>
+                    <div className="meta">
+                      <span>👥 {participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}</span>
                     </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
-                      {ev.location && <span>📍 {ev.location}</span>}
-                      <span>👥 {participantCount} dabei</span>
-                    </div>
+                    {(ev.location || eventAddresses[ev.id]) && (
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 6 }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }}>
+                          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>
+                          {ev.location && <strong style={{ color: 'var(--ink)' }}>{ev.location}</strong>}
+                          {ev.location && eventAddresses[ev.id] && <br />}
+                          {eventAddresses[ev.id] && <span style={{ color: 'var(--ink-muted)' }}>{eventAddresses[ev.id]}</span>}
+                        </span>
+                      </div>
+                    )}
+                    {ev.description && (
+                      <div className="desc" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {ev.description}
+                      </div>
+                    )}
                   </div>
-                  <div style={{ flexShrink: 0, color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: '18px' }}>→</div>
+                  <div className="cta-col">
+                    <span className="zd-mono accent">→</span>
+                  </div>
                 </Link>
               )
             })}
