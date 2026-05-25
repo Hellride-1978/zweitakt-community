@@ -23,6 +23,7 @@ export default async function ProfilesPage() {
   return (
     <DesktopLayout>
       <div className="feed-grid">
+        {/* Main column */}
         <div className="feed-col">
           <div className="feed-head">
             <div>
@@ -41,58 +42,59 @@ export default async function ProfilesPage() {
               </Link>
             </div>
           ) : (
-            <div className="zh-members-grid" style={{ padding: 0 }}>
-              {members.map((m) => {
-                const latestVehicle = m.vehicles?.[0]
-                const initial = (m.name || '?').charAt(0).toUpperCase()
-                const since = formatTimeAgo(m.created_at)
-                return (
-                  <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>
-                    <div className="zh-member-top">
-                      <div className="zh-avatar offline">
-                        {m.avatar_url
-                          ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                          : initial
+            members.map((m) => {
+              const initial = (m.name || '?').charAt(0).toUpperCase()
+              const since = formatTimeAgo(m.created_at)
+              const bikeCount = m.vehicles?.length ?? 0
+              const latestBike = m.vehicles?.[0]
+
+              return (
+                <Link key={m.id} href={`/profile/${m.id}`} className="zd-ride" style={{ textDecoration: 'none' }}>
+                  {/* Avatar block — same position as date block in events */}
+                  <div className="when-block" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="zh-avatar offline" style={{ width: 52, height: 52, fontSize: 20, flexShrink: 0 }}>
+                      {m.avatar_url
+                        ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        : initial
+                      }
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="body">
+                    <div className="title">{m.name || 'Unbekannt'}</div>
+                    <div className="meta">
+                      {m.location && <span>📍 {m.location}</span>}
+                      {m.location && bikeCount > 0 && <span className="sep" />}
+                      {bikeCount > 0 && <span>{bikeCount} {bikeCount === 1 ? 'Bike' : 'Bikes'}</span>}
+                      <span className="sep" />
+                      <span>dabei seit {since}</span>
+                    </div>
+                    {latestBike && (
+                      <div className="desc">
+                        {latestBike.title
+                          ? `${latestBike.make} ${latestBike.model} — ${latestBike.title}`
+                          : `${latestBike.make} ${latestBike.model}${latestBike.year ? ` (${latestBike.year})` : ''}`
                         }
                       </div>
-                      <div className="zh-member-name">
-                        <h4>{m.name || 'Unbekannt'}</h4>
-                        <div className="loc">{m.location || 'Community'}</div>
-                      </div>
-                    </div>
-                    {latestVehicle && (
-                      <div className="zh-member-project">
-                        <div className="label">Fährt</div>
-                        <div className="bike">
-                          {latestVehicle.title
-                            ? `${latestVehicle.make} ${latestVehicle.model} — ${latestVehicle.title}`
-                            : `${latestVehicle.make} ${latestVehicle.model}${latestVehicle.year ? ` (${latestVehicle.year})` : ''}`
-                          }
-                        </div>
-                      </div>
                     )}
-                    <div className="zh-member-stats">
-                      <div className="item">
-                        <div className="n">{m.vehicles?.length ?? 0}</div>
-                        <div className="k">Bikes</div>
-                      </div>
-                      <div className="item">
-                        <div className="n">{since}</div>
-                        <div className="k">dabei</div>
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
+                  </div>
+
+                  <div className="cta-col">
+                    <span className="zd-mono accent">→</span>
+                  </div>
+                </Link>
+              )
+            })
           )}
         </div>
 
+        {/* Right rail */}
         <aside className="feed-rail">
           <div className="zd-card dark">
             <div className="zd-mono" style={{ color: 'var(--accent-3)', marginBottom: 6 }}>Neu hier?</div>
             <div style={{ fontFamily: 'var(--display)', fontSize: 22, lineHeight: 1.0, letterSpacing: 0.3 }}>
-              komm in<br/>die crew.
+              komm in<br />die crew.
             </div>
             <div style={{ marginTop: 10, fontSize: 12, color: 'color-mix(in oklab, var(--cream) 80%, transparent)' }}>
               Kein Antrag. Keine Aufnahmegebühr. Einfach mitmachen.

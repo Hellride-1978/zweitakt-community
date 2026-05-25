@@ -758,7 +758,7 @@ body::before {
 .zh-members-mark::before { content: none; }
 .zh-members-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 16px;
 }
 .zh-member-card {
@@ -1472,7 +1472,6 @@ body::before {
 
 /* Sidebar user profile card */
 .zd-side .meprofile {
-  margin-top: auto;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1615,11 +1614,11 @@ body::before {
 .zd-btn-sm.on { background: var(--ink); color: var(--cream); }
 
 /* ─── Feed layout ─── */
-.feed-grid { display: grid; grid-template-columns: 1fr 320px; gap: 26px; height: 100%; min-height: 0; }
+.feed-grid { display: grid; grid-template-columns: 1fr 320px; gap: 26px; }
 .feed-col { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
 .feed-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
 .feed-head .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-.feed-rail { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+.feed-rail { display: flex; flex-direction: column; gap: 16px; }
 
 /* ─── Ride card in feed ─── */
 .zd-ride {
@@ -1794,18 +1793,10 @@ body::before {
 .club-rail .ride-mini .t { font-family: var(--display); font-size: 19px; line-height: 1; letter-spacing: 0.3px; margin-top: 6px; }
 .club-rail .ride-mini .m { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-muted); margin-top: 6px; }
 
-/* ─── Responsive: mobile hides desktop chrome ─── */
-@media (max-width: 1023px) {
-  .zh-desktop-shell { display: block; }
-  .zh-desktop-shell .zd-side,
-  .zh-desktop-shell .zd-top { display: none; }
-  .zh-desktop-shell .zd-content { padding: 0; }
-}
 
 /* ─── MOBILE: alle Desktop-Grids auf 1 Spalte ─── */
 @media (max-width: 767px) {
-  /* Content-Bereich bekommt Padding zurück */
-  .zh-desktop-shell .zd-content { padding: 16px var(--gutter) 80px !important; }
+  .zd-inner { padding: 16px var(--gutter) 80px; }
 
   /* Alle Grids auf eine Spalte */
   .feed-grid,
@@ -1894,36 +1885,16 @@ body::before {
   .zd-ride .cta-col { display: none; }
 }
 
-/* ─── Desktop: hide mobile nav, lock viewport ─── */
-@media (min-width: 1024px) {
-  body:has(.zh-desktop-shell) .zh-nav,
-  body:has(.zh-desktop-shell) .zh-mobile-menu { display: none !important; }
-  body:has(.zh-desktop-shell) {
-    overflow: hidden !important;
-    height: 100vh !important;
-  }
-  body:has(.zh-desktop-shell) > main {
-    overflow: hidden !important;
-    flex: none !important;
-    height: 100vh !important;
-    min-height: 0 !important;
-    max-width: none !important;
-    margin: 0 !important;
-  }
-  .zh-desktop-shell { height: 100vh; overflow: hidden; }
-  .zh-desktop-shell .zd-main { overflow: hidden; height: 100%; }
-  .zh-desktop-shell .zd-content { overflow-y: auto; height: 100%; }
-  /* Strip page shell padding inside desktop content */
-  .zh-desktop-shell .zh-page { padding: 0; }
-  .zh-desktop-shell .zh-page-inner,
-  .zh-desktop-shell .zh-page-inner-sm { max-width: none; margin: 0; }
-  /* Responsive grids: collapse on smaller desktop */
-  @media (max-width: 1280px) {
-    .feed-grid { grid-template-columns: 1fr 280px; }
-    .detail-grid { grid-template-columns: 1fr 300px; }
-    .club-grid { grid-template-columns: 1fr 280px; }
-    .members-grid { grid-template-columns: repeat(3,1fr); }
-  }
+/* ─── Inner page content wrapper ─── */
+.zd-inner {
+  padding: clamp(32px, 4vw, 56px) var(--gutter);
+}
+
+/* Responsive grids: collapse on smaller desktop */
+@media (max-width: 1280px) {
+  .feed-grid { grid-template-columns: 1fr 280px; }
+  .detail-grid { grid-template-columns: 1fr 300px; }
+  .club-grid { grid-template-columns: 1fr 280px; }
 }
 
 /* ─── ACCESSIBILITY: Focus-visible & Skip-Link ─── */

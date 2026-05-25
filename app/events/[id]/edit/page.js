@@ -35,7 +35,7 @@ export default function EditEventPage({ params }) {
     if (!eventId || !user) return
     supabase.from('rides').select('*').eq('id', eventId).eq('creator_id', user.id).single()
       .then(({ data, error: fetchError }) => {
-        if (fetchError || !data) { setError('Event nicht gefunden oder keine Berechtigung.'); return }
+        if (fetchError || !data) { setError('Termin nicht gefunden oder keine Berechtigung.'); return }
         const d = new Date(data.start_date)
         setForm({
           title: data.title || '',

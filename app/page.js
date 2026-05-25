@@ -76,7 +76,7 @@ export default async function Home() {
           </div>
           <div className="zh-stat">
             <div className="zh-stat-num">{eventCount > 0 ? <>{eventCount}<em>+</em></> : '—'}</div>
-            <div className="zh-stat-label">Events</div>
+            <div className="zh-stat-label">Termine</div>
           </div>
         </div>
       </section>
@@ -129,7 +129,7 @@ export default async function Home() {
               <div className="mark">Nächste Termine</div>
               <h2>bald <em>unterwegs.</em></h2>
             </div>
-            <Link href="/events" className="all">Alle Events →</Link>
+            <Link href="/events" className="all">Alle Termine →</Link>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {events.map((ev) => {
@@ -225,7 +225,7 @@ export default async function Home() {
       <footer className="zh-footer">
         <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
         <ul className="zh-footer-links">
-          <li><Link href="/events">Events</Link></li>
+          <li><Link href="/events">Termine</Link></li>
           <li><Link href="/vehicles">Garage</Link></li>
           <li><Link href="/auth/register">Registrieren</Link></li>
         </ul>

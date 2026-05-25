@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://www.kliemannsland.de/collections/kurse\")",
+      "Bash(curl -s \"https://www.kliemannsland.de/cdn/shop/t/25/assets/theme.css?v=54605678411425772951760476144\")",
+      "Bash(lsof -ti:3000,3001)"
+    ]
+  }
+}

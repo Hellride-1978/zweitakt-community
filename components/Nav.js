@@ -32,14 +32,16 @@ export default function Nav() {
         <ul className="zh-nav-links">
           {!loading && user ? (
             <>
-              <li><Link href="/events"      className={pathname.startsWith('/events')  ? 'active' : ''}>Events</Link></li>
-              <li><Link href="/vehicles"    className={pathname.startsWith('/vehicles') ? 'active' : ''}>Garage</Link></li>
-              <li><Link href="/profile/edit" className={pathname.startsWith('/profile') ? 'active' : ''}>Profil</Link></li>
+              <li><Link href="/events"       className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
+              <li><Link href="/profiles"     className={pathname.startsWith('/profiles') || pathname.startsWith('/profile') ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/vehicles"     className={pathname.startsWith('/vehicles') ? 'active' : ''}>Garage</Link></li>
+              <li><Link href="/profile/edit" className={pathname === '/profile/edit'     ? 'active' : ''}>Profil</Link></li>
             </>
           ) : !loading ? (
             <>
-              <li><Link href="/events"      className={pathname.startsWith('/events') ? 'active' : ''}>Events</Link></li>
-              <li><Link href="/auth/login"  className={pathname === '/auth/login'     ? 'active' : ''}>Anmelden</Link></li>
+              <li><Link href="/events"      className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
+              <li><Link href="/profiles"    className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/auth/login"  className={pathname === '/auth/login'       ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
         </ul>
@@ -73,7 +75,8 @@ export default function Nav() {
       <div id="mobile-menu" className={`zh-mobile-menu${open ? ' open' : ''}`} aria-hidden={!open}>
         {!loading && user ? (
           <>
-            <Link href="/events"       onClick={close}>Events</Link>
+            <Link href="/events"       onClick={close}>Termine</Link>
+            <Link href="/profiles"     onClick={close}>Schrauber</Link>
             <Link href="/vehicles"     onClick={close}>Garage</Link>
             <Link href="/profile/edit" onClick={close}>Profil bearbeiten</Link>
             <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
@@ -82,7 +85,8 @@ export default function Nav() {
           </>
         ) : (
           <>
-            <Link href="/events"        onClick={close}>Events</Link>
+            <Link href="/events"        onClick={close}>Termine</Link>
+            <Link href="/profiles"      onClick={close}>Schrauber</Link>
             <Link href="/auth/login"    onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein →</Link>
           </>
