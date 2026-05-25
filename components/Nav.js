@@ -7,6 +7,8 @@ import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 export default function Nav() {
   const { user, loading } = useAuth()
@@ -80,7 +82,7 @@ export default function Nav() {
             <Link href="/vehicles"     onClick={close}>Garage</Link>
             <Link href="/profile/edit" onClick={close}>Profil bearbeiten</Link>
             <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
-              Abmelden →
+              Abmelden <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} />
             </button>
           </>
         ) : (
@@ -88,7 +90,7 @@ export default function Nav() {
             <Link href="/events"        onClick={close}>Termine</Link>
             <Link href="/profiles"      onClick={close}>Schrauber</Link>
             <Link href="/auth/login"    onClick={close}>Anmelden</Link>
-            <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein →</Link>
+            <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
           </>
         )}
       </div>
