@@ -27,6 +27,8 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({ email: '', password: '', passwordConfirm: '', name: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [emailTaken, setEmailTaken] = useState(false)
+  const [emailChecking, setEmailChecking] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOauthLoading] = useState(null)
@@ -38,7 +40,22 @@ export default function RegisterPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    if (name === 'email') setEmailTaken(false)
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleEmailBlur = async () => {
+    const email = formData.email.trim()
+    if (!email || !email.includes('@')) return
+    setEmailChecking(true)
+    try {
+      const { data } = await supabase.rpc('email_exists', { check_email: email })
+      setEmailTaken(!!data)
+    } catch {
+      // silent — check again on submit
+    } finally {
+      setEmailChecking(false)
+    }
   }
 
   const handleOAuth = async (provider) => {
@@ -55,6 +72,10 @@ export default function RegisterPage() {
     e.preventDefault()
     setError(null)
 
+    if (emailTaken) {
+      setError('Diese E-Mail-Adresse ist bereits registriert.')
+      return
+    }
     if (!isStrong) {
       setError('Bitte wähle ein sicheres Passwort (alle Kriterien erfüllen).')
       return
@@ -123,7 +144,27 @@ export default function RegisterPage() {
 
             <div>
               <label htmlFor="email" className="zh-label">E-Mail</label>
-              <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="zh-input" placeholder="dein@email.com" />
+              <input
+                id="email" name="email" type="email"
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleEmailBlur}
+                required
+                className="zh-input"
+                placeholder="dein@email.com"
+                style={{ borderColor: emailTaken ? '#ef4444' : undefined }}
+              />
+              {emailChecking && (
+                <div style={{ marginTop: '6px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1px', color: 'var(--ink-muted)' }}>
+                  Wird geprüft…
+                </div>
+              )}
+              {emailTaken && !emailChecking && (
+                <div style={{ marginTop: '6px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1px', color: '#ef4444' }}>
+                  Diese E-Mail ist bereits registriert.{' '}
+                  <Link href="/auth/login" style={{ color: '#ef4444', borderBottom: '1px solid #ef4444' }}>Anmelden?</Link>
+                </div>
+              )}
             </div>
 
             {/* Passwort mit Toggle + Stärke-Anzeige */}
@@ -216,7 +257,7 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={loading || !isStrong}
+              disabled={loading || !isStrong || emailTaken}
               className="zh-btn"
               style={{ justifyContent: 'center', gap: '8px', marginTop: '8px', opacity: (loading || !isStrong) ? 0.5 : 1 }}
             >
