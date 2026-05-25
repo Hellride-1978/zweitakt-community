@@ -1804,7 +1804,6 @@ body::before {
 
 /* ─── MOBILE: alle Desktop-Grids auf 1 Spalte ─── */
 @media (max-width: 767px) {
-  :root { --gutter: 5vw; }
   .zd-inner { padding: 16px var(--gutter) 80px; }
 
   /* Alle Grids auf eine Spalte */
