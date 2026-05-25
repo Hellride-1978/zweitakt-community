@@ -84,7 +84,12 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="zh-label">Passwort</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+                <label htmlFor="password" className="zh-label" style={{ margin: 0 }}>Passwort</label>
+                <Link href="/auth/forgot-password" style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', borderBottom: '1px solid var(--hairline)' }}>
+                  Vergessen?
+                </Link>
+              </div>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="zh-input" placeholder="••••••••" />
             </div>
 
