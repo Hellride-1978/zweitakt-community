@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import ProfileActions from '@/components/ProfileActions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMotorcycle, faArrowRight, faArrowLeft, faImage } from '@fortawesome/free-solid-svg-icons'
 
 export default async function ProfilePage({ params }) {
   const { id } = await params
@@ -19,7 +21,7 @@ export default async function ProfilePage({ params }) {
         <div style={{ padding: '40px 0' }}>
           <div className="zd-card">
             <h1 className="zh-page-title" style={{ fontSize: 36 }}>Profil nicht gefunden.</h1>
-            <Link href="/profiles" className="zd-btn outline" style={{ display: 'inline-flex', marginTop: 20 }}>← Alle Schrauber</Link>
+            <Link href="/profiles" className="zd-btn outline" style={{ display: 'inline-flex', marginTop: 20, gap: 8 }}><FontAwesomeIcon icon={faArrowLeft} style={{ fontSize: 13 }} /> Alle Schrauber</Link>
           </div>
         </div>
       </DesktopLayout>
@@ -87,10 +89,10 @@ export default async function ProfilePage({ params }) {
 
           {!vehicles || vehicles.length === 0 ? (
             <div className="zd-card" style={{ textAlign: 'center', padding: '48px 24px', border: '2px dashed var(--hairline)' }}>
-              <div style={{ fontFamily: 'var(--display)', fontSize: 36, marginBottom: 10, opacity: 0.3 }}>🏍️</div>
+              <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.3, color: 'var(--ink-muted)' }}><FontAwesomeIcon icon={faMotorcycle} /></div>
               <p style={{ fontFamily: 'var(--display)', fontSize: 20, color: 'var(--ink-muted)' }}>Noch keine Fahrzeuge eingetragen.</p>
               <Link href="/vehicles/new" className="zd-btn accent" style={{ display: 'inline-flex', marginTop: 16, fontSize: 15 }}>
-                Erstes Bike eintragen →
+                Erstes Bike eintragen <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
               </Link>
             </div>
           ) : (
@@ -100,7 +102,7 @@ export default async function ProfilePage({ params }) {
                   <div className="img" style={{ position: 'relative' }}>
                     {v.image_url
                       ? <img src={v.image_url} alt={`${v.make} ${v.model}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                      : <span style={{ fontFamily: 'var(--display)', fontSize: 40, opacity: 0.3 }}>🏍️</span>
+                      : <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 40, opacity: 0.3, color: 'var(--ink-muted)' }} />
                     }
                     {[v.image_url_2, v.image_url_3, v.image_url_4].filter(Boolean).length > 0 && (
                       <div style={{
@@ -111,9 +113,7 @@ export default async function ProfilePage({ params }) {
                         display: 'flex', alignItems: 'center', gap: 4,
                         fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px',
                       }}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg>
+                        <FontAwesomeIcon icon={faImage} style={{ fontSize: 11 }} />
                         {1 + [v.image_url_2, v.image_url_3, v.image_url_4].filter(Boolean).length}
                       </div>
                     )}

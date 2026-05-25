@@ -3,6 +3,8 @@ import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import VehicleGallery from '@/components/VehicleGallery'
 import VehicleOwnerActions from '@/components/VehicleOwnerActions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 export default async function VehiclePage({ params }) {
   const { id } = await params
@@ -50,9 +52,9 @@ export default async function VehiclePage({ params }) {
               <div>
                 <div className="zd-mono accent">Schrauber</div>
                 <div style={{ fontFamily: 'var(--display)', fontSize: 20, marginTop: 4, letterSpacing: 0.3 }}>{owner.name || 'Unbekannt'}</div>
-                {owner.location && <div className="zd-mono" style={{ marginTop: 2 }}>📍 {owner.location}</div>}
+                {owner.location && <div className="zd-mono" style={{ marginTop: 2 }}><FontAwesomeIcon icon={faLocationDot} style={{ marginRight: 5 }} /> {owner.location}</div>}
               </div>
-              <span style={{ marginLeft: 'auto', color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: 18 }}>→</span>
+              <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: 'auto', color: 'var(--accent)', fontSize: 16 }} />
             </Link>
           )}
         </div>

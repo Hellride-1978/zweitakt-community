@@ -6,6 +6,8 @@ import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import DesktopLayout from '@/components/DesktopLayout'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 const EventMap = dynamic(() => import('@/components/EventMap'), { ssr: false })
 
@@ -177,7 +179,7 @@ export default function EditEventPage({ params }) {
                     onClick={() => { setLat(null); setLng(null) }}
                     style={{ marginLeft: '12px', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)', fontSize: '11px' }}
                   >
-                    ✕ entfernen
+                    <FontAwesomeIcon icon={faXmark} /> entfernen
                   </button>
                 </p>
               )}
@@ -185,7 +187,7 @@ export default function EditEventPage({ params }) {
 
             <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
               <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
-                {saving ? 'Speichert…' : 'Änderungen speichern →'}
+                {saving ? 'Speichert…' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Änderungen speichern <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}
               </button>
               <button type="button" onClick={() => router.push(`/events/${eventId}`)} className="zh-btn zh-btn-outline">
                 Abbrechen

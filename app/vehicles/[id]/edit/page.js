@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 const SLOT_COUNT = 4
 const URL_KEYS = ['image_url', 'image_url_2', 'image_url_3', 'image_url_4']
@@ -275,7 +277,7 @@ export default function EditVehiclePage({ params }) {
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
                               zIndex: 2,
                             }}
-                          >✕</button>
+                          ><FontAwesomeIcon icon={faXmark} /></button>
                           {i === 0 && (
                             <span style={{
                               position: 'absolute', bottom: 6, left: 6,
@@ -303,13 +305,13 @@ export default function EditVehiclePage({ params }) {
                 })}
               </div>
               <p style={{ marginTop: '8px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>
-                Klick auf ein Feld um ein Bild auszuwählen oder zu ersetzen · ✕ zum Entfernen
+                Klick auf ein Feld um ein Bild auszuwählen oder zu ersetzen · <FontAwesomeIcon icon={faXmark} /> zum Entfernen
               </p>
             </div>
 
             <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
               <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
-                {saving ? 'Speichert…' : 'Speichern →'}
+                {saving ? 'Speichert…' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Speichern <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}
               </button>
               <button type="button" onClick={() => router.push(`/vehicles/${vehicleId}`)} className="zh-btn zh-btn-outline">
                 Abbrechen

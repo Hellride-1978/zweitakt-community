@@ -1,6 +1,8 @@
 'use client'
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot, faUsers, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -162,9 +164,7 @@ export default function EventsList({ events, filter }) {
               title="Aktuellen Standort verwenden"
               style={{ position: 'absolute', right: 7, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', color: locStatus === 'ready' ? 'var(--accent)' : 'var(--ink-muted)', opacity: locStatus === 'loading' ? 0.4 : 1 }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
-              </svg>
+              <FontAwesomeIcon icon={faCrosshairs} style={{ fontSize: 14 }} />
             </button>
           </div>
           <select
@@ -199,7 +199,7 @@ export default function EventsList({ events, filter }) {
       {/* ── Event list ── */}
       {!events || events.length === 0 ? (
         <div className="zd-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-          <div style={{ fontFamily: 'var(--display)', fontSize: 40, marginBottom: 12, opacity: 0.3 }}>📍</div>
+          <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.3, color: 'var(--ink-muted)' }}><FontAwesomeIcon icon={faLocationDot} /></div>
           <p style={{ fontFamily: 'var(--display)', fontSize: 24, color: 'var(--ink-muted)' }}>
             {filter === 'upcoming' ? 'Keine Termine in der Zukunft.' : 'Noch keine Termine.'}
           </p>
@@ -209,7 +209,7 @@ export default function EventsList({ events, filter }) {
         </div>
       ) : filteredEvents.length === 0 ? (
         <div className="zd-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-          <div style={{ fontFamily: 'var(--display)', fontSize: 40, marginBottom: 12, opacity: 0.3 }}>📍</div>
+          <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.3, color: 'var(--ink-muted)' }}><FontAwesomeIcon icon={faLocationDot} /></div>
           <p style={{ fontFamily: 'var(--display)', fontSize: 24, color: 'var(--ink-muted)' }}>
             Keine Termine im gewählten Umkreis.
           </p>
@@ -237,14 +237,12 @@ export default function EventsList({ events, filter }) {
               <div className="body">
                 <div className="title">{event.title}</div>
                 <div className="meta">
-                  <span>👥 {participantCount}{event.max_participants ? ` / ${event.max_participants}` : ''}</span>
+                  <FontAwesomeIcon icon={faUsers} style={{ fontSize: 11, marginRight: 4 }} />{participantCount}{event.max_participants ? ` / ${event.max_participants}` : ''}
                   {distKm != null && <><span className="sep" /><span>~{distKm} km</span></>}
                 </div>
                 {(event.location || event.location_lat) && (
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 6 }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-muted)', flexShrink: 0, marginTop: 2 }}>
-                      <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
+                    <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 13, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 2 }} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {event.location && (
                         <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>{event.location}</span>

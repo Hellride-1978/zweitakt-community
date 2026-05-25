@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import HeroActions from '@/components/HeroActions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 async function getReverseGeocode(lat, lng) {
   try {
@@ -179,13 +181,11 @@ export default async function Home() {
                   <div className="body">
                     <div className="title">{ev.title}</div>
                     <div className="meta">
-                      <span>👥 {participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}</span>
+                      <FontAwesomeIcon icon={faUsers} style={{ fontSize: 11, marginRight: 4 }} />{participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}
                     </div>
                     {(ev.location || eventAddresses[ev.id]) && (
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 6 }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }}>
-                          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                        </svg>
+                        <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 13, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
                         <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>
                           {ev.location && <strong style={{ color: 'var(--ink)' }}>{ev.location}</strong>}
                           {ev.location && eventAddresses[ev.id] && <br />}

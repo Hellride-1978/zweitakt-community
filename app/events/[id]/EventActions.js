@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 export default function EventActions({ eventId, creatorId, participants, maxParticipants }) {
   const { user, loading } = useAuth()
@@ -45,7 +47,7 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {!user ? (
         <>
-          <button onClick={handleJoin} className="zh-btn">Ich bin dabei →</button>
+          <button onClick={handleJoin} className="zh-btn" style={{ gap: 8 }}>Ich bin dabei <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></button>
           <p style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textAlign: 'center' }}>
             Zum Anmelden bitte einloggen.
           </p>
@@ -53,7 +55,7 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
       ) : isCreator ? (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <Link href={`/events/${eventId}/edit`} className="zh-btn zh-btn-outline" style={{ justifyContent: 'center', fontSize: 15, padding: '10px 12px' }}>
-            Bearbeiten →
+            Bearbeiten <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
           </Link>
           <button onClick={handleDelete} disabled={working} className="zh-btn" style={{ background: '#c55a3c', borderColor: '#c55a3c', fontSize: 15, padding: '10px 12px', opacity: working ? 0.6 : 1 }}>
             {working ? 'Löscht…' : 'Löschen'}
@@ -65,7 +67,7 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
         </button>
       ) : (
         <button onClick={handleJoin} disabled={working || isFull} className="zh-btn" style={{ opacity: (working || isFull) ? 0.6 : 1 }}>
-          {working ? 'Lädt…' : isFull ? 'Ausgebucht' : 'Ich bin dabei →'}
+          {working ? 'Lädt…' : isFull ? 'Ausgebucht' : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>Ich bin dabei <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} /></span>}
         </button>
       )}
     </div>

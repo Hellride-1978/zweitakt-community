@@ -1,5 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMotorcycle, faChevronLeft, faChevronRight, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 const NAV_BTN = {
   background: 'rgba(255,255,255,0.12)',
@@ -9,7 +11,6 @@ const NAV_BTN = {
   fontSize: 20,
   padding: '10px 18px',
   cursor: 'pointer',
-  fontFamily: 'var(--mono)',
   lineHeight: 1,
 }
 
@@ -44,7 +45,7 @@ export default function VehicleGallery({ images, make, model }) {
       >
         {valid[active]
           ? <img src={valid[active]} alt={`${make} ${model}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          : <span style={{ fontFamily: 'var(--display)', fontSize: 72, opacity: 0.3 }}>🏍️</span>
+          : <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 72, opacity: 0.3 }} />
         }
       </div>
 
@@ -79,7 +80,7 @@ export default function VehicleGallery({ images, make, model }) {
         >
           {valid.length > 1 && (
             <button onClick={e => { e.stopPropagation(); prev() }} style={{ ...NAV_BTN, position: 'absolute', left: 20 }} aria-label="Vorheriges Bild">
-              ←
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
           )}
 
@@ -92,12 +93,12 @@ export default function VehicleGallery({ images, make, model }) {
 
           {valid.length > 1 && (
             <button onClick={e => { e.stopPropagation(); next() }} style={{ ...NAV_BTN, position: 'absolute', right: 20 }} aria-label="Nächstes Bild">
-              →
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           )}
 
           <button onClick={closeLightbox} style={{ ...NAV_BTN, position: 'absolute', top: 20, right: 20, padding: '8px 14px', fontSize: 16 }} aria-label="Schließen">
-            ✕
+            <FontAwesomeIcon icon={faXmark} />
           </button>
 
           {valid.length > 1 && (

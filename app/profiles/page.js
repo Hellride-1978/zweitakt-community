@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function formatTimeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -38,7 +40,7 @@ export default async function ProfilesPage() {
                 Noch keine Mitglieder.
               </p>
               <Link href="/auth/register" className="zd-btn accent" style={{ display: 'inline-flex', marginTop: 20 }}>
-                Jetzt mitmachen →
+                Jetzt mitmachen <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13, marginLeft: 6 }} />
               </Link>
             </div>
           ) : (
@@ -64,7 +66,7 @@ export default async function ProfilesPage() {
                   <div className="body">
                     <div className="title">{m.name || 'Unbekannt'}</div>
                     <div className="meta">
-                      {m.location && <span>📍 {m.location}</span>}
+                      {m.location && <span><FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 11, marginRight: 4 }} />{m.location}</span>}
                       {m.location && bikeCount > 0 && <span className="sep" />}
                       {bikeCount > 0 && <span>{bikeCount} {bikeCount === 1 ? 'Bike' : 'Bikes'}</span>}
                       <span className="sep" />
@@ -81,7 +83,7 @@ export default async function ProfilesPage() {
                   </div>
 
                   <div className="cta-col">
-                    <span className="zd-mono accent">→</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="zd-mono accent" style={{ fontSize: 16 }} />
                   </div>
                 </Link>
               )
@@ -99,8 +101,8 @@ export default async function ProfilesPage() {
             <div style={{ marginTop: 10, fontSize: 12, color: 'color-mix(in oklab, var(--cream) 80%, transparent)' }}>
               Kein Antrag. Keine Aufnahmegebühr. Einfach mitmachen.
             </div>
-            <Link href="/auth/register" className="zd-btn accent" style={{ marginTop: 12, padding: '8px 14px', fontSize: 15, display: 'inline-flex' }}>
-              Registrieren →
+            <Link href="/auth/register" className="zd-btn accent" style={{ marginTop: 12, padding: '8px 14px', fontSize: 15, display: 'inline-flex', gap: 8 }}>
+              Registrieren <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
             </Link>
           </div>
         </aside>

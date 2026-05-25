@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 
 const EventMap = dynamic(() => import('@/components/EventMap'), { ssr: false })
 
@@ -68,7 +70,7 @@ export default function MapTileModal({ lat, lng, locationName, address, tiles, f
             fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.6, textTransform: 'uppercase',
             color: 'var(--ink)', display: 'inline-flex', alignItems: 'center', gap: 6,
           }}>
-            Karte öffnen ↗
+            Karte öffnen <FontAwesomeIcon icon={faUpRightFromSquare} style={{ fontSize: 8 }} />
           </div>
         </div>
 
@@ -130,7 +132,7 @@ export default function MapTileModal({ lat, lng, locationName, address, tiles, f
                   border: '1.5px solid var(--ink)', background: 'var(--cream)',
                   cursor: 'pointer', fontSize: 14, display: 'grid', placeItems: 'center',
                 }}
-              >✕</button>
+              ><FontAwesomeIcon icon={faXmark} /></button>
             </div>
             {/* Full interactive map */}
             <EventMap
