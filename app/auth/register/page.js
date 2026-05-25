@@ -4,17 +4,30 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faGoogle, faApple } from '@fortawesome/free-brands-svg-icons'
 
 export default function RegisterPage() {
-  const [userType, setUserType] = useState('person')
-  const [formData, setFormData] = useState({ email: '', password: '', passwordConfirm: '', name: '', description: '' })
+  const [formData, setFormData] = useState({ email: '', password: '', passwordConfirm: '', name: '' })
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [oauthLoading, setOauthLoading] = useState(null)
   const router = useRouter()
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleOAuth = async (provider) => {
+    setOauthLoading(provider)
+    setError(null)
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+    if (error) { setError(error.message); setOauthLoading(null) }
   }
 
   const handleRegister = async (e) => {
@@ -37,13 +50,7 @@ export default function RegisterPage() {
       const { error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-        options: {
-          data: {
-            name: formData.name,
-            description: formData.description,
-            user_type: userType,
-          },
-        },
+        options: { data: { name: formData.name } },
       })
       if (signUpError) throw signUpError
       alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
@@ -72,29 +79,38 @@ export default function RegisterPage() {
             <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>
           )}
 
-          <div style={{ marginBottom: '24px' }}>
-            <span className="zh-label" style={{ display: 'block', marginBottom: '10px' }}>Ich bin</span>
-            <div className="zh-radio-group">
-              <label className="zh-radio-label">
-                <input type="radio" name="userType" value="person" checked={userType === 'person'} onChange={(e) => setUserType(e.target.value)} />
-                Einzelperson
-              </label>
-              <label className="zh-radio-label">
-                <input type="radio" name="userType" value="club" checked={userType === 'club'} onChange={(e) => setUserType(e.target.value)} />
-                Klub
-              </label>
-            </div>
+          {/* OAuth buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+            <button
+              onClick={() => handleOAuth('google')}
+              disabled={!!oauthLoading}
+              className="zh-btn zh-btn-outline"
+              style={{ justifyContent: 'center', gap: '10px', opacity: oauthLoading === 'google' ? 0.6 : 1 }}
+            >
+              <FontAwesomeIcon icon={faGoogle} style={{ fontSize: '16px' }} />
+              {oauthLoading === 'google' ? 'Weiterleitung…' : 'Mit Google registrieren'}
+            </button>
+            <button
+              onClick={() => handleOAuth('apple')}
+              disabled={!!oauthLoading}
+              className="zh-btn"
+              style={{ justifyContent: 'center', gap: '10px', opacity: oauthLoading === 'apple' ? 0.6 : 1 }}
+            >
+              <FontAwesomeIcon icon={faApple} style={{ fontSize: '16px' }} />
+              {oauthLoading === 'apple' ? 'Weiterleitung…' : 'Mit Apple registrieren'}
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--hairline)' }} />
+            <span style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>oder</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--hairline)' }} />
           </div>
 
           <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <label htmlFor="name" className="zh-label">{userType === 'person' ? 'Dein Name' : 'Klub-Name'}</label>
+              <label htmlFor="name" className="zh-label">Dein Name</label>
               <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required className="zh-input" placeholder="z.B. Max Müller" />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="zh-label">Kurze Beschreibung</label>
-              <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={3} className="zh-input" style={{ resize: 'vertical' }} placeholder="z.B. Leidenschaftlicher Zweitakt-Fan…" />
             </div>
 
             <div>
@@ -116,9 +132,9 @@ export default function RegisterPage() {
               type="submit"
               disabled={loading}
               className="zh-btn"
-              style={{ justifyContent: 'center', marginTop: '8px', opacity: loading ? 0.6 : 1 }}
+              style={{ justifyContent: 'center', gap: '8px', marginTop: '8px', opacity: loading ? 0.6 : 1 }}
             >
-              {loading ? 'Wird registriert…' : 'Jetzt mitmachen →'}
+              {loading ? 'Wird registriert…' : <><span>Jetzt mitmachen</span><FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '13px' }} /></>}
             </button>
           </form>
 
