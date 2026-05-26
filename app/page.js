@@ -284,6 +284,8 @@ export default async function Home() {
           <li><Link href="/events">Termine</Link></li>
           <li><Link href="/vehicles">Garage</Link></li>
           <li><Link href="/auth/register">Registrieren</Link></li>
+          <li><Link href="/impressum">Impressum</Link></li>
+          <li><Link href="/datenschutz">Datenschutz</Link></li>
         </ul>
         <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
       </footer>
