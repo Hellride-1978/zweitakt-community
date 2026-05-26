@@ -59,12 +59,16 @@ export default function MembersGrid({ members }) {
             </button>
           ))}
           <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 4px' }} />
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Sortierung</span>
-          {SORT_OPTIONS.map(o => (
-            <button key={o.key} className={`zh-filter-btn${sort === o.key ? ' active' : ''}`} onClick={() => setSort(o.key)}>
-              {o.label}
-            </button>
-          ))}
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value)}
+            className="zh-input"
+            style={{ padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)', letterSpacing: '1.5px', textTransform: 'uppercase', height: 'auto', width: 'auto', cursor: 'pointer' }}
+          >
+            {SORT_OPTIONS.map(o => (
+              <option key={o.key} value={o.key}>{o.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
