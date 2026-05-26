@@ -79,10 +79,6 @@ export default async function VehiclePage({ params }) {
             {vehicle.displacement_cc && (
               <div className="s"><div className="lbl">Hubraum</div><div className="v">{vehicle.displacement_cc} cc</div></div>
             )}
-            <div className="s">
-              <div className="lbl">Eingetragen</div>
-              <div className="v" style={{ fontSize: 14 }}>{new Date(vehicle.created_at).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-            </div>
           </div>
 
           {/* Description / notes */}
