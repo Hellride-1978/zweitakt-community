@@ -11,11 +11,11 @@
   --ink-muted:    #5e5248;
   --hairline:     rgba(26,17,8,0.32);
   --ink-faint:    rgba(26,17,8,0.14);
-  --accent:       rgb(155, 195, 214);
-  --accent-2:     rgb(175, 210, 225);
-  --accent-3:     rgb(200, 225, 235);
-  --accent-ink:   rgb(100, 155, 180);
-  --accent-hot:   #FF5C8F;
+  --accent:       #FF5C8F;
+  --accent-2:     #ff85aa;
+  --accent-3:     #ffb3cb;
+  --accent-ink:   #e0366a;
+  --accent-hot:   rgb(155, 195, 214);
   --shadow:       rgba(26,17,8,0.18);
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
