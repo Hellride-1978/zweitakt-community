@@ -962,14 +962,17 @@ body::before {
 
 /* ─── FOOTER ─── */
 .zh-footer {
-  padding: clamp(28px, 3vw, 40px) var(--gutter);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  padding: clamp(40px, 5vw, 64px) var(--gutter) 0;
   background: var(--cream);
   border-top: 1px solid var(--hairline);
+}
+.zh-footer-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding-bottom: clamp(32px, 4vw, 48px);
 }
 .zh-footer-logo {
   font-family: var(--display);
@@ -979,23 +982,45 @@ body::before {
   paint-order: stroke fill;
   display: inline-flex;
   align-items: baseline;
+  flex-shrink: 0;
 }
 .zh-footer-logo span { color: var(--accent); -webkit-text-stroke: 0.5px var(--accent); }
+.zh-footer-cols {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.zh-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.zh-footer-col-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
 .zh-footer-links {
   display: flex;
-  gap: 28px;
+  flex-direction: column;
+  gap: 10px;
   list-style: none;
-  flex-wrap: wrap;
 }
 .zh-footer-links a {
   font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--ink-soft);
   transition: color 0.18s;
 }
 .zh-footer-links a:hover { color: var(--accent); }
+.zh-footer-bottom {
+  border-top: 1px solid var(--hairline);
+  padding: 16px 0;
+}
 .zh-footer-copy {
   font-family: var(--mono);
   font-size: 10px;
@@ -1279,8 +1304,9 @@ body::before {
   .zh-stat:last-child { border-bottom: 0; }
   .zh-teaser-item { padding: 26px 22px; gap: 18px; }
   .zh-teaser-icon { width: 52px; height: 52px; }
-  .zh-footer { flex-direction: column; text-align: center; }
-  .zh-footer-links { justify-content: center; }
+  .zh-footer-top { flex-direction: column; gap: 32px; }
+  .zh-footer-cols { gap: 32px; }
+  .zh-footer-bottom { text-align: center; }
 }
 @media (max-width: 560px) {
   .zh-clubs-grid, .zh-members-grid { grid-template-columns: 1fr; }

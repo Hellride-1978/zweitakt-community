@@ -279,15 +279,41 @@ export default async function Home() {
 
       {/* ── FOOTER ── */}
       <footer className="zh-footer">
-        <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
-        <ul className="zh-footer-links">
-          <li><Link href="/events">Termine</Link></li>
-          <li><Link href="/vehicles">Garage</Link></li>
-          <li><Link href="/auth/register">Registrieren</Link></li>
-          <li><Link href="/impressum">Impressum</Link></li>
-          <li><Link href="/datenschutz">Datenschutz</Link></li>
-        </ul>
-        <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
+        <div className="zh-footer-top">
+          <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
+
+          <div className="zh-footer-cols">
+            <div className="zh-footer-col">
+              <div className="zh-footer-col-label">Community</div>
+              <ul className="zh-footer-links">
+                <li><Link href="/events">Termine</Link></li>
+                <li><Link href="/profiles">Schrauber</Link></li>
+                <li><Link href="/auth/register">Registrieren</Link></li>
+              </ul>
+            </div>
+            <div className="zh-footer-col">
+              <div className="zh-footer-col-label">Kontakt</div>
+              <ul className="zh-footer-links">
+                <li><a href="mailto:info@zweitakthoden.de">info@zweitakthoden.de</a></li>
+                <li>
+                  <a href="https://www.instagram.com/zweitakt_hoden/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    Instagram
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="zh-footer-col">
+              <div className="zh-footer-col-label">Rechtliches</div>
+              <ul className="zh-footer-links">
+                <li><Link href="/impressum">Impressum</Link></li>
+                <li><Link href="/datenschutz">Datenschutz</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="zh-footer-bottom">
+          <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
+        </div>
       </footer>
     </>
   )
