@@ -11,10 +11,11 @@
   --ink-muted:    #5e5248;
   --hairline:     rgba(26,17,8,0.32);
   --ink-faint:    rgba(26,17,8,0.14);
-  --accent:       #4b5563;
-  --accent-2:     #6b7280;
-  --accent-3:     #9ca3af;
-  --accent-ink:   #374151;
+  --accent:       rgb(155, 195, 214);
+  --accent-2:     rgb(175, 210, 225);
+  --accent-3:     rgb(200, 225, 235);
+  --accent-ink:   rgb(100, 155, 180);
+  --accent-hot:   #FF5C8F;
   --shadow:       rgba(26,17,8,0.18);
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
@@ -276,7 +277,7 @@ body::before {
 }
 .zh-bubble-stack .l1 { font-size: clamp(72px, 12.8vw, 166px); color: var(--accent-3); animation-delay: 0.18s; }
 .zh-bubble-stack .l2 { font-size: clamp(64px, 11.2vw, 141px); color: var(--accent-2); animation-delay: 0.30s; }
-.zh-bubble-stack .l3 { font-size: clamp(48px,  8.8vw, 115px); color: var(--accent);   animation-delay: 0.42s; }
+.zh-bubble-stack .l3 { font-size: clamp(48px,  8.8vw, 115px); color: var(--accent-hot); animation-delay: 0.42s; }
 
 .zh-hero-tagline {
   font-size: clamp(17px, 1.7vw, 22px);
@@ -611,7 +612,7 @@ body::before {
   color: var(--ink);
   max-width: 14ch;
 }
-.zh-preview-head h2 em { font-style: normal; color: var(--accent); }
+.zh-preview-head h2 em { font-style: normal; color: var(--accent-hot); }
 .zh-preview-head .all {
   font-family: var(--mono);
   font-size: 11px;
@@ -1049,7 +1050,7 @@ body::before {
   -webkit-text-stroke: 0.5px var(--ink);
   paint-order: stroke fill;
 }
-.zh-page-title em { font-style: normal; color: var(--accent); }
+.zh-page-title em { font-style: normal; color: var(--accent-hot); }
 .zh-page-lead {
   font-size: clamp(16px, 1.6vw, 19px);
   color: var(--ink-soft);
@@ -1280,9 +1281,9 @@ body::before {
   background: var(--cream);
   border: 1.5px solid var(--ink);
   border-radius: 18px;
-  transition: box-shadow 0.2s;
+  transition: transform 0.18s, box-shadow 0.18s;
 }
-.zh-post-card:hover { box-shadow: 4px 4px 0 var(--ink); }
+.zh-post-card:hover { transform: translate(-2px, -3px); box-shadow: 6px 6px 0 var(--ink); }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 960px) {
@@ -1656,7 +1657,9 @@ body::before {
 .zd-ride {
   display: grid; grid-template-columns: 120px 1fr auto; gap: 18px; align-items: center;
   border: 1.5px solid var(--ink); border-radius: 18px; background: var(--cream); padding: 14px; position: relative;
+  transition: transform 0.18s, box-shadow 0.18s;
 }
+.zd-ride:hover { transform: translate(-2px, -3px); box-shadow: 6px 6px 0 var(--ink); }
 .zd-ride.hot { box-shadow: 4px 4px 0 var(--accent); }
 .zd-ride.hot .when-block { background: var(--accent); }
 .zd-ride .when-block {
@@ -1714,7 +1717,7 @@ body::before {
 .detail-hero .when-line { font-family: var(--mono); font-size: 11px; letter-spacing: 2.2px; text-transform: uppercase; color: var(--accent-3); display: inline-flex; gap: 10px; align-items: center; }
 .detail-hero .when-line .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 .detail-hero h1 { font-family: var(--display); font-size: 52px; line-height: 0.9; letter-spacing: 0.4px; margin: 0; -webkit-text-stroke: 0.6px var(--cream); paint-order: stroke fill; }
-.detail-hero h1 em { color: var(--accent); font-style: normal; }
+.detail-hero h1 em { color: var(--accent-hot); font-style: normal; }
 .detail-hero .sub { font-size: 14px; color: color-mix(in oklab, var(--cream) 80%, transparent); max-width: 56ch; }
 .detail-hero .stamps { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .detail-hero .stamps .ds { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; padding: 5px 10px; border-radius: 100px; background: color-mix(in oklab, var(--cream) 14%, transparent); border: 1px solid color-mix(in oklab, var(--cream) 30%, transparent); }
