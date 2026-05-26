@@ -95,6 +95,9 @@ body::before {
 }
 .zh-nav-logo span { color: var(--accent-hot); -webkit-text-stroke: 1px var(--accent-hot); }
 .zh-nav-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 32px;
   list-style: none;
