@@ -491,9 +491,9 @@ body::before {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 2px;
-  color: var(--accent);
+  color: var(--ink-muted);
 }
-.zh-credo-card:nth-child(1) .num { color: var(--accent-3); }
+.zh-credo-card:nth-child(1) .num { color: var(--cream); }
 .zh-credo-card h3 {
   font-family: var(--display);
   font-size: clamp(28px, 3.4vw, 40px);
@@ -522,7 +522,7 @@ body::before {
   gap: 12px;
   line-height: 1.4;
 }
-.zh-credo-card ul li::before { content: "—"; color: var(--accent); font-weight: 600; }
+.zh-credo-card ul li::before { content: "—"; color: var(--ink-muted); font-weight: 600; }
 .zh-credo-card .kicker {
   margin-top: auto;
   padding-top: 18px;
