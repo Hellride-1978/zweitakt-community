@@ -16,6 +16,8 @@
   --accent-3:     #ffb3cb;
   --accent-ink:   #e0366a;
   --accent-hot:   rgb(155, 195, 214);
+  --accent-hot-2: rgb(175, 210, 225);
+  --accent-hot-3: rgb(210, 230, 238);
   --shadow:       rgba(26,17,8,0.18);
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
@@ -90,7 +92,7 @@ body::before {
   display: inline-flex;
   align-items: baseline;
 }
-.zh-nav-logo span { color: var(--accent); -webkit-text-stroke: 1px var(--accent); }
+.zh-nav-logo span { color: var(--accent-hot); -webkit-text-stroke: 1px var(--accent-hot); }
 .zh-nav-links {
   display: flex;
   gap: 32px;
@@ -107,14 +109,14 @@ body::before {
   transition: color 0.18s;
 }
 .zh-nav-links a:hover,
-.zh-nav-links a.active { color: var(--accent); }
+.zh-nav-links a.active { color: var(--accent-hot); }
 .zh-nav-links a.active::after,
 .zh-nav-links a:hover::after {
   content: "";
   position: absolute;
   left: 0; right: 0; bottom: 0;
   height: 2px;
-  background: var(--accent);
+  background: var(--accent-hot);
 }
 .zh-nav-cta {
   display: inline-flex;
@@ -132,7 +134,7 @@ body::before {
   border: none;
   cursor: pointer;
 }
-.zh-nav-cta:hover { background: var(--accent); transform: translateY(-1px); }
+.zh-nav-cta:hover { background: var(--accent-hot); transform: translateY(-1px); }
 .zh-nav-cta-dot {
   width: 7px; height: 7px;
   border-radius: 50%;
@@ -788,7 +790,7 @@ body::before {
   width: 56px; height: 56px;
   border-radius: 50%;
   border: 1.5px solid var(--ink);
-  background: repeating-linear-gradient(45deg, var(--accent-3) 0 6px, var(--accent-2) 6px 12px);
+  background: repeating-linear-gradient(45deg, var(--accent-hot-3) 0 6px, var(--accent-hot-2) 6px 12px);
   display: grid;
   place-items: center;
   font-family: var(--display);
@@ -840,15 +842,15 @@ body::before {
   align-items: center;
   gap: 6px;
 }
-.zh-member-name .loc::before { content: "◇"; color: var(--accent); }
+.zh-member-name .loc::before { content: "◇"; color: var(--accent-hot); }
 .zh-member-project {
-  background: color-mix(in oklab, var(--accent-3) 28%, var(--cream));
+  background: color-mix(in oklab, var(--accent-hot-3) 28%, var(--cream));
   border: 1px dashed var(--ink);
   border-radius: 12px;
   padding: 10px 12px;
   transition: background 0.2s, border-style 0.2s;
 }
-.zh-member-card:hover .zh-member-project { background: color-mix(in oklab, var(--accent) 15%, var(--cream)); border-style: solid; }
+.zh-member-card:hover .zh-member-project { background: color-mix(in oklab, var(--accent-hot) 15%, var(--cream)); border-style: solid; }
 .zh-member-project .label {
   font-family: var(--mono);
   font-size: 9.5px;
@@ -893,7 +895,7 @@ body::before {
   line-height: 1;
   letter-spacing: 0.3px;
 }
-.zh-member-stats .n em { color: var(--accent); font-style: normal; }
+.zh-member-stats .n em { color: var(--accent-hot); font-style: normal; }
 .zh-member-stats .k {
   font-family: var(--mono);
   font-size: 9px;
@@ -1980,7 +1982,7 @@ body::before {
 .zh-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .zh-burger:focus-visible,
-.zh-nav-cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.zh-nav-cta:focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 4px; }
 
 .zd-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
