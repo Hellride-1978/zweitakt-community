@@ -46,7 +46,6 @@ body {
 main#main-content {
   max-width: 80vw;
   margin: 0 auto;
-  padding-top: var(--nav-h);
 }
 
 a { color: inherit; text-decoration: none; }
@@ -75,7 +74,7 @@ body::before {
   justify-content: space-between;
   gap: 24px;
   padding: 18px var(--gutter);
-  background: color-mix(in oklab, var(--cream) 96%, transparent);
+  background: var(--cream);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--hairline);
@@ -1806,7 +1805,7 @@ body::before {
 
 /* ─── MOBILE: alle Desktop-Grids auf 1 Spalte ─── */
 @media (max-width: 767px) {
-  :root { --gutter: 8px; --nav-h: 49px; }
+  :root { --gutter: 8px; --nav-h: 65px; }
   main#main-content { max-width: 100%; }
   .zh-nav { padding-top: 10px; padding-bottom: 10px; }
   .zd-inner { padding: 12px var(--gutter) 80px; }

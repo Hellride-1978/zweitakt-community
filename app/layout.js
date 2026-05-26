@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
         <Nav />
+        <div aria-hidden="true" style={{ height: 'var(--nav-h)' }} />
         <main id="main-content" className="flex-1">{children}</main>
       </body>
     </html>
