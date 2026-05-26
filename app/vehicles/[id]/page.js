@@ -60,7 +60,7 @@ export default async function VehiclePage({ params }) {
         </div>
 
         {/* ── Right: specs + info ── */}
-        <div style={{ minWidth: 0, overflowY: 'auto' }}>
+        <div style={{ minWidth: 0, paddingRight: 4, paddingBottom: 4 }}>
           <div style={{ marginBottom: 4 }}>
             <h1 className="zd-h1" style={{ fontSize: 44 }}>
               {vehicle.make} <em>{vehicle.model}</em>
@@ -71,15 +71,17 @@ export default async function VehiclePage({ params }) {
             <div className="zd-mono accent" style={{ marginBottom: 14 }}>· {vehicle.title}</div>
           )}
 
-          {/* Spec grid */}
-          <div className="spec-grid-d" style={{ marginBottom: 18 }}>
-            {vehicle.year && (
-              <div className="s"><div className="lbl">Baujahr</div><div className="v">{vehicle.year}</div></div>
-            )}
-            {vehicle.displacement_cc && (
-              <div className="s"><div className="lbl">Hubraum</div><div className="v">{vehicle.displacement_cc} cc</div></div>
-            )}
-          </div>
+          {/* Spec grid — nur rendern wenn mind. ein Wert vorhanden */}
+          {(vehicle.year || vehicle.displacement_cc) && (
+            <div className="spec-grid-d" style={{ marginBottom: 18 }}>
+              {vehicle.year && (
+                <div className="s"><div className="lbl">Baujahr</div><div className="v">{vehicle.year}</div></div>
+              )}
+              {vehicle.displacement_cc && (
+                <div className="s"><div className="lbl">Hubraum</div><div className="v">{vehicle.displacement_cc} cc</div></div>
+              )}
+            </div>
+          )}
 
           {/* Description / notes */}
           {vehicle.description && (
