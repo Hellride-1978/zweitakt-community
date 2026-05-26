@@ -19,6 +19,12 @@
   --accent-hot-2: rgb(175, 210, 225);
   --accent-hot-3: rgb(210, 230, 238);
   --shadow:       rgba(26,17,8,0.18);
+  --gutter:       clamp(20px, 4vw, 56px);
+  --display:      var(--font-display, 'Boogaloo'), cursive;
+  --sans:         var(--font-sans, 'DM Sans'), system-ui, sans-serif;
+  --mono:         var(--font-mono, 'DM Mono'), ui-monospace, monospace;
+  --background:   var(--cream);
+  --foreground:   var(--ink);
 }
 
 [data-theme="pink"] {
@@ -29,12 +35,6 @@
   --accent-hot:   #FF5C8F;
   --accent-hot-2: #ff85aa;
   --accent-hot-3: #ffb3cb;
-  --gutter:       clamp(20px, 4vw, 56px);
-  --display:      var(--font-display, 'Boogaloo'), cursive;
-  --sans:         var(--font-sans, 'DM Sans'), system-ui, sans-serif;
-  --mono:         var(--font-mono, 'DM Mono'), ui-monospace, monospace;
-  --background:   var(--cream);
-  --foreground:   var(--ink);
 }
 
 @theme inline {
