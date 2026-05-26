@@ -1841,7 +1841,7 @@ body::before {
 .bike-hero-big { border: 1.5px solid var(--ink); border-radius: 18px; height: 360px; box-shadow: 5px 5px 0 var(--ink); margin-bottom: 14px; overflow: hidden; background: repeating-linear-gradient(135deg, var(--parchment) 0 12px, color-mix(in oklab, var(--parchment) 88%, var(--ink)) 12px 13px); display: flex; align-items: center; justify-content: center; }
 .bike-thumbs { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
 .bike-thumbs .t { aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--ink); background: var(--parchment); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.spec-grid-d { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--cream); margin-bottom: 14px; }
+.spec-grid-d { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--cream); margin-bottom: 32px; }
 .spec-grid-d .s { padding: 14px 16px; border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); }
 .spec-grid-d .s:last-child { border-right: 0; }
 .spec-grid-d .s:nth-last-child(-n+3) { border-bottom: 0; }
