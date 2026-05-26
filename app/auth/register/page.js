@@ -94,6 +94,13 @@ export default function RegisterPage() {
         options: { data: { name: formData.name } },
       })
       if (signUpError) throw signUpError
+
+      fetch('/api/notify-registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: formData.name, email: formData.email }),
+      }).catch(() => {})
+
       alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
       router.push('/auth/login')
     } catch (err) {

@@ -1,0 +1,39 @@
+import nodemailer from 'nodemailer'
+
+const transporter = nodemailer.createTransport({
+  host: process.env.NOTIFY_SMTP_HOST,
+  port: Number(process.env.NOTIFY_SMTP_PORT) || 465,
+  secure: true,
+  auth: {
+    user: process.env.NOTIFY_SMTP_USER,
+    pass: process.env.NOTIFY_SMTP_PASS,
+  },
+})
+
+export async function POST(request) {
+  try {
+    const { name, email } = await request.json()
+
+    await transporter.sendMail({
+      from: `"Zweitakthoden" <${process.env.NOTIFY_SMTP_USER}>`,
+      to: process.env.NOTIFY_SMTP_USER,
+      subject: `Neues Mitglied: ${name || email}`,
+      text: `Neues Mitglied registriert!\n\nName: ${name || '—'}\nE-Mail: ${email}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #faf7f2; border-radius: 12px;">
+          <h2 style="font-size: 22px; margin: 0 0 16px;">Neues Mitglied 🏍</h2>
+          <p style="margin: 0 0 8px; color: #3a3028;"><strong>Name:</strong> ${name || '—'}</p>
+          <p style="margin: 0 0 24px; color: #3a3028;"><strong>E-Mail:</strong> ${email}</p>
+          <a href="https://zweitakthoden.de/profiles" style="display: inline-block; padding: 10px 20px; background: #1a1108; color: #faf7f2; border-radius: 8px; text-decoration: none; font-size: 14px;">
+            Profil ansehen →
+          </a>
+        </div>
+      `,
+    })
+
+    return Response.json({ ok: true })
+  } catch (err) {
+    console.error('Notification email failed:', err)
+    return Response.json({ ok: false }, { status: 500 })
+  }
+}
