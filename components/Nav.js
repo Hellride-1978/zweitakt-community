@@ -48,33 +48,33 @@ export default function Nav() {
           ) : null}
         </ul>
 
-        <ThemeToggle />
-
-        {!loading && (
-          user ? (
-            <button className="zh-nav-cta" onClick={handleLogout}>
-              Abmelden <span className="zh-nav-cta-dot" />
-            </button>
-          ) : (
-            <Link href="/auth/register" className="zh-nav-cta">
-              Dabei sein <span className="zh-nav-cta-dot" />
-            </Link>
-          )
-        )}
-
-        <button
-          className={`zh-burger${open ? ' open' : ''}`}
-          onClick={() => setOpen(v => !v)}
-          aria-label={open ? 'Menü schließen' : 'Menü öffnen'}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-        >
-          <span className="burger-icon-wrap">
-            <IconBurger className="i-burger" />
-            <IconBurgerFries className="i-close" />
-          </span>
-          <span className="burger-label">{open ? 'schließen' : 'menu'}</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
+          <ThemeToggle />
+          {!loading && (
+            user ? (
+              <button className="zh-nav-cta" onClick={handleLogout}>
+                Abmelden <span className="zh-nav-cta-dot" />
+              </button>
+            ) : (
+              <Link href="/auth/register" className="zh-nav-cta">
+                Dabei sein <span className="zh-nav-cta-dot" />
+              </Link>
+            )
+          )}
+          <button
+            className={`zh-burger${open ? ' open' : ''}`}
+            onClick={() => setOpen(v => !v)}
+            aria-label={open ? 'Menü schließen' : 'Menü öffnen'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+          >
+            <span className="burger-icon-wrap">
+              <IconBurger className="i-burger" />
+              <IconBurgerFries className="i-close" />
+            </span>
+            <span className="burger-label">{open ? 'schließen' : 'menu'}</span>
+          </button>
+        </div>
       </nav>
 
       <div id="mobile-menu" className={`zh-mobile-menu${open ? ' open' : ''}`} aria-hidden={!open}>
