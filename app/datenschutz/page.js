@@ -60,6 +60,11 @@ export default function DatenschutzPage() {
               Das Hosting erfolgt über Vercel Inc. (340 Pine Street, Suite 701, San Francisco, CA 94104, USA). Dabei können technische Zugriffsdaten (IP-Adresse, Browser, Zeitpunkt) kurzfristig in Logdateien gespeichert werden. Weitere Informationen: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>vercel.com/legal/privacy-policy</a>
             </p>
 
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Resend</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Für den Versand von Benachrichtigungs-E-Mails bei neuen Registrierungen nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei werden Name und E-Mail-Adresse des neuen Mitglieds einmalig zum Versand der Benachrichtigung übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>resend.com/legal/privacy-policy</a>
+            </p>
+
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>OpenStreetMap / Nominatim</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Zur Anzeige von Kartenausschnitten und Ortsbezeichnungen bei Terminen nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Koordinaten von Treffpunkten übermittelt, jedoch keine personenbezogenen Daten. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
