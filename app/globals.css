@@ -242,7 +242,7 @@ body::before {
   font-family: var(--display);
   width: 100%;
 }
-.zh-mobile-menu .mm-cta::after { content: ""; }
+.zh-mobile-menu .mm-cta::after { display: none; }
 
 /* ─── HERO ─── */
 .zh-hero {
