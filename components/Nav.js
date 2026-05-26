@@ -35,8 +35,8 @@ export default function Nav() {
           {!loading && user ? (
             <>
               <li><Link href="/events"       className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
-              <li><Link href="/profiles"     className={pathname.startsWith('/profiles') || pathname.startsWith('/profile') ? 'active' : ''}>Schrauber</Link></li>
-              <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile') ? 'active' : ''}>Profil</Link></li>
+              <li><Link href="/profiles"     className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
             </>
           ) : !loading ? (
             <>
