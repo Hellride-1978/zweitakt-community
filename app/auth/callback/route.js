@@ -13,7 +13,13 @@ export async function GET(request) {
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     )
-    await supabase.auth.exchangeCodeForSession(code)
+    const { data } = await supabase.auth.exchangeCodeForSession(code)
+    if (data?.user) {
+      const { data: profile } = await supabase.from('profiles').select('name').eq('id', data.user.id).single()
+      if (!profile?.name) {
+        return NextResponse.redirect(`${origin}/profile/edit?welcome=1`)
+      }
+    }
   }
 
   return NextResponse.redirect(`${origin}${next}`)

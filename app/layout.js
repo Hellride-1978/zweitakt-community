@@ -13,8 +13,20 @@ const dmSans   = DM_Sans({ subsets: ["latin"], weight: ["300","400","500","600"]
 const dmMono   = DM_Mono({ subsets: ["latin"], weight: ["400","500"], variable: "--font-mono" });
 
 export const metadata = {
-  title: "Zweitakthoden — Die Community",
-  description: "Community für Zweitakt-Schrauber, Profile, Fahrzeuge und Ausfahrten",
+  metadataBase: new URL('https://zweitakthoden.de'),
+  title: {
+    default: 'Zweitakthoden — Die Community',
+    template: '%s — Zweitakthoden',
+  },
+  description: 'Community für Zweitakt-Schrauber. Profile, Fahrzeuge und Ausfahrten.',
+  openGraph: {
+    siteName: 'Zweitakthoden',
+    locale: 'de_DE',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+  },
 };
 
 export const viewport = {

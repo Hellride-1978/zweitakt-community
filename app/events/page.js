@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
-import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import EventsList from './EventsList'
+import EventsCreateCard from './EventsCreateCard'
 
 export default async function EventsPage({ searchParams }) {
   const params = await searchParams
@@ -39,18 +39,7 @@ export default async function EventsPage({ searchParams }) {
 
         {/* Right rail */}
         <aside className="feed-rail">
-          <div className="zd-card dark">
-            <div className="zd-mono" style={{ color: 'var(--accent-3)', marginBottom: 6 }}>Neu dabei?</div>
-            <div style={{ fontFamily: 'var(--display)', fontSize: 22, lineHeight: 1.0, letterSpacing: 0.3 }}>
-              erstell deinen<br/>eigenen termin.
-            </div>
-            <div style={{ marginTop: 10, fontSize: 12, color: 'color-mix(in oklab, var(--cream) 80%, transparent)' }}>
-              Ausfahrt, Stammtisch, Schraubertreffen — alles geht.
-            </div>
-            <Link href="/events/new" className="zd-btn accent" style={{ marginTop: 12, padding: '8px 14px', fontSize: 15, display: 'inline-flex' }}>
-              Termin erstellen →
-            </Link>
-          </div>
+          <EventsCreateCard />
         </aside>
       </div>
 

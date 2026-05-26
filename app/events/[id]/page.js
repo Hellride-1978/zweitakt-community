@@ -5,6 +5,21 @@ import MapTileModal from './MapTileModal'
 import ShareButtons from './ShareButtons'
 import DesktopLayout from '@/components/DesktopLayout'
 
+export async function generateMetadata({ params }) {
+  const { id } = await params
+  const { data: event } = await supabase.from('rides').select('title, description, start_date, location').eq('id', id).single()
+  if (!event) return { title: 'Termin nicht gefunden' }
+  const date = new Date(event.start_date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })
+  const description = event.description
+    ? event.description.slice(0, 120)
+    : `${date}${event.location ? ` · ${event.location}` : ''}`
+  return {
+    title: event.title,
+    description,
+    openGraph: { title: event.title, description, type: 'article' },
+  }
+}
+
 async function getReverseGeocode(lat, lng) {
   try {
     const res = await fetch(

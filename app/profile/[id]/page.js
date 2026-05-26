@@ -5,6 +5,25 @@ import ProfileActions from '@/components/ProfileActions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMotorcycle, faArrowRight, faArrowLeft, faImage, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
 
+export async function generateMetadata({ params }) {
+  const { id } = await params
+  const supabase = createServerClient()
+  const { data: profile } = await supabase.from('profiles').select('name, description, avatar_url').eq('id', id).single()
+  if (!profile) return { title: 'Profil nicht gefunden' }
+  const description = profile.description
+    ? profile.description.slice(0, 120)
+    : `${profile.name || 'Schrauber'} auf Zweitakthoden`
+  return {
+    title: profile.name || 'Profil',
+    description,
+    openGraph: {
+      title: profile.name || 'Profil',
+      description,
+      ...(profile.avatar_url ? { images: [{ url: profile.avatar_url }] } : {}),
+    },
+  }
+}
+
 export default async function ProfilePage({ params }) {
   const { id } = await params
   const supabase = createServerClient()
@@ -141,7 +160,6 @@ export default async function ProfilePage({ params }) {
                     <div className="specs">
                       {v.year && <div className="s"><div className="lbl">BJ</div><div className="v">{v.year}</div></div>}
                       {v.displacement_cc && <div className="s"><div className="lbl">Hubraum</div><div className="v">{v.displacement_cc} cc</div></div>}
-                      <div className="s"><div className="lbl">Status</div><div className="v">läuft</div></div>
                     </div>
                   </div>
                 </Link>

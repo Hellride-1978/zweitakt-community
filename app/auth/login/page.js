@@ -33,9 +33,14 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
-      router.push('/')
+      const { data: profile } = await supabase.from('profiles').select('name').eq('id', data.user.id).single()
+      if (!profile?.name) {
+        router.push('/profile/edit?welcome=1')
+      } else {
+        router.push('/')
+      }
     } catch (err) {
       setError(translateAuthError(err.message))
     } finally {

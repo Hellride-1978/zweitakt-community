@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -33,7 +32,7 @@ export default function RegisterPage() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [oauthLoading, setOauthLoading] = useState(null)
-  const router = useRouter()
+  const [done, setDone] = useState(false)
 
   const strength = getStrength(formData.password)
   const passedRules = RULES.map((r) => r.test(formData.password))
@@ -101,8 +100,7 @@ export default function RegisterPage() {
         body: JSON.stringify({ name: formData.name, email: formData.email }),
       }).catch(() => {})
 
-      alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
-      router.push('/auth/login')
+      setDone(true)
     } catch (err) {
       setError(translateAuthError(err.message) || 'Registrierungsfehler')
     } finally {
@@ -121,6 +119,20 @@ export default function RegisterPage() {
           <h1 className="zh-page-title">Dabei sein.</h1>
           <p className="zh-page-lead">Kein Antrag. Keine Aufnahmegebühr.</p>
         </div>
+
+        {done ? (
+          <div className="zh-card" style={{ textAlign: 'center', padding: '40px 24px' }}>
+            <div style={{ fontSize: 32, marginBottom: 16 }}>✉️</div>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: 26, marginBottom: 12 }}>Fast fertig!</h2>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
+              Wir haben eine Bestätigungs-E-Mail an <strong>{formData.email}</strong> geschickt.
+              Klick auf den Link darin — dann bist du dabei.
+            </p>
+            <Link href="/auth/login" className="zh-btn" style={{ display: 'inline-flex', marginTop: 28 }}>
+              Zum Login →
+            </Link>
+          </div>
+        ) : (
 
         <div className="zh-card">
           {error && <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>}
@@ -280,6 +292,8 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
+
+        )}
       </div>
     </div>
   )

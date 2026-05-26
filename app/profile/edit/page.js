@@ -1,16 +1,26 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
 import { validateImageFile } from '@/lib/validateImage'
 
 export default function EditProfilePage() {
+  return (
+    <Suspense>
+      <EditProfilePageInner />
+    </Suspense>
+  )
+}
+
+function EditProfilePageInner() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const isWelcome = searchParams.get('welcome') === '1'
   const fileInputRef = useRef(null)
   const [form, setForm] = useState({ name: '', description: '', avatar_url: '', location: '' })
   const [file, setFile] = useState(null)
@@ -150,6 +160,14 @@ export default function EditProfilePage() {
           <h1 className="zh-page-title">Profil bearbeiten.</h1>
         </div>
 
+        {isWelcome && (
+          <div style={{ marginBottom: '24px', padding: '16px 20px', background: 'color-mix(in oklab, var(--accent) 12%, var(--cream))', border: '1.5px solid var(--accent)', borderRadius: '14px' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: 6 }}>Willkommen in der Crew</div>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.5 }}>
+              Stell dich kurz vor — ein Name und optional ein Profilbild reichen schon.
+            </p>
+          </div>
+        )}
         {error && <div className="zh-error" role="alert" style={{ marginBottom: '24px' }}>{error}</div>}
 
         <div className="zh-card">
