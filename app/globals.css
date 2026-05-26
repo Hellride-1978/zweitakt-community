@@ -1203,6 +1203,24 @@ body::before {
   overflow: hidden;
 }
 
+/* ─── PAINT ROLLER ─── */
+@keyframes zh-roller-colors {
+  0%     { color: rgb(155,195,214); }
+  20%    { color: #FF5C8F; }
+  40%    { color: #7DC4A0; }
+  60%    { color: #E8A045; }
+  80%    { color: #A99BD4; }
+  100%   { color: rgb(155,195,214); }
+}
+.zh-roller-btn {
+  color: var(--accent);
+  animation: zh-roller-colors 1.4s linear infinite;
+  animation-play-state: paused;
+}
+.zh-roller-btn:hover {
+  animation-play-state: running;
+}
+
 /* ─── ANIMATIONS ─── */
 @keyframes zh-pop    { to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes zh-rise   { to { opacity: 1; transform: translateY(0); } }

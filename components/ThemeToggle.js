@@ -25,6 +25,7 @@ export default function ThemeToggle() {
         onClick={() => setOpen(v => !v)}
         aria-label="Farbe wählen"
         title="Farbe wählen"
+        className="zh-roller-btn"
         style={{
           width: 36, height: 36,
           borderRadius: '50%',
@@ -32,7 +33,6 @@ export default function ThemeToggle() {
           border: '1.5px solid ' + (open ? 'var(--hairline)' : 'transparent'),
           cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: 'var(--accent)',
           fontSize: 15,
           transition: 'background 0.18s, border-color 0.18s',
         }}
