@@ -2,7 +2,7 @@
 
 /* ─── Design Tokens ─── */
 :root {
-  --nav-h: 65px;
+  --nav-h: calc(65px + env(safe-area-inset-top, 0px));
   --cream:        #ffffff;
   --cream-2:      #f2f2f2;
   --parchment:    #e8e8e8;
@@ -73,7 +73,7 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 18px var(--gutter);
+  padding: calc(18px + env(safe-area-inset-top, 0px)) var(--gutter) 18px;
   background: var(--cream);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1805,9 +1805,9 @@ body::before {
 
 /* ─── MOBILE: alle Desktop-Grids auf 1 Spalte ─── */
 @media (max-width: 767px) {
-  :root { --gutter: 8px; --nav-h: 65px; }
+  :root { --gutter: 8px; --nav-h: calc(65px + env(safe-area-inset-top, 0px)); }
   main#main-content { max-width: 100%; }
-  .zh-nav { padding-top: 10px; padding-bottom: 10px; }
+  .zh-nav { padding-top: calc(10px + env(safe-area-inset-top, 0px)); padding-bottom: 10px; }
   .zd-inner { padding: 12px var(--gutter) 80px; }
   .zh-page-inner-sm { max-width: 100%; }
   .zd-inner .zh-page { padding-left: 0; padding-right: 0; padding-top: 16px; }
