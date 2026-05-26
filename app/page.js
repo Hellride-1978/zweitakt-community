@@ -313,6 +313,8 @@ export default async function Home() {
         </div>
         <div className="zh-footer-bottom">
           <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
+          <span className="zh-footer-copy" style={{ color: 'var(--ink-faint)' }}>·</span>
+          <span className="zh-footer-copy">Design & Entwicklung: <a href="https://delavega-design.de/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--ink-muted)', borderBottom: '1px solid var(--hairline)', transition: 'color 0.18s, border-color 0.18s' }} onMouseOver={e => { e.target.style.color = 'var(--accent)'; e.target.style.borderColor = 'var(--accent)' }} onMouseOut={e => { e.target.style.color = 'var(--ink-muted)'; e.target.style.borderColor = 'var(--hairline)' }}>delavega-design.de</a></span>
         </div>
       </footer>
     </>
