@@ -50,14 +50,6 @@ export default function ShareButtons({ title }) {
           Facebook
         </button>
 
-        <button type="button" onClick={() => copyLink('ig')} aria-label="Link für Instagram kopieren" style={{ ...btn, background: copiedKey === 'ig' ? '#C13584' : 'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', color: '#fff', border: '1.5px solid transparent' }}>
-          {copiedKey === 'ig' ? '✓ Kopiert!' : 'Instagram'}
-        </button>
-
-        <button type="button" onClick={() => copyLink('tt')} aria-label="Link für TikTok kopieren" style={{ ...btn, background: copiedKey === 'tt' ? '#333' : '#010101', color: '#fff', border: '1.5px solid #333' }}>
-          {copiedKey === 'tt' ? '✓ Kopiert!' : 'TikTok'}
-        </button>
-
       </div>
     </div>
   )
