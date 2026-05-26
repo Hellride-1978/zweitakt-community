@@ -14,13 +14,21 @@ export default function ThemeProvider({ children }) {
   useEffect(() => {
     const saved = localStorage.getItem('zh-theme') || 'blue'
     setTheme(saved)
-    document.documentElement.setAttribute('data-theme', saved === 'pink' ? 'pink' : '')
+    if (saved === 'pink') {
+      document.documentElement.setAttribute('data-theme', 'pink')
+    } else {
+      document.documentElement.removeAttribute('data-theme')
+    }
   }, [])
 
   const toggle = (t) => {
     setTheme(t)
     localStorage.setItem('zh-theme', t)
-    document.documentElement.setAttribute('data-theme', t === 'pink' ? 'pink' : '')
+    if (t === 'pink') {
+      document.documentElement.setAttribute('data-theme', 'pink')
+    } else {
+      document.documentElement.removeAttribute('data-theme')
+    }
   }
 
   return (

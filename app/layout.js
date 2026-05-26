@@ -29,6 +29,11 @@ export default function RootLayout({ children }) {
       lang="de"
       className={`${boogaloo.variable} ${dmSans.variable} ${dmMono.variable} h-full`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){var t=localStorage.getItem('zh-theme');if(t==='pink')document.documentElement.setAttribute('data-theme','pink');})();
+        `}} />
+      </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
         <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
