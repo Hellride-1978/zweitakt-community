@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
+import ThemeToggle from './ThemeToggle'
 
 export default function Nav() {
   const { user, loading } = useAuth()
@@ -46,6 +47,8 @@ export default function Nav() {
             </>
           ) : null}
         </ul>
+
+        <ThemeToggle />
 
         {!loading && (
           user ? (

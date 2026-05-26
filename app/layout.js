@@ -5,6 +5,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 import Nav from "@/components/Nav";
 import ScrollReset from "@/components/ScrollReset";
+import ThemeProvider from "@/components/ThemeProvider";
 import Link from "next/link";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
       className={`${boogaloo.variable} ${dmSans.variable} ${dmMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
+        <ThemeProvider>
         <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
         <ScrollReset />
         <Nav />
@@ -68,6 +70,7 @@ export default function RootLayout({ children }) {
             <span className="zh-footer-copy">Design & Entwicklung: <a href="https://delavega-design.de/" target="_blank" rel="noopener noreferrer" className="zh-footer-credit">delavega-design.de</a></span>
           </div>
         </footer>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -11,14 +11,24 @@
   --ink-muted:    #5e5248;
   --hairline:     rgba(26,17,8,0.32);
   --ink-faint:    rgba(26,17,8,0.14);
-  --accent:       #FF5C8F;
-  --accent-2:     #ff85aa;
-  --accent-3:     #ffb3cb;
-  --accent-ink:   #e0366a;
+  --accent:       rgb(155, 195, 214);
+  --accent-2:     rgb(175, 210, 225);
+  --accent-3:     rgb(210, 230, 238);
+  --accent-ink:   rgb(100, 155, 180);
   --accent-hot:   rgb(155, 195, 214);
   --accent-hot-2: rgb(175, 210, 225);
   --accent-hot-3: rgb(210, 230, 238);
   --shadow:       rgba(26,17,8,0.18);
+}
+
+[data-theme="pink"] {
+  --accent:       #FF5C8F;
+  --accent-2:     #ff85aa;
+  --accent-3:     #ffb3cb;
+  --accent-ink:   #e0366a;
+  --accent-hot:   #FF5C8F;
+  --accent-hot-2: #ff85aa;
+  --accent-hot-3: #ffb3cb;
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
   --sans:         var(--font-sans, 'DM Sans'), system-ui, sans-serif;
