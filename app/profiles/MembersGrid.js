@@ -31,20 +31,11 @@ const FILTER_OPTIONS = [
 ]
 
 export default function MembersGrid({ members }) {
-  const [query,  setQuery]  = useState('')
   const [filter, setFilter] = useState('all')
   const [sort,   setSort]   = useState('newest')
 
   const visible = useMemo(() => {
     let list = [...members]
-
-    if (query.trim()) {
-      const q = query.toLowerCase()
-      list = list.filter(m =>
-        (m.name     || '').toLowerCase().includes(q) ||
-        (m.location || '').toLowerCase().includes(q)
-      )
-    }
 
     if (filter === 'bike')   list = list.filter(m => m.vehicles?.length > 0)
     if (filter === 'nobike') list = list.filter(m => !m.vehicles?.length)
@@ -54,20 +45,12 @@ export default function MembersGrid({ members }) {
     if (sort === 'name')   list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'de'))
 
     return list
-  }, [members, query, filter, sort])
+  }, [members, filter, sort])
 
   return (
     <>
       {/* ── Controls ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
-        <input
-          type="search"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Name oder Ort suchen…"
-          className="zh-input"
-          style={{ maxWidth: 360 }}
-        />
+      <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Filter</span>
           {FILTER_OPTIONS.map(o => (
