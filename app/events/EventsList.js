@@ -167,12 +167,13 @@ export default function EventsList({ events, filter }) {
               <FontAwesomeIcon icon={faCrosshairs} style={{ fontSize: 14 }} />
             </button>
           </div>
+          <label htmlFor="umkreis-select" className="sr-only">Umkreis</label>
           <select
+            id="umkreis-select"
             value={radius ?? ''}
             onChange={e => setRadius(e.target.value ? Number(e.target.value) : null)}
             className="zh-input"
             style={{ width: 'auto', padding: '7px 10px', fontSize: 13 }}
-            aria-label="Umkreis"
           >
             <option value="">Alle km</option>
             <option value="10">10 km</option>

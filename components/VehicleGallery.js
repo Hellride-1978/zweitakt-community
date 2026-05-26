@@ -38,39 +38,49 @@ export default function VehicleGallery({ images, make, model }) {
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className="bike-hero-big"
         onClick={() => valid[active] && openLightbox(active)}
         style={{ cursor: valid[active] ? 'zoom-in' : 'default' }}
+        aria-label={valid[active] ? `${make} ${model} vergrößern` : undefined}
+        disabled={!valid[active]}
       >
         {valid[active]
           ? <img src={valid[active]} alt={`${make} ${model}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          : <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 72, opacity: 0.3 }} />
+          : <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 72, opacity: 0.3 }} aria-hidden="true" />
         }
-      </div>
+      </button>
 
       <div className="bike-thumbs">
         {[0, 1, 2, 3].map((i) => (
-          <div
+          <button
             key={i}
+            type="button"
             className="t"
             onClick={() => valid[i] && setActive(i)}
+            disabled={!valid[i]}
+            aria-label={valid[i] ? `${make} ${model} – Bild ${i + 1}` : `Kein Bild ${i + 1}`}
+            aria-pressed={active === i && !!valid[i]}
             style={{
               cursor: valid[i] ? 'pointer' : 'default',
-              outline: active === i && valid[i] ? '2px solid var(--accent)' : 'none',
+              outline: active === i && valid[i] ? '2px solid var(--ink)' : 'none',
               outlineOffset: '-2px',
             }}
           >
             {valid[i]
-              ? <img src={valid[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-              : <span style={{ fontFamily: 'var(--display)', fontSize: 16, opacity: 0.2 }}>{`0${i + 1}`}</span>
+              ? <img src={valid[i]} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              : <span aria-hidden="true" style={{ fontFamily: 'var(--display)', fontSize: 16, opacity: 0.2 }}>{`0${i + 1}`}</span>
             }
-          </div>
+          </button>
         ))}
       </div>
 
       {lightbox && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Bildvorschau: ${make} ${model}`}
           onClick={closeLightbox}
           style={{
             position: 'fixed', inset: 0, zIndex: 1000,

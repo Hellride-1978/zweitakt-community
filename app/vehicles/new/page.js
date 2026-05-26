@@ -218,9 +218,11 @@ export default function NewVehiclePage() {
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileInputChange} style={{ display: 'none' }} />
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                 {images.map((img, i) => (
-                  <div
+                  <button
                     key={i}
+                    type="button"
                     onClick={() => handlePickFile(i)}
+                    aria-label={img.previewUrl ? `Foto ${i + 1} ersetzen` : i === 0 ? 'Titelbild auswählen' : `Foto ${i + 1} auswählen`}
                     style={{
                       position: 'relative',
                       aspectRatio: '4/3',
@@ -234,11 +236,12 @@ export default function NewVehiclePage() {
                       justifyContent: 'center',
                       flexDirection: 'column',
                       gap: '6px',
+                      padding: 0,
                     }}
                   >
                     {img.previewUrl ? (
                       <>
-                        <img src={img.previewUrl} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={img.previewUrl} alt={i === 0 ? 'Titelbild Vorschau' : `Foto ${i + 1} Vorschau`} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); handleRemoveImage(i) }}
@@ -273,7 +276,7 @@ export default function NewVehiclePage() {
                         <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#fff', letterSpacing: 2 }}>LÄDT…</span>
                       </div>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
               <p style={{ marginTop: '8px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>

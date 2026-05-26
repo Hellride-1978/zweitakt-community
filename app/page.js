@@ -91,11 +91,11 @@ export default async function Home() {
     <>
       {/* ── HERO ── */}
       <section className="zh-hero">
-        <div className="zh-bubble-stack" aria-label="Zweitakthoden Community">
+        <h1 className="zh-bubble-stack">
           <span className="line l1">ZWEITAKT</span>
           <span className="line l2">HODEN</span>
           <span className="line l3">COMMUNITY.</span>
-        </div>
+        </h1>
 
         <p className="zh-hero-tagline">
           Weil viele Zweitakt-Fans alleine vor sich hin schrauben — und das verdammt schade ist.<br /><br />

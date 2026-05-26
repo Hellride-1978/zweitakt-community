@@ -267,9 +267,11 @@ body::before {
 
 .zh-bubble-stack {
   font-family: var(--display);
+  font-size: inherit;
+  font-weight: inherit;
   line-height: 0.85;
   letter-spacing: -0.5px;
-  margin-bottom: clamp(20px, 3vw, 32px);
+  margin: 0 0 clamp(20px, 3vw, 32px);
 }
 .zh-bubble-stack .line {
   display: block;
@@ -300,7 +302,7 @@ body::before {
   font-style: normal;
   font-family: var(--display);
   font-size: 1.15em;
-  color: var(--accent);
+  color: var(--ink);
   letter-spacing: 0.5px;
 }
 
@@ -1606,7 +1608,7 @@ body::before {
 }
 .zd-top .breadcrumb {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -1838,9 +1840,9 @@ body::before {
 
 /* ─── Bike detail layout ─── */
 .bike-detail-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 26px; height: 100%; min-height: 0; }
-.bike-hero-big { border: 1.5px solid var(--ink); border-radius: 18px; height: 360px; box-shadow: 5px 5px 0 var(--ink); margin-bottom: 14px; overflow: hidden; background: repeating-linear-gradient(135deg, var(--parchment) 0 12px, color-mix(in oklab, var(--parchment) 88%, var(--ink)) 12px 13px); display: flex; align-items: center; justify-content: center; }
+.bike-hero-big { appearance: none; width: 100%; border: 1.5px solid var(--ink); border-radius: 18px; height: 360px; box-shadow: 5px 5px 0 var(--ink); margin-bottom: 14px; overflow: hidden; background: repeating-linear-gradient(135deg, var(--parchment) 0 12px, color-mix(in oklab, var(--parchment) 88%, var(--ink)) 12px 13px); display: flex; align-items: center; justify-content: center; padding: 0; }
 .bike-thumbs { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
-.bike-thumbs .t { aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--ink); background: var(--parchment); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.bike-thumbs .t { appearance: none; aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--ink); background: var(--parchment); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 0; }
 .spec-grid-d { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--cream); margin-bottom: 32px; }
 .spec-grid-d .s { padding: 14px 16px; border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); }
 .spec-grid-d .s:last-child { border-right: 0; }
@@ -2003,7 +2005,9 @@ body::before {
   .club-grid { grid-template-columns: 1fr 280px; }
 }
 
-/* ─── ACCESSIBILITY: Focus-visible & Skip-Link ─── */
+/* ─── ACCESSIBILITY: Focus-visible, Skip-Link & Utilities ─── */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 .skip-link {
   position: fixed;
   top: 0;
@@ -2023,20 +2027,20 @@ body::before {
 }
 .skip-link:focus { transform: translateY(0); outline: 2px solid var(--accent); outline-offset: 2px; }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
 
 .zh-btn:focus-visible,
 .zh-btn-outline:focus-visible,
-.zh-btn-accent:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.zh-btn-accent:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; }
 
-.zd-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.zd-btn:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; }
 
-.zh-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zh-input:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 2px; }
 
 .zh-burger:focus-visible,
-.zh-nav-cta:focus-visible { outline: 2px solid var(--accent-hot); outline-offset: 4px; }
+.zh-nav-cta:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 4px; }
 
-.zd-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zd-nav a:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 2px; }
 
 .tab-pill:focus-visible,
-.zd-btn-sm:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zd-btn-sm:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 2px; }
