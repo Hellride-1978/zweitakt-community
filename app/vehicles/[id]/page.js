@@ -61,19 +61,19 @@ export default async function VehiclePage({ params }) {
 
         {/* ── Right: specs + info ── */}
         <div style={{ minWidth: 0, paddingRight: 4, paddingBottom: 4 }}>
-          <div style={{ marginBottom: 4 }}>
+          <div style={{ marginBottom: 8 }}>
             <h1 className="zd-h1" style={{ fontSize: 44 }}>
               {vehicle.make} <em>{vehicle.model}</em>
             </h1>
           </div>
 
           {vehicle.title && (
-            <div className="zd-mono accent" style={{ marginBottom: 14 }}>· {vehicle.title}</div>
+            <div className="zd-mono accent" style={{ marginBottom: 24 }}>· {vehicle.title}</div>
           )}
 
           {/* Spec grid — nur rendern wenn mind. ein Wert vorhanden */}
           {(vehicle.year || vehicle.displacement_cc) && (
-            <div className="spec-grid-d" style={{ marginBottom: 18 }}>
+            <div className="spec-grid-d" style={{ marginBottom: 28 }}>
               {vehicle.year && (
                 <div className="s"><div className="lbl">Baujahr</div><div className="v">{vehicle.year}</div></div>
               )}
@@ -86,8 +86,8 @@ export default async function VehiclePage({ params }) {
           {/* Description / notes */}
           {vehicle.description && (
             <>
-              <div className="zd-mono accent" style={{ marginBottom: 10 }}>Beschreibung</div>
-              <div className="zd-card" style={{ marginBottom: 18 }}>
+              <div className="zd-mono accent" style={{ marginBottom: 12 }}>Beschreibung</div>
+              <div className="zd-card" style={{ marginBottom: 28 }}>
                 <p style={{ fontSize: 14, color: 'var(--ink-soft)', lineHeight: 1.6, margin: 0, whiteSpace: 'pre-wrap' }}>
                   {vehicle.description}
                 </p>
