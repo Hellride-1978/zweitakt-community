@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { translateAuthError } from '@/lib/authErrors'
 
 const RULES = [
   { id: 'len',     label: 'Mindestens 8 Zeichen',       test: (p) => p.length >= 8 },
@@ -65,7 +66,7 @@ export default function RegisterPage() {
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
-    if (error) { setError(error.message); setOauthLoading(null) }
+    if (error) { setError(translateAuthError(error.message)); setOauthLoading(null) }
   }
 
   const handleRegister = async (e) => {
@@ -96,7 +97,7 @@ export default function RegisterPage() {
       alert('Registrierung erfolgreich! Bitte überprüfe deine E-Mail.')
       router.push('/auth/login')
     } catch (err) {
-      setError(err.message || 'Registrierungsfehler')
+      setError(translateAuthError(err.message) || 'Registrierungsfehler')
     } finally {
       setLoading(false)
     }

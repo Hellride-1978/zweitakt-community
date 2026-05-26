@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { translateAuthError } from '@/lib/authErrors'
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState('')
@@ -33,7 +34,7 @@ function ResetPasswordForm() {
     setError(null)
     const { error } = await supabase.auth.updateUser({ password })
     setLoading(false)
-    if (error) { setError(error.message); return }
+    if (error) { setError(translateAuthError(error.message)); return }
     setDone(true)
     setTimeout(() => router.push('/'), 2000)
   }

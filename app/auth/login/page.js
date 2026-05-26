@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { translateAuthError } from '@/lib/authErrors'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -24,7 +25,7 @@ export default function LoginPage() {
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
-    if (error) { setError(error.message); setOauthLoading(null) }
+    if (error) { setError(translateAuthError(error.message)); setOauthLoading(null) }
   }
 
   const handleLogin = async (e) => {
@@ -36,7 +37,7 @@ export default function LoginPage() {
       if (error) throw error
       router.push('/')
     } catch (err) {
-      setError(err.message)
+      setError(translateAuthError(err.message))
     } finally {
       setLoading(false)
     }
