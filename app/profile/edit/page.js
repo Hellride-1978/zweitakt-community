@@ -19,6 +19,8 @@ export default function EditProfilePage() {
   const [saving, setSaving] = useState(false)
   const [picking, setPicking] = useState(false)
   const [error, setError] = useState(null)
+  const [deleteStep, setDeleteStep] = useState(0)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -113,6 +115,21 @@ export default function EditProfilePage() {
     }
   }
 
+  const handleDelete = async () => {
+    setDeleting(true)
+    try {
+      const res = await fetch('/api/delete-account', { method: 'DELETE' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (err) {
+      setError(err.message)
+      setDeleting(false)
+      setDeleteStep(0)
+    }
+  }
+
   if (loading) return <div className="zh-page" style={{ color: 'var(--ink-muted)', fontFamily: 'var(--mono)', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>Authentifiziere…</div>
   if (!user) return (
     <div className="zh-page">
@@ -202,6 +219,46 @@ export default function EditProfilePage() {
           </form>
         </div>
       </div>
+      {/* ── Account löschen ── */}
+      <div style={{ maxWidth: 680, margin: '40px auto 0', paddingTop: 32, borderTop: '1px solid var(--hairline)', paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 12 }}>
+          Gefahrenzone
+        </div>
+        {deleteStep === 0 && (
+          <button
+            type="button"
+            onClick={() => setDeleteStep(1)}
+            style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}
+          >
+            Account löschen
+          </button>
+        )}
+        {deleteStep === 1 && (
+          <div style={{ background: 'color-mix(in oklab, #ef4444 8%, var(--cream))', border: '1.5px solid #ef4444', borderRadius: 14, padding: '20px' }}>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--ink)', marginBottom: 16, lineHeight: 1.5 }}>
+              <strong>Wirklich löschen?</strong> Dein Profil, alle Fahrzeuge und Termine-Teilnahmen werden unwiderruflich gelöscht.
+            </p>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#fff', background: '#ef4444', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer', opacity: deleting ? 0.6 : 1 }}
+              >
+                {deleting ? 'Wird gelöscht…' : 'Ja, Account löschen'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteStep(0)}
+                style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink)', background: 'none', border: '1.5px solid var(--hairline)', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
       {cropSrc && (
         <CropModal src={cropSrc} onConfirm={handleCropConfirm} onCancel={handleCropCancel} />
       )}
