@@ -1028,6 +1028,12 @@ body::before {
   gap: 10px;
   flex-wrap: wrap;
 }
+.zh-footer-credit {
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--hairline);
+  transition: color 0.18s, border-color 0.18s;
+}
+.zh-footer-credit:hover { color: var(--accent); border-color: var(--accent); }
 .zh-footer-copy {
   font-family: var(--mono);
   font-size: 10px;
