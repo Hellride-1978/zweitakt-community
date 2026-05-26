@@ -1804,6 +1804,7 @@ body::before {
 @media (max-width: 767px) {
   :root { --gutter: 8px; }
   main#main-content { max-width: 100%; }
+  .zh-nav { padding-top: 10px; padding-bottom: 10px; }
   .zd-inner { padding: 12px var(--gutter) 80px; }
   .zh-page-inner-sm { max-width: 100%; }
   .zd-inner .zh-page { padding-left: 0; padding-right: 0; padding-top: 16px; }
