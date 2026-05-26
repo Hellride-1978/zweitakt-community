@@ -425,10 +425,10 @@ body::before {
 }
 .zh-section-mark {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ink-muted);
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -489,7 +489,7 @@ body::before {
 .zh-credo-card:nth-child(1) ul li::before { color: var(--accent-3); }
 .zh-credo-card .num {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 2px;
   color: var(--ink-muted);
 }
@@ -594,10 +594,10 @@ body::before {
 }
 .zh-preview-head .mark {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ink-muted);
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -1675,8 +1675,8 @@ body::before {
 .zd-h2 { font-family: var(--display); font-size: 32px; line-height: 0.96; letter-spacing: 0.3px; }
 .zd-h2 em { color: var(--accent); font-style: normal; }
 .zd-h3 { font-family: var(--display); font-size: 22px; line-height: 1; letter-spacing: 0.3px; }
-.zd-mono { font-family: var(--mono); font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-muted); }
-.zd-mono.accent { color: var(--accent); }
+.zd-mono { font-family: var(--mono); font-size: 14px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-muted); }
+.zd-mono.accent { color: var(--ink-muted); }
 .zd-mark {
   font-family: var(--mono); font-size: 10px; letter-spacing: 2.2px; text-transform: uppercase;
   color: var(--accent); display: inline-flex; align-items: center; gap: 10px;
@@ -1816,7 +1816,7 @@ body::before {
 .profile-id { border: 1.5px solid var(--ink); border-radius: 18px; background: var(--cream); padding: 22px; text-align: center; box-shadow: 5px 5px 0 var(--ink); }
 .profile-id .nm { font-family: var(--display); font-size: 36px; line-height: 1; letter-spacing: 0.4px; -webkit-text-stroke: 0.5px var(--ink); paint-order: stroke fill; }
 .profile-id .nm em { color: var(--accent); font-style: normal; }
-.profile-id .hn { font-family: var(--mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent); margin-top: 8px; }
+.profile-id .hn { font-family: var(--mono); font-size: 14px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-muted); margin-top: 8px; }
 .profile-id .pstats { display: grid; grid-template-columns: repeat(3,1fr); margin-top: 16px; border-top: 1px dashed var(--hairline); padding-top: 14px; }
 .profile-id .pstats .s { padding: 0 4px; }
 .profile-id .pstats .s + .s { border-left: 1px dashed var(--hairline); }

@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div className="zh-page">
       <div className="zh-page-inner-sm" style={{ textAlign: 'center', paddingTop: 64 }}>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 16 }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
           404
         </div>
         <h1 className="zh-page-title">Seite nicht gefunden.</h1>

@@ -88,7 +88,7 @@ export default function NewEventPage() {
       <div className="zh-page-inner" style={{ maxWidth: '720px' }}>
 
         <div style={{ marginBottom: '32px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', marginBottom: '16px', fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', marginBottom: '16px', fontFamily: 'var(--mono)', fontSize: '14px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
             <span style={{ fontFamily: 'var(--display)', fontSize: '18px', paddingRight: '12px', borderRight: '1px solid var(--hairline)', color: 'var(--ink)' }}>EVENT</span>
             Ausfahrten & Treffen
           </div>

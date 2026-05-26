@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
         <div className="zh-card">
           {sent ? (
             <div style={{ textAlign: 'center', padding: '16px 0' }}>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '14px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: '12px' }}>
                 Mail verschickt.
               </div>
               <p style={{ fontSize: '15px', color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: '24px' }}>
