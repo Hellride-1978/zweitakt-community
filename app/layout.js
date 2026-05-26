@@ -4,6 +4,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 import Nav from "@/components/Nav";
+import ScrollReset from "@/components/ScrollReset";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
 const dmSans   = DM_Sans({ subsets: ["latin"], weight: ["300","400","500","600"], variable: "--font-sans" });
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
+        <ScrollReset />
         <Nav />
         <div aria-hidden="true" style={{ height: 'var(--nav-h)' }} />
         <main id="main-content" className="flex-1">{children}</main>
