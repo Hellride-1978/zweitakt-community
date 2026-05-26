@@ -1,0 +1,376 @@
+'use client'
+
+import { PALETTES } from '@/lib/palettes'
+import DesktopLayout from '@/components/DesktopLayout'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight, faMotorcycle, faLocationDot, faUsers, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
+
+const Section = ({ title, children }) => (
+  <section style={{ marginBottom: 64 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32, paddingBottom: 16, borderBottom: '1px solid var(--hairline)' }}>
+      <h2 style={{ fontFamily: 'var(--display)', fontSize: 28, margin: 0 }}>{title}</h2>
+    </div>
+    {children}
+  </section>
+)
+
+const Label = ({ children }) => (
+  <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 8 }}>
+    {children}
+  </div>
+)
+
+const Chip = ({ children }) => (
+  <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', background: 'var(--parchment)', border: '1px solid var(--hairline)', borderRadius: 6, padding: '3px 8px', color: 'var(--ink-soft)' }}>
+    {children}
+  </span>
+)
+
+const TECH = [
+  {
+    cat: 'Framework & Hosting',
+    items: [
+      { name: 'Next.js 16', desc: 'App Router, Server Components, dynamische Routen, generateMetadata', url: 'https://nextjs.org' },
+      { name: 'Vercel', desc: 'Hosting, automatisches Deployment via GitHub Push, Edge Network', url: 'https://vercel.com' },
+    ],
+  },
+  {
+    cat: 'Backend & Datenbank',
+    items: [
+      { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos)', url: 'https://supabase.com' },
+      { name: 'Supabase Storage', desc: 'Buckets: avatars, vehicles — öffentliche Bild-URLs mit Cache-Busting', url: null },
+    ],
+  },
+  {
+    cat: 'E-Mail',
+    items: [
+      { name: 'Resend', desc: 'Transaktions-E-Mail für Registrierungsbenachrichtigungen — versendet von info@zweitakthoden.de', url: 'https://resend.com' },
+    ],
+  },
+  {
+    cat: 'Karten & Geocoding',
+    items: [
+      { name: 'OpenStreetMap / Nominatim', desc: 'Reverse-Geocoding: Koordinaten → Adresse. Karten-Tiles für Termindetailseite', url: 'https://openstreetmap.org' },
+    ],
+  },
+  {
+    cat: 'Fonts & Icons',
+    items: [
+      { name: 'Google Fonts', desc: 'Boogaloo (Display), DM Sans (Text), DM Mono (Mono) — via next/font', url: null },
+      { name: 'Font Awesome 6', desc: 'Icons über @fortawesome/react-fontawesome — nur solid + brands', url: 'https://fontawesome.com' },
+    ],
+  },
+  {
+    cat: 'Features & Extras',
+    items: [
+      { name: 'Color Theming', desc: '5 Farbpaletten (Blau, Rosa, Grün, Amber, Lila) — localStorage-persistent, Flash-frei via inline <script> in <head>', url: null },
+      { name: 'Image Crop', desc: 'react-image-crop — Zuschneiden von Avataren (rund) und Fahrzeugfotos (4:3) direkt im Browser', url: null },
+      { name: 'Password Strength', desc: 'Live-Passwortprüfung mit 4 Regeln + Stärkebalken auf Registrierung und Passwort-Reset', url: null },
+      { name: 'Account Deletion', desc: 'Zweistufige Bestätigung, löscht Profile + Fahrzeuge + Teilnahmen + Storage + Auth-User via Service Role Key', url: null },
+      { name: 'Onboarding Flow', desc: 'Neue User werden nach Login/OAuth-Callback zu /profile/edit weitergeleitet wenn kein Name gesetzt ist', url: null },
+      { name: 'OG Meta Tags', desc: 'Dynamische OpenGraph-Tags für Termin- und Profilseiten via generateMetadata', url: null },
+    ],
+  },
+]
+
+const BASE_COLORS = [
+  { name: '--ink',       desc: 'Text (dunkel)' },
+  { name: '--ink-soft',  desc: 'Text (weich)' },
+  { name: '--ink-muted', desc: 'Text (gedimmt)' },
+  { name: '--cream',     desc: 'Hintergrund' },
+  { name: '--parchment', desc: 'Karten-BG' },
+  { name: '--hairline',  desc: 'Trennlinien' },
+]
+
+export default function StyleguidePage() {
+  return (
+    <DesktopLayout crumb="Style Guide">
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 0 80px' }}>
+
+        {/* Titel */}
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 12 }}>
+            Design System
+          </div>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(36px, 5vw, 60px)', lineHeight: 1, marginBottom: 16 }}>
+            Style Guide.
+          </h1>
+          <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', maxWidth: 560, lineHeight: 1.6 }}>
+            Farben, Typografie, Komponenten und der vollständige Tech-Stack von Zweitakthoden.
+          </p>
+        </div>
+
+        {/* ── TECH STACK ── */}
+        <Section title="Tech Stack">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            {TECH.map((group) => (
+              <div key={group.cat}>
+                <Label>{group.cat}</Label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {group.items.map((item) => (
+                    <div key={item.name} className="zd-card" style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '16px 20px' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4, flexWrap: 'wrap' }}>
+                          <span style={{ fontFamily: 'var(--display)', fontSize: 18 }}>{item.name}</span>
+                          {item.url && (
+                            <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+                              Docs ↗
+                            </a>
+                          )}
+                        </div>
+                        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── FARBPALETTEN ── */}
+        <Section title="Farbpaletten">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            {Object.entries(PALETTES).map(([key, p]) => (
+              <div key={key}>
+                <Label>{p.label} {key === 'blue' ? '— Standard' : ''}</Label>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[
+                    { label: 'accent', value: p.accent },
+                    { label: 'accent-2', value: p.accent2 },
+                    { label: 'accent-3', value: p.accent3 },
+                    { label: 'accent-ink', value: p.accentInk },
+                  ].map((c) => (
+                    <div key={c.label} style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 100 }}>
+                      <div style={{ width: '100%', height: 48, borderRadius: 10, background: c.value, border: '1.5px solid var(--hairline)' }} />
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                        --{c.label}
+                      </div>
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-soft)' }}>{c.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── BASIS-FARBEN ── */}
+        <Section title="Basis-Farben">
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {BASE_COLORS.map((c) => (
+              <div key={c.name} style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 120 }}>
+                <div style={{ width: '100%', height: 48, borderRadius: 10, background: `var(${c.name})`, border: '1.5px solid var(--hairline)' }} />
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                  {c.name}
+                </div>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: 12, color: 'var(--ink-soft)' }}>{c.desc}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── TYPOGRAFIE ── */}
+        <Section title="Typografie">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+
+            <div>
+              <Label>Display — Boogaloo (var(--display))</Label>
+              <div className="zd-card" style={{ padding: '24px 28px' }}>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 52, lineHeight: 1, color: 'var(--ink)', marginBottom: 8 }}>
+                  Zweitakthoden
+                </div>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 32, color: 'var(--accent)' }}>Garage statt Gallery.</div>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 20, color: 'var(--ink-muted)', marginTop: 4 }}>Pageheader · Karten-Titel · Nav-Logo</div>
+              </div>
+            </div>
+
+            <div>
+              <Label>Sans — DM Sans (var(--sans))</Label>
+              <div className="zd-card" style={{ padding: '24px 28px' }}>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: 18, fontWeight: 600, marginBottom: 6 }}>Weil viele Zweitakt-Fans alleine vor sich hin schrauben.</div>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: 6 }}>
+                  Fließtext, Beschreibungen, Formularfelder. Gewichte: 300 · 400 · 500 · 600.
+                </div>
+                <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-muted)' }}>Klein — Meta, Hilfetext, Labels</div>
+              </div>
+            </div>
+
+            <div>
+              <Label>Mono — DM Mono (var(--mono))</Label>
+              <div className="zd-card" style={{ padding: '24px 28px' }}>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                  Ausfahrten · Schrauber · 404
+                </div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                  Section-Marks · Labels · Badges · Status-Chips
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </Section>
+
+        {/* ── BUTTONS ── */}
+        <Section title="Buttons">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <div>
+              <Label>zh-btn — Primär (schwarz)</Label>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                <button className="zh-btn">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 12 }} /></button>
+                <button className="zh-btn" disabled style={{ opacity: 0.5 }}>Disabled</button>
+              </div>
+            </div>
+            <div>
+              <Label>zh-btn zh-btn-outline — Sekundär</Label>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                <button className="zh-btn zh-btn-outline">Abbrechen</button>
+                <button className="zh-btn zh-btn-outline">Bearbeiten <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 12 }} /></button>
+              </div>
+            </div>
+            <div>
+              <Label>zd-btn accent — Dark cards</Label>
+              <div style={{ background: 'var(--ink)', padding: '20px 24px', borderRadius: 14, display: 'inline-flex', gap: 12, flexWrap: 'wrap' }}>
+                <a href="#" className="zd-btn accent" style={{ display: 'inline-flex' }}>Termin erstellen →</a>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* ── KARTEN ── */}
+        <Section title="Karten">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+            <div>
+              <Label>zh-card — Standard</Label>
+              <div className="zh-card">
+                <div style={{ fontFamily: 'var(--display)', fontSize: 20, marginBottom: 8 }}>Simson S51</div>
+                <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.5 }}>
+                  Baujahr 1985 · 50 cc · Restomod
+                </p>
+              </div>
+            </div>
+            <div>
+              <Label>zd-card — Leicht erhöht</Label>
+              <div className="zd-card">
+                <div className="zd-mono accent" style={{ marginBottom: 8 }}>Schrauber</div>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 20 }}>Max Müller</div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 6 }}>
+                  Berlin · dabei seit März 2026
+                </div>
+              </div>
+            </div>
+            <div>
+              <Label>zd-card dark — Invertiert</Label>
+              <div className="zd-card dark">
+                <div className="zd-mono" style={{ color: 'var(--accent-3)', marginBottom: 6 }}>Neu dabei?</div>
+                <div style={{ fontFamily: 'var(--display)', fontSize: 22, lineHeight: 1.0, letterSpacing: 0.3 }}>
+                  erstell deinen<br />eigenen termin.
+                </div>
+                <a href="#" className="zd-btn accent" style={{ marginTop: 12, padding: '8px 14px', fontSize: 15, display: 'inline-flex' }}>
+                  Los geht's →
+                </a>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* ── FORMULAR ── */}
+        <Section title="Formular-Elemente">
+          <div className="zh-card" style={{ maxWidth: 480 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div>
+                <label className="zh-label">Name</label>
+                <input className="zh-input" placeholder="z.B. Max Müller" readOnly />
+              </div>
+              <div>
+                <label className="zh-label">Beschreibung</label>
+                <textarea className="zh-input" rows={3} placeholder="Erzähl etwas…" readOnly style={{ resize: 'none' }} />
+              </div>
+              <div>
+                <label className="zh-label">Fehler-Zustand</label>
+                <div className="zh-error" role="alert">Diese E-Mail-Adresse ist bereits registriert.</div>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* ── PILLS & BADGES ── */}
+        <Section title="Pills & Badges">
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="zh-pill" style={{ background: 'var(--accent)', color: 'var(--ink)', border: '1px solid var(--ink)' }}>BJ 1985</span>
+            <span className="zh-pill" style={{ background: 'var(--ink)', color: 'var(--cream)' }}>50 cc</span>
+            <span className="zh-pill" style={{ background: 'color-mix(in oklab, #22c55e 14%, var(--cream))', color: '#16a34a', border: '1px solid #22c55e' }}>✓ Dabei</span>
+            <span className="zh-pill" style={{ background: 'color-mix(in oklab, #ef4444 10%, var(--cream))', color: '#ef4444', border: '1px solid #ef4444' }}>Ausgebucht</span>
+            <Chip>TXT-Record</Chip>
+            <Chip>verified</Chip>
+          </div>
+        </Section>
+
+        {/* ── SPACING & RADIUS ── */}
+        <Section title="Spacing & Radius">
+          <div className="zd-card" style={{ fontFamily: 'var(--mono)', fontSize: 12, lineHeight: 2 }}>
+            {[
+              ['--gutter',  'Seitlicher Innenabstand der Seiten'],
+              ['--nav-h',   'Höhe der Navigation (für top-offset)'],
+              ['--hairline','Rahmenfarbe feine Trennlinien'],
+            ].map(([token, desc]) => (
+              <div key={token} style={{ display: 'flex', gap: 24, borderBottom: '1px solid var(--hairline)', padding: '10px 0' }}>
+                <code style={{ color: 'var(--accent)', minWidth: 160 }}>{token}</code>
+                <span style={{ color: 'var(--ink-soft)', fontFamily: 'var(--sans)', fontSize: 13 }}>{desc}</span>
+              </div>
+            ))}
+            {[
+              ['Radius klein',  '8–10px',  'Chips, Badges, kleine Buttons'],
+              ['Radius mittel', '12–14px', 'Karten, Inputs, Buttons'],
+              ['Radius groß',   '18–24px', 'Hero-Cards, Modals'],
+            ].map(([label, val, desc]) => (
+              <div key={label} style={{ display: 'flex', gap: 24, borderBottom: '1px solid var(--hairline)', padding: '10px 0' }}>
+                <code style={{ color: 'var(--accent)', minWidth: 160 }}>{label}</code>
+                <span style={{ fontWeight: 600, minWidth: 80 }}>{val}</span>
+                <span style={{ color: 'var(--ink-soft)', fontFamily: 'var(--sans)', fontSize: 13 }}>{desc}</span>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ── CSS KLASSEN ── */}
+        <Section title="CSS-Klassen Übersicht">
+          <div className="zd-card">
+            {[
+              ['zh-page',         'Seiten-Wrapper mit top-padding für Nav'],
+              ['zh-page-inner',   'Zentrierter Content-Bereich, max 1000px'],
+              ['zh-page-inner-sm','Schmaler Content-Bereich, max 560px'],
+              ['zh-card',         'Standard-Karte: weiß, Border, Radius 14px'],
+              ['zd-card',         'Leicht erhöhte Karte mit Box-Shadow'],
+              ['zd-card dark',    'Invertierte Karte (ink-Hintergrund)'],
+              ['zh-btn',          'Primär-Button (schwarz)'],
+              ['zh-btn-outline',  'Sekundär-Button (transparent, Border)'],
+              ['zd-btn accent',   'Accent-Button für dark cards'],
+              ['zh-input',        'Text-Input / Textarea'],
+              ['zh-label',        'Form-Label (mono, uppercase)'],
+              ['zh-error',        'Fehler-Box (rot)'],
+              ['zh-pill',         'Kleines Badge / Tag'],
+              ['zh-avatar',       'Runder Avatar-Container'],
+              ['zh-nav',          'Fixierte Navigation'],
+              ['zh-footer',       'Footer-Bereich'],
+              ['zd-mono',         'Mono-Typografie-Helfer'],
+              ['zd-h1 / zd-h2',   'Display-Überschriften mit em-Italic'],
+              ['zh-section-mark', 'Abschnitts-Markierung (Pill + Text)'],
+              ['zh-members-grid', '4-Spalten Member-Karten-Grid'],
+              ['zh-member-card',  'Einzelne Member-Kachel'],
+              ['zh-bubble-stack', 'Hero-Schriftzug (animiert, 3 Zeilen)'],
+              ['zd-ride',         'Event-Zeile mit Datum-Block'],
+              ['zd-bike',         'Fahrzeug-Kachel in Garage-Grid'],
+            ].map(([cls, desc]) => (
+              <div key={cls} style={{ display: 'flex', gap: 20, borderBottom: '1px solid var(--hairline)', padding: '10px 0', flexWrap: 'wrap' }}>
+                <code style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.5px', minWidth: 180 }}>.{cls}</code>
+                <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>{desc}</span>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+      </div>
+    </DesktopLayout>
+  )
+}
