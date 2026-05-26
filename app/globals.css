@@ -27,15 +27,6 @@
   --foreground:   var(--ink);
 }
 
-[data-theme="pink"] {
-  --accent:       #FF5C8F;
-  --accent-2:     #ff85aa;
-  --accent-3:     #ffb3cb;
-  --accent-ink:   #e0366a;
-  --accent-hot:   #FF5C8F;
-  --accent-hot-2: #ff85aa;
-  --accent-hot-3: #ffb3cb;
-}
 
 @theme inline {
   --color-background: var(--background);
