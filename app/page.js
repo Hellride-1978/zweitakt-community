@@ -151,7 +151,7 @@ export default async function Home() {
             <li>schraubst oder anfangen willst</li>
             <li>Lust auf Austausch hast</li>
           </ul>
-          <p className="kicker">Dann meld dich. Kein Antrag. Keine Aufnahmegebühr.</p>
+          <p className="kicker">Dann meld dich an. Kein Antrag. Keine Aufnahmegebühr.</p>
         </article>
       </section>
 
