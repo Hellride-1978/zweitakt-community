@@ -6,10 +6,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
+import MessagesBadge from './MessagesBadge'
 
 export default function Nav() {
   const { user, loading } = useAuth()
@@ -38,6 +39,12 @@ export default function Nav() {
               <li><Link href="/events"       className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
               <li><Link href="/profiles"     className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
+              <li>
+                <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`}>
+                  Nachrichten
+                  <MessagesBadge />
+                </Link>
+              </li>
             </>
           ) : !loading ? (
             <>
@@ -50,7 +57,7 @@ export default function Nav() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
           <ThemeToggle />
-          {!loading && (
+{!loading && (
             user ? (
               <button className="zh-nav-cta" onClick={handleLogout}>
                 Abmelden <span className="zh-nav-cta-dot" />
@@ -83,6 +90,12 @@ export default function Nav() {
             <Link href="/events"       onClick={close}>Termine</Link>
             <Link href="/profiles"     onClick={close}>Schrauber</Link>
             <Link href={`/profile/${user.id}`} onClick={close}>Profil</Link>
+            <Link href="/messages"     onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                Nachrichten
+                <MessagesBadge />
+              </span>
+            </Link>
             <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
               Abmelden <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} />
             </button>

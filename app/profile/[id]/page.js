@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import ProfileActions from '@/components/ProfileActions'
+import ProfileSettings from '@/components/ProfileSettings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMotorcycle, faArrowRight, faArrowLeft, faImage, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -207,6 +208,8 @@ export default async function ProfilePage({ params }) {
           </div>
         </div>
       )}
+
+      <ProfileSettings profileId={id} />
 
       </div>
     </DesktopLayout>
