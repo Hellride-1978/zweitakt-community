@@ -214,13 +214,8 @@ function TabSecurity({ user }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
-  const [session, setSession] = useState(null)
-  const [signOutStep, setSignOutStep] = useState(0)
-  const [signingOut, setSigningOut] = useState(false)
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data?.session))
-  }, [])
+  const [deleteStep, setDeleteStep] = useState(0)
+  const [deleting, setDeleting] = useState(false)
 
   const strength = pwStrength(pw.next)
 
@@ -241,10 +236,18 @@ function TabSecurity({ user }) {
     }
   }
 
-  const handleSignOutAll = async () => {
-    setSigningOut(true)
-    await supabase.auth.signOut({ scope: 'global' })
-    router.push('/auth/login')
+  const handleDeleteAccount = async () => {
+    setDeleting(true)
+    const res = await fetch('/api/delete-account', { method: 'DELETE' })
+    if (res.ok) {
+      await supabase.auth.signOut()
+      router.push('/')
+    } else {
+      const { error } = await res.json()
+      setDeleting(false)
+      setDeleteStep(0)
+      alert(error || 'Fehler beim Löschen des Accounts.')
+    }
   }
 
   return (
@@ -299,32 +302,23 @@ function TabSecurity({ user }) {
       </form>
 
       <div style={{ borderTop: '1px solid var(--hairline)', marginTop: 28, paddingTop: 4 }}>
-        <SectionLabel>Aktive Sitzungen</SectionLabel>
-        {session && (
-          <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '14px 16px', marginTop: 12, marginBottom: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px color-mix(in oklab, #22c55e 20%, transparent)', flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 500 }}>Aktuelle Sitzung</div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 3 }}>{user.email}</div>
-              </div>
-            </div>
+        <SectionLabel>Account löschen</SectionLabel>
+        {deleteStep === 0 ? (
+          <div style={{ paddingTop: 12 }}>
+            <button type="button" onClick={() => setDeleteStep(1)} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}>
+              Account löschen
+            </button>
           </div>
-        )}
-        {signOutStep === 0 ? (
-          <button type="button" onClick={() => setSignOutStep(1)} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#ef4444', background: 'none', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}>
-            Alle Sitzungen beenden
-          </button>
         ) : (
-          <div style={{ background: 'color-mix(in oklab, #ef4444 8%, var(--cream))', border: '1.5px solid #ef4444', borderRadius: 14, padding: '16px' }}>
+          <div style={{ background: 'color-mix(in oklab, #ef4444 8%, var(--cream))', border: '1.5px solid #ef4444', borderRadius: 14, padding: '16px', marginTop: 12 }}>
             <p style={{ fontSize: 14, color: 'var(--ink)', marginBottom: 12, lineHeight: 1.5 }}>
-              <strong>Wirklich alle Sitzungen beenden?</strong> Du wirst auf allen Geräten abgemeldet.
+              <strong>Wirklich löschen?</strong> Dein Profil, alle Bikes und Daten werden unwiderruflich entfernt.
             </p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <button type="button" onClick={handleSignOutAll} disabled={signingOut} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#fff', background: '#ef4444', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer', opacity: signingOut ? 0.6 : 1 }}>
-                {signingOut ? '…' : 'Ja, abmelden'}
+              <button type="button" onClick={handleDeleteAccount} disabled={deleting} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#fff', background: '#ef4444', border: '1.5px solid #ef4444', borderRadius: 10, padding: '10px 18px', cursor: 'pointer', opacity: deleting ? 0.6 : 1 }}>
+                {deleting ? '…' : 'Ja, löschen'}
               </button>
-              <button type="button" onClick={() => setSignOutStep(0)} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink)', background: 'none', border: '1.5px solid var(--hairline)', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}>
+              <button type="button" onClick={() => setDeleteStep(0)} style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink)', background: 'none', border: '1.5px solid var(--hairline)', borderRadius: 10, padding: '10px 18px', cursor: 'pointer' }}>
                 Abbrechen
               </button>
             </div>
