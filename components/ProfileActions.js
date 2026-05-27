@@ -1,20 +1,29 @@
 'use client'
 import { useAuth } from '@/lib/useAuth'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 export default function ProfileActions({ profileId }) {
   const { user, loading } = useAuth()
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const settingsOpen = searchParams.get('settings') === '1'
+
   if (loading || !user) return null
 
-  // Eigenes Profil: Bearbeiten + Bike hinzufügen
   if (user.id === profileId) {
     return (
       <div style={{ display: 'flex', gap: 8 }}>
-        <Link href="/profile/edit" className="zd-btn outline" style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}>
-          Bearbeiten
-        </Link>
+        <button
+          onClick={() => router.push(settingsOpen ? pathname : `${pathname}?settings=1`)}
+          className="zd-btn outline"
+          style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}
+        >
+          {settingsOpen ? 'Schließen' : 'Bearbeiten'}
+        </button>
         <Link href="/vehicles/new" className="zd-btn accent" style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}>
           + Bike
         </Link>
@@ -22,7 +31,6 @@ export default function ProfileActions({ profileId }) {
     )
   }
 
-  // Fremdes Profil: Nachricht senden
   return (
     <Link
       href={`/messages/new?to=${profileId}`}

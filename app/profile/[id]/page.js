@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
@@ -107,7 +108,7 @@ export default async function ProfilePage({ params }) {
           )}
 
 
-          <ProfileActions profileId={id} />
+          <Suspense fallback={null}><ProfileActions profileId={id} /></Suspense>
         </div>
 
         {/* ── Right: Garage grid ── */}
@@ -209,7 +210,7 @@ export default async function ProfilePage({ params }) {
         </div>
       )}
 
-      <ProfileSettings profileId={id} />
+      <Suspense fallback={null}><ProfileSettings profileId={id} /></Suspense>
 
       </div>
     </DesktopLayout>

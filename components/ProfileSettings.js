@@ -3,61 +3,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from './CropModal'
 import { validateImageFile } from '@/lib/validateImage'
 
 // ─── Passwort-Regeln ─────────────────────────────────────────
 
 const PW_RULES = [
-  { label: 'Mindestens 8 Zeichen',       test: p => p.length >= 8 },
-  { label: 'Groß- und Kleinbuchstaben',  test: p => /[a-z]/.test(p) && /[A-Z]/.test(p) },
-  { label: 'Mindestens eine Zahl',       test: p => /\d/.test(p) },
-  { label: 'Mindestens ein Sonderzeichen', test: p => /[^a-zA-Z0-9]/.test(p) },
+  { label: 'Mindestens 8 Zeichen',          test: p => p.length >= 8 },
+  { label: 'Groß- und Kleinbuchstaben',     test: p => /[a-z]/.test(p) && /[A-Z]/.test(p) },
+  { label: 'Mindestens eine Zahl',          test: p => /\d/.test(p) },
+  { label: 'Mindestens ein Sonderzeichen',  test: p => /[^a-zA-Z0-9]/.test(p) },
 ]
 const PW_STRENGTH_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e']
 const PW_STRENGTH_LABELS = ['Sehr schwach', 'Schwach', 'Mittel', 'Stark']
 
 function pwStrength(p) { return PW_RULES.filter(r => r.test(p)).length }
 
-// ─── Standard-Einstellungen ──────────────────────────────────
-
-const DEFAULTS = {
-  notify_replies: true,  notify_messages: true,
-  notify_mentions: true, notify_newsletter: false,
-  push_browser: false,   push_sounds: true,
-  email_digest: 'daily',
-  profile_visibility: 'members', who_can_message: 'members',
-  show_online_status: true, show_activity: true,
-  show_in_search: true,  share_usage_stats: false,
-}
-
 // ─── Hilfliche Sub-Komponenten ────────────────────────────────
-
-function Toggle({ checked, onChange }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      style={{
-        width: 44, height: 24, borderRadius: 100, padding: 0,
-        background: checked ? 'var(--accent)' : 'var(--parchment)',
-        border: '1.5px solid var(--ink)', cursor: 'pointer',
-        position: 'relative', flexShrink: 0, transition: 'background 0.2s',
-      }}
-    >
-      <span style={{
-        position: 'absolute', top: 2, left: checked ? 20 : 2,
-        width: 16, height: 16, borderRadius: '50%',
-        background: 'var(--cream)', border: '1.5px solid var(--ink)',
-        transition: 'left 0.2s', display: 'block',
-      }} />
-    </button>
-  )
-}
 
 function SettingRow({ label, description, children }) {
   return (
@@ -115,27 +78,20 @@ function TabProfile({ user }) {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [cropSrc, setCropSrc] = useState(null)
   const [picking, setPicking] = useState(false)
-  const [vehicles, setVehicles] = useState([])
-  const [removeStep, setRemoveStep] = useState({})
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const fileRef = useRef(null)
 
   useEffect(() => {
-    async function load() {
-      const [{ data: p }, { data: vs }] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', user.id).single(),
-        supabase.from('vehicles').select('id, make, model, year').eq('user_id', user.id),
-      ])
-      if (p) {
-        setForm({ name: p.name || '', first_name: p.first_name || '', last_name: p.last_name || '', location: p.location || '', description: p.description || '' })
-        setAvatarUrl(p.avatar_url || '')
-      }
-      setEmail(user.email || '')
-      setVehicles(vs || [])
-    }
-    load()
+    supabase.from('profiles').select('*').eq('id', user.id).single()
+      .then(({ data: p }) => {
+        if (p) {
+          setForm({ name: p.name || '', first_name: p.first_name || '', last_name: p.last_name || '', location: p.location || '', description: p.description || '' })
+          setAvatarUrl(p.avatar_url || '')
+        }
+        setEmail(user.email || '')
+      })
   }, [user])
 
   const openCrop = (rawFile) => { setCropSrc(URL.createObjectURL(rawFile)) }
@@ -159,12 +115,6 @@ function TabProfile({ user }) {
       } catch (err) { if (err.name !== 'AbortError') console.error(err) }
       finally { setPicking(false) }
     } else { fileRef.current?.click() }
-  }
-
-  const handleRemove = async (id) => {
-    const { error } = await supabase.from('vehicles').delete().eq('id', id).eq('user_id', user.id)
-    if (!error) setVehicles(vs => vs.filter(v => v.id !== id))
-    setRemoveStep(s => ({ ...s, [id]: 0 }))
   }
 
   const handleSave = async (e) => {
@@ -242,36 +192,9 @@ function TabProfile({ user }) {
         <input id="ps-loc" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} className="zh-input" placeholder="z.B. München, Wien…" />
       </div>
 
-      <div style={{ paddingTop: 14, paddingBottom: 20, borderBottom: '1px solid var(--hairline)' }}>
+      <div style={{ paddingTop: 14 }}>
         <label htmlFor="ps-bio" className="zh-label">Bio</label>
         <textarea id="ps-bio" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="zh-input" rows={3} style={{ resize: 'vertical' }} />
-      </div>
-
-      {/* Maschinen */}
-      <div style={{ paddingTop: 18, paddingBottom: 20, borderBottom: '1px solid var(--hairline)' }}>
-        <label className="zh-label">Meine Maschinen</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-          {vehicles.map(v => {
-            const label = [v.make, v.model, v.year].filter(Boolean).join(' ')
-            const step = removeStep[v.id] ?? 0
-            return step === 0 ? (
-              <span key={v.id} className="zh-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                {label}
-                <button type="button" onClick={() => setRemoveStep(s => ({ ...s, [v.id]: 1 }))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 15, lineHeight: 1, padding: '0 0 0 2px', opacity: 0.7 }} aria-label={`${label} entfernen`}>×</button>
-              </span>
-            ) : (
-              <span key={v.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 100, border: '1.5px solid #ef4444', background: 'color-mix(in oklab, #ef4444 10%, var(--cream))' }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#ef4444' }}>Löschen?</span>
-                <button type="button" onClick={() => handleRemove(v.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase' }}>Ja</button>
-                <span style={{ color: '#ef4444', opacity: 0.4 }}>·</span>
-                <button type="button" onClick={() => setRemoveStep(s => ({ ...s, [v.id]: 0 }))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)', fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase' }}>Nein</button>
-              </span>
-            )
-          })}
-          <Link href="/vehicles/new" className="zh-pill" style={{ background: 'transparent', color: 'var(--ink)', border: '1.5px dashed var(--hairline)', textDecoration: 'none' }}>
-            + Bike hinzufügen
-          </Link>
-        </div>
       </div>
 
       <SaveRow saving={saving} />
@@ -283,154 +206,7 @@ function TabProfile({ user }) {
   )
 }
 
-// ─── Tab 2: Benachrichtigungen ────────────────────────────────
-
-function TabNotifications({ user }) {
-  const [s, setS] = useState(DEFAULTS)
-  const [loaded, setLoaded] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null)
-
-  useEffect(() => {
-    supabase.from('user_settings').select('*').eq('user_id', user.id).single()
-      .then(({ data }) => { if (data) setS(x => ({ ...x, ...data })); setLoaded(true) })
-  }, [user])
-
-  const set = (k, v) => setS(x => ({ ...x, [k]: v }))
-
-  const handleSave = async (e) => {
-    e.preventDefault()
-    setSaving(true); setError(null); setSuccess(null)
-    const { error: err } = await supabase.from('user_settings').upsert({
-      user_id: user.id,
-      notify_replies: s.notify_replies, notify_messages: s.notify_messages,
-      notify_mentions: s.notify_mentions, notify_newsletter: s.notify_newsletter,
-      push_browser: s.push_browser, push_sounds: s.push_sounds,
-      email_digest: s.email_digest,
-      updated_at: new Date().toISOString(),
-    })
-    setSaving(false)
-    if (err) setError(err.message)
-    else { setSuccess('Benachrichtigungen gespeichert.'); setTimeout(() => setSuccess(null), 4000) }
-  }
-
-  if (!loaded) return <div style={{ padding: '24px 0', fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Lade…</div>
-
-  return (
-    <form onSubmit={handleSave}>
-      <SuccessMsg msg={success} />
-      {error && <div className="zh-error" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
-
-      <SectionLabel>E-Mail</SectionLabel>
-      <SettingRow label="Antworten auf Beiträge" description="Wenn jemand auf deinen Post antwortet">
-        <Toggle checked={s.notify_replies} onChange={v => set('notify_replies', v)} />
-      </SettingRow>
-      <SettingRow label="Private Nachrichten" description="Neue Direktnachrichten">
-        <Toggle checked={s.notify_messages} onChange={v => set('notify_messages', v)} />
-      </SettingRow>
-      <SettingRow label="Erwähnungen" description="Wenn jemand dich @erwähnt">
-        <Toggle checked={s.notify_mentions} onChange={v => set('notify_mentions', v)} />
-      </SettingRow>
-      <SettingRow label="Newsletter" description="Updates aus der Community">
-        <Toggle checked={s.notify_newsletter} onChange={v => set('notify_newsletter', v)} />
-      </SettingRow>
-
-      <SectionLabel>Push</SectionLabel>
-      <SettingRow label="Browser-Benachrichtigungen" description="Benachrichtigungen im Browser">
-        <Toggle checked={s.push_browser} onChange={v => set('push_browser', v)} />
-      </SettingRow>
-      <SettingRow label="Töne" description="Akustische Signale bei Ereignissen">
-        <Toggle checked={s.push_sounds} onChange={v => set('push_sounds', v)} />
-      </SettingRow>
-
-      <SectionLabel>Zusammenfassung</SectionLabel>
-      <SettingRow label="E-Mail-Zusammenfassung" description="Wie oft du eine Zusammenfassung erhältst">
-        <select value={s.email_digest} onChange={e => set('email_digest', e.target.value)} className="zh-input" style={{ width: 'auto', padding: '8px 12px' }}>
-          <option value="instant">Sofort</option>
-          <option value="daily">Täglich</option>
-          <option value="weekly">Wöchentlich</option>
-          <option value="never">Nie</option>
-        </select>
-      </SettingRow>
-
-      <SaveRow saving={saving} />
-    </form>
-  )
-}
-
-// ─── Tab 3: Datenschutz / Sichtbarkeit ────────────────────────
-
-function TabPrivacy({ user }) {
-  const [s, setS] = useState(DEFAULTS)
-  const [loaded, setLoaded] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null)
-
-  useEffect(() => {
-    supabase.from('user_settings').select('*').eq('user_id', user.id).single()
-      .then(({ data }) => { if (data) setS(x => ({ ...x, ...data })); setLoaded(true) })
-  }, [user])
-
-  const set = (k, v) => setS(x => ({ ...x, [k]: v }))
-
-  const handleSave = async (e) => {
-    e.preventDefault()
-    setSaving(true); setError(null); setSuccess(null)
-    const { error: err } = await supabase.from('user_settings').upsert({
-      user_id: user.id,
-      profile_visibility: s.profile_visibility, who_can_message: s.who_can_message,
-      show_online_status: s.show_online_status, show_activity: s.show_activity,
-      show_in_search: s.show_in_search, share_usage_stats: s.share_usage_stats,
-      updated_at: new Date().toISOString(),
-    })
-    setSaving(false)
-    if (err) setError(err.message)
-    else { setSuccess('Datenschutzeinstellungen gespeichert.'); setTimeout(() => setSuccess(null), 4000) }
-  }
-
-  if (!loaded) return <div style={{ padding: '24px 0', fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Lade…</div>
-
-  const visOpts = [{ value: 'all', label: 'Alle' }, { value: 'members', label: 'Nur Mitglieder' }, { value: 'none', label: 'Niemand' }]
-
-  return (
-    <form onSubmit={handleSave}>
-      <SuccessMsg msg={success} />
-      {error && <div className="zh-error" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
-
-      <SectionLabel>Sichtbarkeit</SectionLabel>
-      <SettingRow label="Profil sichtbar für" description="Wer dein Profil sehen kann">
-        <select value={s.profile_visibility} onChange={e => set('profile_visibility', e.target.value)} className="zh-input" style={{ width: 'auto', padding: '8px 12px' }}>
-          {visOpts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-      </SettingRow>
-      <SettingRow label="Wer kann schreiben" description="Wer dir Nachrichten senden darf">
-        <select value={s.who_can_message} onChange={e => set('who_can_message', e.target.value)} className="zh-input" style={{ width: 'auto', padding: '8px 12px' }}>
-          {visOpts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-      </SettingRow>
-
-      <SectionLabel>Aktivität</SectionLabel>
-      <SettingRow label="Online-Status anzeigen" description="Andere sehen ob du aktiv bist">
-        <Toggle checked={s.show_online_status} onChange={v => set('show_online_status', v)} />
-      </SettingRow>
-      <SettingRow label="Aktivitätsverlauf" description="Deine Aktivitäten sind für andere sichtbar">
-        <Toggle checked={s.show_activity} onChange={v => set('show_activity', v)} />
-      </SettingRow>
-      <SettingRow label="In Suchergebnissen" description="Dein Profil erscheint in der Mitgliedersuche">
-        <Toggle checked={s.show_in_search} onChange={v => set('show_in_search', v)} />
-      </SettingRow>
-      <SettingRow label="Nutzungsstatistiken teilen" description="Anonyme Daten zur Verbesserung der Plattform">
-        <Toggle checked={s.share_usage_stats} onChange={v => set('share_usage_stats', v)} />
-      </SettingRow>
-
-      <SaveRow saving={saving} />
-    </form>
-  )
-}
-
-// ─── Tab 4: Passwort & Sicherheit ────────────────────────────
+// ─── Tab 2: Passwort & Sicherheit ────────────────────────────
 
 function TabSecurity({ user }) {
   const router = useRouter()
@@ -453,11 +229,8 @@ function TabSecurity({ user }) {
     if (pw.next !== pw.confirm) { setError('Passwörter stimmen nicht überein.'); return }
     if (strength < 2) { setError('Passwort ist zu schwach. Mindestens 2 Regeln erfüllen.'); return }
     setSaving(true); setError(null); setSuccess(null)
-
-    // Aktuelles Passwort prüfen durch Re-Authentifizierung
     const { error: signInErr } = await supabase.auth.signInWithPassword({ email: user.email, password: pw.current })
     if (signInErr) { setSaving(false); setError('Aktuelles Passwort ist falsch.'); return }
-
     const { error: updateErr } = await supabase.auth.updateUser({ password: pw.next })
     setSaving(false)
     if (updateErr) setError(updateErr.message)
@@ -476,8 +249,6 @@ function TabSecurity({ user }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-
-      {/* Passwort ändern */}
       <form onSubmit={handlePasswordChange} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         <SectionLabel>Passwort ändern</SectionLabel>
         <SuccessMsg msg={success} />
@@ -527,15 +298,6 @@ function TabSecurity({ user }) {
         <SaveRow saving={saving} label="Passwort ändern →" />
       </form>
 
-      {/* 2FA */}
-      <div style={{ borderTop: '1px solid var(--hairline)', marginTop: 28, paddingTop: 4 }}>
-        <SectionLabel>Zwei-Faktor-Authentifizierung</SectionLabel>
-        <SettingRow label="2FA aktivieren" description="Noch nicht verfügbar — kommt bald">
-          <Toggle checked={false} onChange={() => {}} />
-        </SettingRow>
-      </div>
-
-      {/* Sitzungen */}
       <div style={{ borderTop: '1px solid var(--hairline)', marginTop: 28, paddingTop: 4 }}>
         <SectionLabel>Aktive Sitzungen</SectionLabel>
         {session && (
@@ -544,9 +306,7 @@ function TabSecurity({ user }) {
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px color-mix(in oklab, #22c55e 20%, transparent)', flexShrink: 0 }} />
               <div>
                 <div style={{ fontSize: 14, fontWeight: 500 }}>Aktuelle Sitzung</div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 3 }}>
-                  {user.email}
-                </div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 3 }}>{user.email}</div>
               </div>
             </div>
           </div>
@@ -571,7 +331,6 @@ function TabSecurity({ user }) {
           </div>
         )}
       </div>
-
     </div>
   )
 }
@@ -579,17 +338,18 @@ function TabSecurity({ user }) {
 // ─── Haupt-Export ─────────────────────────────────────────────
 
 const TABS = [
-  { id: 'profile',       label: 'Profildaten' },
-  { id: 'notifications', label: 'Benachrichtigungen' },
-  { id: 'privacy',       label: 'Datenschutz' },
-  { id: 'security',      label: 'Sicherheit' },
+  { id: 'profile',  label: 'Profildaten' },
+  { id: 'security', label: 'Sicherheit' },
 ]
 
 export default function ProfileSettings({ profileId }) {
   const { user, loading } = useAuth()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('profile')
 
-  if (loading || !user || user.id !== profileId) return null
+  const isOpen = searchParams.get('settings') === '1'
+
+  if (loading || !user || user.id !== profileId || !isOpen) return null
 
   return (
     <div style={{ marginTop: 48, borderTop: '2px solid var(--ink)', paddingTop: 40 }}>
@@ -603,8 +363,7 @@ export default function ProfileSettings({ profileId }) {
       </div>
 
       <div style={{ maxWidth: 560 }}>
-        {/* Tab-Navigation */}
-        <div className="tab-pills" style={{ marginBottom: 24, flexWrap: 'wrap', display: 'inline-flex' }}>
+        <div className="tab-pills" style={{ marginBottom: 24 }}>
           {TABS.map(t => (
             <button key={t.id} type="button" className={`tab-pill${activeTab === t.id ? ' on' : ''}`} onClick={() => setActiveTab(t.id)}>
               {t.label}
@@ -612,12 +371,9 @@ export default function ProfileSettings({ profileId }) {
           ))}
         </div>
 
-        {/* Tab-Inhalt */}
         <div className="zh-card">
-          {activeTab === 'profile'       && <TabProfile       user={user} />}
-          {activeTab === 'notifications' && <TabNotifications user={user} />}
-          {activeTab === 'privacy'       && <TabPrivacy       user={user} />}
-          {activeTab === 'security'      && <TabSecurity      user={user} />}
+          {activeTab === 'profile'  && <TabProfile  user={user} />}
+          {activeTab === 'security' && <TabSecurity user={user} />}
         </div>
       </div>
     </div>
