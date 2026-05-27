@@ -22,24 +22,6 @@ function pwStrength(p) { return PW_RULES.filter(r => r.test(p)).length }
 
 // ─── Hilfliche Sub-Komponenten ────────────────────────────────
 
-function SettingRow({ label, description, children }) {
-  return (
-    <div style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      gap: 16, padding: '14px 0', borderBottom: '1px solid var(--hairline)',
-    }}>
-      <div style={{ minWidth: 0 }}>
-        <div style={{ fontSize: 14, color: 'var(--ink)', fontWeight: 500 }}>{label}</div>
-        {description && (
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 3 }}>
-            {description}
-          </div>
-        )}
-      </div>
-      <div style={{ flexShrink: 0 }}>{children}</div>
-    </div>
-  )
-}
 
 function SectionLabel({ children }) {
   return (
@@ -49,20 +31,22 @@ function SectionLabel({ children }) {
   )
 }
 
-function SuccessMsg({ msg }) {
-  if (!msg) return null
-  return (
-    <div style={{ background: 'color-mix(in oklab, #22c55e 12%, var(--cream))', border: '1.5px solid #22c55e', borderRadius: 10, padding: '12px 16px', fontSize: 14, color: '#166534', marginBottom: 16 }}>
-      {msg}
-    </div>
-  )
-}
 
-function SaveRow({ saving, label = 'Speichern →' }) {
+function SaveRow({ saving, success, label = 'Speichern →' }) {
   return (
     <div style={{ paddingTop: 20 }}>
-      <button type="submit" disabled={saving} className="zh-btn" style={{ opacity: saving ? 0.6 : 1 }}>
-        {saving ? 'Speichert…' : label}
+      <button
+        type="submit"
+        disabled={saving || !!success}
+        className="zh-btn"
+        style={{
+          opacity: saving ? 0.6 : 1,
+          background: success ? '#22c55e' : undefined,
+          borderColor: success ? '#22c55e' : undefined,
+          transition: 'background 0.2s, border-color 0.2s',
+        }}
+      >
+        {saving ? 'Speichert…' : success ? '✓ Gespeichert!' : label}
       </button>
     </div>
   )
@@ -144,7 +128,6 @@ function TabProfile({ user }) {
 
   return (
     <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-      <SuccessMsg msg={success} />
       {error && <div className="zh-error" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
 
       {/* Avatar */}
@@ -196,7 +179,7 @@ function TabProfile({ user }) {
         <textarea id="ps-bio" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="zh-input" rows={3} style={{ resize: 'vertical' }} />
       </div>
 
-      <SaveRow saving={saving} />
+      <SaveRow saving={saving} success={success} />
 
       {cropSrc && (
         <CropModal src={cropSrc} onConfirm={handleCropConfirm} onCancel={() => { URL.revokeObjectURL(cropSrc); setCropSrc(null) }} aspect={1} circularCrop outputWidth={480} outputHeight={480} />
@@ -253,7 +236,6 @@ function TabSecurity({ user }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
       <form onSubmit={handlePasswordChange} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         <SectionLabel>Passwort ändern</SectionLabel>
-        <SuccessMsg msg={success} />
         {error && <div className="zh-error" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
 
         <div style={{ paddingTop: 10, paddingBottom: 14 }}>
@@ -297,7 +279,7 @@ function TabSecurity({ user }) {
           )}
         </div>
 
-        <SaveRow saving={saving} label="Passwort ändern →" />
+        <SaveRow saving={saving} success={success} label="Passwort ändern →" />
       </form>
 
       <div style={{ borderTop: '1px solid var(--hairline)', marginTop: 28, paddingTop: 4 }}>
