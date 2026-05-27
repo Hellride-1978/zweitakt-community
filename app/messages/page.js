@@ -217,26 +217,28 @@ export default function MessagesPage() {
                 {sent.map(msg => {
                   const initial = (msg.recipient?.name || '?').charAt(0).toUpperCase()
                   return (
-                    <Link key={msg.id} href={`/messages/${msg.id}`} className="msg-main" style={{ borderBottom: '1px solid var(--hairline)', display: 'flex' }}>
-                      <div className="zh-avatar offline" style={{ width: 44, height: 44, fontSize: 18, flexShrink: 0 }}>
-                        {msg.recipient?.avatar_url
-                          ? <img src={msg.recipient.avatar_url} alt={msg.recipient.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                          : initial
-                        }
-                      </div>
-                      <div className="msg-content">
-                        <div className="msg-meta">
-                          <span className="msg-sender" style={{ color: 'var(--ink-soft)', fontSize: 14 }}>
-                            An: <strong style={{ color: 'var(--ink)' }}>{msg.recipient?.name || 'Unbekannt'}</strong>
-                          </span>
-                          <span className="msg-date">{formatDate(msg.created_at)}</span>
+                    <div key={msg.id} className="msg-row">
+                      <Link href={`/messages/${msg.id}`} className="msg-main">
+                        <div className="zh-avatar offline" style={{ width: 44, height: 44, fontSize: 18, flexShrink: 0 }}>
+                          {msg.recipient?.avatar_url
+                            ? <img src={msg.recipient.avatar_url} alt={msg.recipient.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                            : initial
+                          }
                         </div>
-                        <div className="msg-subject">{msg.subject}</div>
-                        <div className="msg-preview">
-                          {msg.body?.slice(0, 80)}{msg.body?.length > 80 ? '…' : ''}
+                        <div className="msg-content">
+                          <div className="msg-meta">
+                            <span className="msg-sender" style={{ color: 'var(--ink-soft)', fontSize: 14 }}>
+                              An: <strong style={{ color: 'var(--ink)' }}>{msg.recipient?.name || 'Unbekannt'}</strong>
+                            </span>
+                            <span className="msg-date">{formatDate(msg.created_at)}</span>
+                          </div>
+                          <div className="msg-subject">{msg.subject}</div>
+                          <div className="msg-preview">
+                            {msg.body?.slice(0, 80)}{msg.body?.length > 80 ? '…' : ''}
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   )
                 })}
               </div>
