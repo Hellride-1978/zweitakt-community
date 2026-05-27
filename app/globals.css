@@ -1054,6 +1054,7 @@ body::before {
   padding: clamp(40px, 6vw, 80px) var(--gutter);
 }
 .zh-page-inner {
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
 }

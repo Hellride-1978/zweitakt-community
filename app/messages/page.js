@@ -118,7 +118,7 @@ export default function MessagesPage() {
   return (
     <DesktopLayout>
       <div className="zh-page">
-        <div className="zh-page-inner" style={{ maxWidth: 760 }}>
+        <div className="zh-page-inner" style={{ maxWidth: 760, width: '100%' }}>
 
           <div style={{ marginBottom: 28 }}>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 8 }}>
