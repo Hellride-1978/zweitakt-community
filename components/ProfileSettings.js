@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -349,10 +349,14 @@ export default function ProfileSettings({ profileId }) {
 
   const isOpen = searchParams.get('settings') === '1'
 
+  const scrollRef = useCallback((node) => {
+    if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   if (loading || !user || user.id !== profileId || !isOpen) return null
 
   return (
-    <div style={{ marginTop: 48, borderTop: '2px solid var(--ink)', paddingTop: 40 }}>
+    <div ref={scrollRef} style={{ marginTop: 48, borderTop: '2px solid var(--ink)', paddingTop: 40 }}>
       <div style={{ marginBottom: 28 }}>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 8 }}>
           Einstellungen
