@@ -36,7 +36,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: auto; }
+html { scroll-behavior: auto; scrollbar-gutter: stable; }
 
 body {
   background: var(--cream);
