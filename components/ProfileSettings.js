@@ -184,7 +184,6 @@ function TabProfile({ user }) {
       <div style={{ paddingTop: 14 }}>
         <label className="zh-label">E-Mail</label>
         <input value={email} disabled className="zh-input" style={{ opacity: 0.55, cursor: 'not-allowed' }} />
-        <div style={{ marginTop: 5, fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>E-Mail-Änderung über Supabase Auth</div>
       </div>
 
       <div style={{ paddingTop: 14 }}>
