@@ -1372,7 +1372,7 @@ body::before {
 }
 @media (max-width: 560px) {
   .zh-clubs-grid, .zh-members-grid { grid-template-columns: 1fr; }
-  .vehicles-overview-grid { grid-template-columns: 1fr; }
+  .vehicles-overview-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ═══════════════════════════════════════════════════════

@@ -6,12 +6,15 @@ import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
+const PAGE_SIZE = 10
+
 export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
   const { user } = useAuth()
   const router = useRouter()
   const [counts, setCounts] = useState(initialCounts)
   const [liked, setLiked] = useState({})
   const [working, setWorking] = useState({})
+  const [visible, setVisible] = useState(PAGE_SIZE)
 
   // Load user's own likes on mount
   useEffect(() => {
@@ -71,7 +74,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
       </div>
 
       <div className="vehicles-overview-grid">
-        {vehicles.map(v => {
+        {vehicles.slice(0, visible).map(v => {
           const isLiked = !!liked[v.id]
           const count = counts[v.id] ?? 0
           const owner = v.profiles
@@ -137,6 +140,18 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
           )
         })}
       </div>
+
+      {visible < vehicles.length && (
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <button
+            onClick={() => setVisible(v => v + PAGE_SIZE)}
+            className="zh-btn"
+            style={{ fontSize: 14, padding: '12px 28px' }}
+          >
+            Weitere Bikes laden
+          </button>
+        </div>
+      )}
     </>
   )
 }
