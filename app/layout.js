@@ -21,6 +21,7 @@ export const metadata = {
   },
   description: 'Community für Zweitakt-Schrauber. Profile, Fahrzeuge und Ausfahrten.',
   openGraph: {
+    title: 'ZWEITAKTHODEN',
     siteName: 'Zweitakthoden',
     locale: 'de_DE',
     type: 'website',
