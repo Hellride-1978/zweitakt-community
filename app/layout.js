@@ -6,6 +6,7 @@ config.autoAddCss = false;
 import Nav from "@/components/Nav";
 import ScrollReset from "@/components/ScrollReset";
 import ThemeProvider from "@/components/ThemeProvider";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import Link from "next/link";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
         <Nav />
         <div aria-hidden="true" style={{ height: 'var(--nav-h)' }} />
         <main id="main-content" className="flex-1">{children}</main>
+        <FeedbackWidget />
         <footer className="zh-footer">
           <div className="zh-footer-top">
             <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
