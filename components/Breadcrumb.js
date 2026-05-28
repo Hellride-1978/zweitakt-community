@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faHouse } from '@fortawesome/free-solid-svg-icons'
 
 const SECTION_MAP = {
   events:   { label: 'Termine',     href: '/events' },
@@ -28,7 +28,6 @@ const chipBase = {
 
 export default function Breadcrumb({ crumb }) {
   const pathname = usePathname()
-  const router = useRouter()
   const segment = pathname?.split('/').filter(Boolean)[0]
   const section = SECTION_MAP[segment]
   const isTop = !section || !crumb || crumb === section?.label
@@ -42,25 +41,21 @@ export default function Breadcrumb({ crumb }) {
       gap: 6,
       padding: '20px var(--gutter) 10px',
     }}>
-      {/* Back button — nur auf Unterseiten */}
-      {!isTop && (
-        <button
-          onClick={() => router.back()}
-          aria-label="Zurück"
-          style={{
-            ...chipBase,
-            background: 'var(--ink)',
-            color: 'var(--cream)',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 5,
-            marginRight: 2,
-          }}
-        >
-          <FontAwesomeIcon icon={faAngleLeft} style={{ fontSize: 11 }} />
-        </button>
-      )}
+      {/* Haus-Chip — immer sichtbar */}
+      <Link
+        href="/"
+        aria-label="Startseite"
+        style={{
+          ...chipBase,
+          background: 'var(--ink)',
+          color: 'var(--cream)',
+          display: 'flex',
+          alignItems: 'center',
+          marginRight: 2,
+        }}
+      >
+        <FontAwesomeIcon icon={faHouse} style={{ fontSize: 11 }} />
+      </Link>
 
       {/* Section chip */}
       {isTop ? (
