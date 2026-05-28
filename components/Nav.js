@@ -36,10 +36,10 @@ export default function Nav() {
         <ul className="zh-nav-links">
           {!loading && user ? (
             <>
-              <li><Link href="/events"       className={pathname.startsWith('/events')    ? 'active' : ''}>Termine</Link></li>
-              <li><Link href="/vehicles"     className={pathname.startsWith('/vehicles')  ? 'active' : ''}>Bikes</Link></li>
-              <li><Link href="/profiles"     className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
-              <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
+              <li><Link id="tour-termine" href="/events"       className={pathname.startsWith('/events')    ? 'active' : ''}>Termine</Link></li>
+              <li><Link id="tour-bikes"   href="/vehicles"     className={pathname.startsWith('/vehicles')  ? 'active' : ''}>Bikes</Link></li>
+              <li><Link href="/profiles"                       className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link id="tour-profil"  href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
               <li>
                 <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`} title="Nachrichten">
                   <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 16 }} />
