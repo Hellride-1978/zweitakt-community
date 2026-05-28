@@ -1,9 +1,12 @@
+import { Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import EventActions from './EventActions'
 import MapTileModal from './MapTileModal'
 import ShareButtons from './ShareButtons'
 import DesktopLayout from '@/components/DesktopLayout'
+import LikeButton from '@/components/LikeButton'
+import Comments from '@/components/Comments'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
@@ -191,6 +194,11 @@ export default async function EventDetailPage({ params }) {
             </div>
           )}
 
+          {/* Kommentare */}
+          <div className="zd-card" style={{ margin: 0 }}>
+            <Comments targetType="event" targetId={event.id} ownerId={event.creator_id} />
+          </div>
+
         </div>
 
         {/* ── Right rail ── */}
@@ -250,6 +258,10 @@ export default async function EventDetailPage({ params }) {
           {/* Teilen */}
           <div className="zd-mono accent" style={{ marginTop: 6 }}>Teilen</div>
           <ShareButtons title={event.title} />
+
+          {/* Likes */}
+          <div className="zd-mono accent" style={{ marginTop: 6 }}>Gefällt mir</div>
+          <LikeButton targetType="event" targetId={event.id} />
 
           {/* Actions — am Ende der Spalte */}
           <div style={{ marginTop: 'auto', paddingTop: 8 }}>

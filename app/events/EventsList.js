@@ -25,7 +25,7 @@ function formatTime(dateStr) {
   return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
 }
 
-export default function EventsList({ events, filter }) {
+export default function EventsList({ events, filter, likeCounts = {} }) {
   const [sortMode, setSortMode] = useState('date')
   const [userLat, setUserLat] = useState(null)
   const [userLon, setUserLon] = useState(null)
@@ -227,6 +227,7 @@ export default function EventsList({ events, filter }) {
             sortMode === 'distance' && userLat != null && event.location_lat && event.location_lng
               ? Math.round(haversine(userLat, userLon, event.location_lat, event.location_lng))
               : null
+          const likeCount = likeCounts[event.id] ?? 0
           return (
             <Link key={event.id} href={`/events/${event.id}`} className="zd-ride" style={{ textDecoration: 'none' }}>
               <div className="when-block">
@@ -240,6 +241,7 @@ export default function EventsList({ events, filter }) {
                 <div className="meta">
                   <FontAwesomeIcon icon={faUsers} style={{ fontSize: 11, marginRight: 4 }} />{participantCount}{event.max_participants ? ` / ${event.max_participants}` : ''}
                   {distKm != null && <><span className="sep" /><span>~{distKm} km</span></>}
+                  {likeCount > 0 && <><span className="sep" /><span>♥ {likeCount}</span></>}
                 </div>
                 {(event.location || event.location_lat) && (
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 6 }}>

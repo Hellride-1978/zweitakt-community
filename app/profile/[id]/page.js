@@ -39,6 +39,17 @@ export default async function ProfilePage({ params }) {
     supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
   ])
 
+  let vehicleLikeCounts = {}
+  if (vehicles?.length > 0) {
+    const vids = vehicles.map(v => v.id)
+    const { data: vlikes } = await supabase
+      .from('likes')
+      .select('target_id')
+      .eq('target_type', 'vehicle')
+      .in('target_id', vids)
+    vlikes?.forEach(l => { vehicleLikeCounts[l.target_id] = (vehicleLikeCounts[l.target_id] || 0) + 1 })
+  }
+
   const now = new Date().toISOString()
   const upcomingEvents = (participations ?? [])
     .map((p) => p.rides)
@@ -128,7 +139,9 @@ export default async function ProfilePage({ params }) {
             </div>
           ) : (
             <div className="garage-grid">
-              {vehicles.map((v) => (
+              {vehicles.map((v) => {
+                const vLikes = vehicleLikeCounts[v.id] ?? 0
+                return (
                 <Link key={v.id} href={`/vehicles/${v.id}`} className="zd-bike" style={{ textDecoration: 'none' }}>
                   <div className="img" style={{ position: 'relative' }}>
                     {v.image_url
@@ -148,6 +161,17 @@ export default async function ProfilePage({ params }) {
                         {1 + [v.image_url_2, v.image_url_3, v.image_url_4].filter(Boolean).length}
                       </div>
                     )}
+                    {vLikes > 0 && (
+                      <div style={{
+                        position: 'absolute', top: 8, right: 8,
+                        background: 'rgba(26,17,8,0.75)', backdropFilter: 'blur(4px)',
+                        color: '#fff', borderRadius: 6,
+                        padding: '3px 7px',
+                        fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px',
+                      }}>
+                        ♥ {vLikes}
+                      </div>
+                    )}
                   </div>
                   <div className="info">
                     <div className="model">
@@ -165,7 +189,7 @@ export default async function ProfilePage({ params }) {
                     </div>
                   </div>
                 </Link>
-              ))}
+              )})}
             </div>
           )}
         </div>
