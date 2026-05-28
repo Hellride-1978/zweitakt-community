@@ -58,6 +58,7 @@ export default async function Home() {
   const [
     { data: members },
     { data: events },
+    { data: vehicles },
     { count: memberCount },
     { count: eventCount },
   ] = await Promise.all([
@@ -72,6 +73,11 @@ export default async function Home() {
       .gte('start_date', new Date().toISOString())
       .order('start_date', { ascending: true })
       .limit(3),
+    supabase
+      .from('vehicles')
+      .select('id, make, model, title, year, displacement_cc, images, profiles(id, name, avatar_url)')
+      .order('created_at', { ascending: false })
+      .limit(6),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('rides').select('*', { count: 'exact', head: true }),
   ])
@@ -117,6 +123,55 @@ export default async function Home() {
       </section>
 
 
+
+      {/* ── BIKES PREVIEW ── */}
+      {vehicles && vehicles.length > 0 && (
+        <section className="zh-preview zh-bikes-preview">
+          <div className="zh-preview-head">
+            <div>
+              <div className="mark">Frisch aus der Garage</div>
+              <h2>aktuelle <em>Bikes.</em></h2>
+            </div>
+            <Link href="/vehicles" className="all">Alle Bikes →</Link>
+          </div>
+          <div className="zh-bikes-grid">
+            {vehicles.map((v) => {
+              const image = v.images?.[0] ?? null
+              const ownerInitial = (v.profiles?.name || '?').charAt(0).toUpperCase()
+              return (
+                <Link key={v.id} href={`/vehicles/${v.id}`} className="zh-bike-card" style={{ textDecoration: 'none' }}>
+                  <div className="zh-bike-img">
+                    {image
+                      ? <img src={image} alt={`${v.make} ${v.model}`} />
+                      : <span className="zh-bike-img-placeholder">{v.make?.[0] ?? '?'}</span>
+                    }
+                  </div>
+                  <div className="zh-bike-body">
+                    <div className="zh-bike-name">
+                      {v.make} {v.model}
+                      {v.title && <span className="zh-bike-title">— {v.title}</span>}
+                    </div>
+                    <div className="zh-bike-meta">
+                      {v.year && <span>{v.year}</span>}
+                      {v.year && v.displacement_cc && <span className="zh-bike-dot">·</span>}
+                      {v.displacement_cc && <span>{v.displacement_cc} cc</span>}
+                    </div>
+                  </div>
+                  <div className="zh-bike-footer">
+                    <div className="zh-avatar offline" style={{ width: 26, height: 26, fontSize: 11, flexShrink: 0 }}>
+                      {v.profiles?.avatar_url
+                        ? <img src={v.profiles.avatar_url} alt={v.profiles.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        : ownerInitial
+                      }
+                    </div>
+                    <span className="zh-bike-owner">{v.profiles?.name || 'Unbekannt'}</span>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       {/* ── CREDO ── */}
       <section className="zh-credo">
