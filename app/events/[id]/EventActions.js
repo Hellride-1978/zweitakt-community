@@ -57,7 +57,7 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
           <Link href={`/events/${eventId}/edit`} className="zh-btn zh-btn-outline" style={{ justifyContent: 'center', fontSize: 15, padding: '10px 12px' }}>
             Bearbeiten <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
           </Link>
-          <button onClick={handleDelete} disabled={working} className="zh-btn" style={{ background: '#ef4444', borderColor: '#ef4444', color: '#fff', fontSize: 15, padding: '10px 12px', opacity: working ? 0.6 : 1 }}>
+          <button onClick={handleDelete} disabled={working} className="zh-btn" style={{ background: '#ef4444', borderColor: '#ef4444', color: '#fff', fontSize: 15, padding: '10px 12px', justifyContent: 'center', opacity: working ? 0.6 : 1 }}>
             {working ? 'Löscht…' : 'Löschen'}
           </button>
         </div>
