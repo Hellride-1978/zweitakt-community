@@ -2244,8 +2244,8 @@ body::before {
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  background: var(--accent);
-  color: var(--cream);
+  background: #e53e3e;
+  color: #ffffff;
   border-radius: 100px;
   font-family: var(--mono);
   font-size: 9px;
