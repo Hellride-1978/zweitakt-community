@@ -21,6 +21,7 @@ export default function Comments({ targetType, targetId, ownerId }) {
   const [body, setBody] = useState('')
   const [saving, setSaving] = useState(false)
   const [deleteStep, setDeleteStep] = useState({})
+  const [myProfile, setMyProfile] = useState(null)
 
   useEffect(() => {
     if (!targetId) return
@@ -32,6 +33,12 @@ export default function Comments({ targetType, targetId, ownerId }) {
       .order('created_at', { ascending: true })
       .then(({ data }) => setComments(data || []))
   }, [targetType, targetId])
+
+  useEffect(() => {
+    if (!user) return
+    supabase.from('profiles').select('name, avatar_url').eq('id', user.id).single()
+      .then(({ data }) => { if (data) setMyProfile(data) })
+  }, [user])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -128,9 +135,9 @@ export default function Comments({ targetType, targetId, ownerId }) {
       {user ? (
         <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
           <div className="zh-avatar offline" style={{ width: 36, height: 36, fontSize: 14, flexShrink: 0 }}>
-            {user.user_metadata?.avatar_url
-              ? <img src={user.user_metadata.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-              : (user.email || '?').charAt(0).toUpperCase()
+            {myProfile?.avatar_url
+              ? <img src={myProfile.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              : (myProfile?.name || user.email || '?').charAt(0).toUpperCase()
             }
           </div>
           <div style={{ flex: 1, display: 'flex', gap: 8, alignItems: 'flex-start' }}>
