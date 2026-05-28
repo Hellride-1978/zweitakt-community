@@ -1,7 +1,12 @@
-export default function DesktopLayout({ children }) {
+import Breadcrumb from './Breadcrumb'
+
+export default function DesktopLayout({ children, crumb }) {
   return (
-    <div className="zd-inner">
-      {children}
-    </div>
+    <>
+      <Breadcrumb crumb={crumb} />
+      <div className="zd-inner">
+        {children}
+      </div>
+    </>
   )
 }

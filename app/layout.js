@@ -40,6 +40,7 @@ export default function RootLayout({ children }) {
     <html
       lang="de"
       className={`${boogaloo.variable} ${dmSans.variable} ${dmMono.variable} h-full`}
+      suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: `

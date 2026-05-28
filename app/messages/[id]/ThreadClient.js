@@ -156,8 +156,10 @@ export default function ThreadClient({ id }) {
     )
   }
 
+  const otherName = root.sender_id === user?.id ? root.recipient?.name : root.sender?.name
+
   return (
-    <DesktopLayout>
+    <DesktopLayout crumb={otherName || root.subject}>
       <div className="zh-page">
         <div className="zh-page-inner" style={{ maxWidth: 760 }}>
 

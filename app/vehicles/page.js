@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase'
 import VehiclesGrid from './VehiclesGrid'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const metadata = {
   title: 'Bikes',
@@ -25,6 +26,8 @@ export default async function VehiclesPage() {
   }
 
   return (
+    <>
+    <Breadcrumb />
     <div className="zh-page">
       <div className="zh-page-inner">
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 40 }}>
@@ -37,5 +40,7 @@ export default async function VehiclesPage() {
         <VehiclesGrid vehicles={vehicles ?? []} likeCounts={likeCounts} />
       </div>
     </div>
+    </>
+
   )
 }
