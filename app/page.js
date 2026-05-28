@@ -75,7 +75,7 @@ export default async function Home() {
       .limit(3),
     supabase
       .from('vehicles')
-      .select('id, make, model, title, year, displacement_cc, images, profiles(id, name, avatar_url)')
+      .select('id, make, model, title, year, displacement_cc, image_url, profiles(id, name, avatar_url)')
       .order('created_at', { ascending: false })
       .limit(6),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
@@ -136,7 +136,7 @@ export default async function Home() {
           </div>
           <div className="zh-bikes-grid">
             {vehicles.map((v) => {
-              const image = v.images?.[0] ?? null
+              const image = v.image_url ?? null
               const ownerInitial = (v.profiles?.name || '?').charAt(0).toUpperCase()
               return (
                 <Link key={v.id} href={`/vehicles/${v.id}`} className="zh-bike-card" style={{ textDecoration: 'none' }}>
