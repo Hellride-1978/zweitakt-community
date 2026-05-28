@@ -41,8 +41,8 @@ export default function Nav() {
               <li><Link href="/profiles"     className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
               <li>
-                <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`}>
-                  Nachrichten
+                <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`} title="Nachrichten">
+                  <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 16 }} />
                   <MessagesBadge />
                 </Link>
               </li>
