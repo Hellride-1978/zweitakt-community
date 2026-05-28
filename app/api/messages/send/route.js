@@ -1,5 +1,15 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
+
+const transporter = nodemailer.createTransport({
+  host: process.env.NOTIFY_SMTP_HOST,
+  port: Number(process.env.NOTIFY_SMTP_PORT) || 465,
+  secure: true,
+  auth: {
+    user: process.env.NOTIFY_SMTP_USER,
+    pass: process.env.NOTIFY_SMTP_PASS,
+  },
+})
 
 export async function POST(request) {
   try {
@@ -18,9 +28,8 @@ export async function POST(request) {
       return Response.json({ ok: false }, { status: 404 })
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY)
-    await resend.emails.send({
-      from: 'Zweitakthoden <info@zweitakthoden.de>',
+    await transporter.sendMail({
+      from: `"Zweitakthoden" <${process.env.NOTIFY_SMTP_USER}>`,
       to: user.email,
       subject: `Neue Nachricht von ${senderName}`,
       html: `
@@ -43,6 +52,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Message notification failed:', err)
-    return Response.json({ ok: false }, { status: 500 })
+    return Response.json({ ok: false, error: err.message }, { status: 500 })
   }
 }
