@@ -36,8 +36,9 @@ export default function Nav() {
         <ul className="zh-nav-links">
           {!loading && user ? (
             <>
-              <li><Link href="/events"       className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
-              <li><Link href="/profiles"     className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/events"       className={pathname.startsWith('/events')    ? 'active' : ''}>Termine</Link></li>
+              <li><Link href="/vehicles"     className={pathname.startsWith('/vehicles')  ? 'active' : ''}>Bikes</Link></li>
+              <li><Link href="/profiles"     className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
               <li>
                 <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`}>
@@ -49,6 +50,7 @@ export default function Nav() {
           ) : !loading ? (
             <>
               <li><Link href="/events"      className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
+              <li><Link href="/vehicles"    className={pathname.startsWith('/vehicles') ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"    className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href="/auth/login"  className={pathname === '/auth/login'       ? 'active' : ''}>Anmelden</Link></li>
             </>
@@ -88,6 +90,7 @@ export default function Nav() {
         {!loading && user ? (
           <>
             <Link href="/events"       onClick={close}>Termine</Link>
+            <Link href="/vehicles"     onClick={close}>Bikes</Link>
             <Link href="/profiles"     onClick={close}>Schrauber</Link>
             <Link href={`/profile/${user.id}`} onClick={close}>Profil</Link>
             <Link href="/messages"     onClick={close}>
@@ -103,6 +106,7 @@ export default function Nav() {
         ) : (
           <>
             <Link href="/events"        onClick={close}>Termine</Link>
+            <Link href="/vehicles"      onClick={close}>Bikes</Link>
             <Link href="/profiles"      onClick={close}>Schrauber</Link>
             <Link href="/auth/login"    onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
