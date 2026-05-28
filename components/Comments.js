@@ -46,6 +46,12 @@ export default function Comments({ targetType, targetId, ownerId }) {
     if (!error && data) {
       setComments(c => [...c, data])
       setBody('')
+      const commenterName = data.profiles?.name || user.email?.split('@')[0] || 'Jemand'
+      fetch('/api/notify-comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetType, targetId, commenterName, commenterId: user.id }),
+      }).catch(() => {})
     }
   }
 
