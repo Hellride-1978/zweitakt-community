@@ -135,7 +135,11 @@ export default function FeedbackWidget() {
                   required
                   aria-label="Nachricht"
                 />
-                <div className="zh-feedback-chars">{message.length} / 1000</div>
+                <div className="zh-feedback-chars" style={{ color: message.length > 0 && message.length < 10 ? '#e53e3e' : undefined }}>
+                  {message.length > 0 && message.length < 10
+                    ? `Noch ${10 - message.length} Zeichen`
+                    : `${message.length} / 1000`}
+                </div>
 
                 {!user && (
                   <input
@@ -161,7 +165,13 @@ export default function FeedbackWidget() {
                   type="submit"
                   disabled={message.length < 10 || status === 'sending'}
                   className="zh-btn"
-                  style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    marginTop: 8,
+                    opacity: (message.length < 10 || status === 'sending') ? 0.45 : 1,
+                    cursor: message.length < 10 ? 'not-allowed' : 'pointer',
+                  }}
                 >
                   {status === 'sending' ? 'Wird gesendet…' : 'Abschicken →'}
                 </button>
