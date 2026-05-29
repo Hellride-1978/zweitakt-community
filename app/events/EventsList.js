@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faUsers, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot, faUsers, faCrosshairs, faList, faTableCells } from '@fortawesome/free-solid-svg-icons'
 
 
 function haversine(lat1, lon1, lat2, lon2) {
@@ -26,6 +26,11 @@ function formatTime(dateStr) {
 }
 
 export default function EventsList({ events, filter, likeCounts = {} }) {
+  const [viewMode, setViewMode] = useState(() =>
+    typeof window !== 'undefined' ? (localStorage.getItem('zh-events-view') || 'grid') : 'grid'
+  )
+  const switchView = (mode) => { setViewMode(mode); localStorage.setItem('zh-events-view', mode) }
+
   const [sortMode, setSortMode] = useState('date')
   const [userLat, setUserLat] = useState(null)
   const [userLon, setUserLon] = useState(null)
@@ -192,9 +197,29 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           </span>
         )}
 
-        <Link href="/events/new" className="zd-btn accent" style={{ marginLeft: 'auto', fontSize: 15, padding: '9px 18px', textDecoration: 'none', flexShrink: 0 }}>
-          + Termin
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
+          <div className="tab-pills" role="group" aria-label="Ansicht">
+            <button
+              className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
+              onClick={() => switchView('list')}
+              aria-pressed={viewMode === 'list'}
+              title="Listenansicht"
+            >
+              <FontAwesomeIcon icon={faList} style={{ fontSize: 12 }} />
+            </button>
+            <button
+              className={`tab-pill${viewMode === 'grid' ? ' on' : ''}`}
+              onClick={() => switchView('grid')}
+              aria-pressed={viewMode === 'grid'}
+              title="Kachelansicht"
+            >
+              <FontAwesomeIcon icon={faTableCells} style={{ fontSize: 12 }} />
+            </button>
+          </div>
+          <Link href="/events/new" className="zd-btn accent" style={{ fontSize: 15, padding: '9px 18px', textDecoration: 'none' }}>
+            + Termin
+          </Link>
+        </div>
       </div>
 
       {/* ── Event list ── */}
@@ -217,6 +242,63 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           <button onClick={() => setRadius(null)} className="zd-btn accent" style={{ display: 'inline-flex', marginTop: 20 }}>
             Filter aufheben
           </button>
+        </div>
+      ) : viewMode === 'grid' ? (
+        <div className="events-card-grid">
+          {filteredEvents.map((event) => {
+            const participantCount = event.ride_participants?.[0]?.count ?? 0
+            const date = new Date(event.start_date)
+            const time = formatTime(event.start_date)
+            const distKm =
+              sortMode === 'distance' && userLat != null && event.location_lat && event.location_lng
+                ? Math.round(haversine(userLat, userLon, event.location_lat, event.location_lng))
+                : null
+            const likeCount = likeCounts[event.id] ?? 0
+            return (
+              <Link key={event.id} href={`/events/${event.id}`} className="ec">
+                <div className="ec-head">
+                  <span className="ec-day">{formatDay(event.start_date)}</span>
+                  <span className="ec-num">{date.getDate()}</span>
+                  <span className="ec-mon">{date.toLocaleDateString('de-DE', { month: 'short' })}</span>
+                  {time && <span className="ec-time">{time}</span>}
+                </div>
+                <div className="ec-body">
+                  <div className="ec-title">{event.title}</div>
+                  <div className="ec-meta">
+                    <FontAwesomeIcon icon={faUsers} style={{ fontSize: 10 }} />
+                    <span>{participantCount}{event.max_participants ? ` / ${event.max_participants}` : ''}</span>
+                    {distKm != null && <><span className="sep" /><span>~{distKm} km</span></>}
+                    {likeCount > 0 && <><span className="sep" /><span>♥ {likeCount}</span></>}
+                  </div>
+                  {(event.location || event.location_lat) && (
+                    <div className="ec-loc">
+                      <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 12, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {event.location && <span>{event.location}</span>}
+                        {pinAddresses[event.id] && (
+                          <button
+                            type="button"
+                            onClick={e => { e.preventDefault(); e.stopPropagation(); window.open(`https://www.openstreetmap.org/?mlat=${event.location_lat}&mlon=${event.location_lng}&zoom=15`, '_blank', 'noopener,noreferrer') }}
+                            style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.2, color: 'var(--ink-muted)', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: 2, background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                          >
+                            {pinAddresses[event.id]}
+                          </button>
+                        )}
+                        {event.location_lat && !pinAddresses[event.id] && (
+                          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.2, color: 'var(--ink-muted)' }}>
+                            {event.location_lat.toFixed(4)}, {event.location_lng.toFixed(4)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {event.description && (
+                    <div className="ec-desc">{event.description}</div>
+                  )}
+                </div>
+              </Link>
+            )
+          })}
         </div>
       ) : (
         filteredEvents.map((event) => {

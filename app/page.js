@@ -221,45 +221,44 @@ export default async function Home() {
             </div>
             <Link href="/events" className="all">Alle Termine →</Link>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="events-card-grid">
             {events.map((ev) => {
               const participantCount = ev.ride_participants?.[0]?.count ?? 0
               const d = new Date(ev.start_date)
               const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' }).toUpperCase()
-              const month = d.toLocaleDateString('de-DE', { month: 'short' }).toUpperCase()
+              const month = d.toLocaleDateString('de-DE', { month: 'short' })
               const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
               const time = hasTime ? d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : null
               return (
-                <Link key={ev.id} href={`/events/${ev.id}`} className="zd-ride" style={{ textDecoration: 'none' }}>
-                  <div className="when-block">
-                    <div className="day">{weekday}</div>
-                    <div className="num">{d.getDate()}</div>
-                    <div className="mon">{month}</div>
-                    {time && <div className="tm">{time}</div>}
+                <Link key={ev.id} href={`/events/${ev.id}`} className="ec">
+                  <div className="ec-head">
+                    <span className="ec-day">{weekday}</span>
+                    <span className="ec-num">{d.getDate()}</span>
+                    <span className="ec-mon">{month}</span>
+                    {time && <span className="ec-time">{time}</span>}
                   </div>
-                  <div className="body">
-                    <div className="title">{ev.title}</div>
-                    <div className="meta">
-                      <FontAwesomeIcon icon={faUsers} style={{ fontSize: 11, marginRight: 4 }} />{participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}
+                  <div className="ec-body">
+                    <div className="ec-title">{ev.title}</div>
+                    <div className="ec-meta">
+                      <FontAwesomeIcon icon={faUsers} style={{ fontSize: 10 }} />
+                      <span>{participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}</span>
                     </div>
                     {(ev.location || eventAddresses[ev.id]) && (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginTop: 6 }}>
-                        <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 13, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
-                        <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>
-                          {ev.location && <strong style={{ color: 'var(--ink)' }}>{ev.location}</strong>}
-                          {ev.location && eventAddresses[ev.id] && <br />}
-                          {eventAddresses[ev.id] && <span style={{ color: 'var(--ink-muted)' }}>{eventAddresses[ev.id]}</span>}
-                        </span>
+                      <div className="ec-loc">
+                        <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 12, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {ev.location && <span>{ev.location}</span>}
+                          {eventAddresses[ev.id] && (
+                            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.2, color: 'var(--ink-muted)' }}>
+                              {eventAddresses[ev.id]}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     )}
                     {ev.description && (
-                      <div className="desc" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        {ev.description}
-                      </div>
+                      <div className="ec-desc">{ev.description}</div>
                     )}
-                  </div>
-                  <div className="cta-col">
-                    <span className="zd-mono accent">→</span>
                   </div>
                 </Link>
               )
