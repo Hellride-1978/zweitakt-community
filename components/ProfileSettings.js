@@ -148,6 +148,9 @@ function TabProfile({ user }) {
           <button type="button" onClick={handlePickFile} disabled={picking} className="zh-btn zh-btn-outline" style={{ fontSize: 13, padding: '8px 16px' }}>
             {picking ? 'Auswahl läuft…' : 'Bild ändern'}
           </button>
+          <div style={{ marginTop: 5, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+            JPG, PNG, WebP · max. 5 MB
+          </div>
           {file && <div style={{ marginTop: 6, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', color: '#22c55e' }}>✓ {file.name}</div>}
         </div>
       </div>

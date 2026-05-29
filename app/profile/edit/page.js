@@ -219,6 +219,9 @@ function EditProfilePageInner() {
                   {picking ? 'Auswahl läuft…' : 'Datei auswählen'}
                 </button>
               </div>
+              <p style={{ marginTop: 8, fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                JPG, PNG, WebP · max. 5 MB
+              </p>
               {file && (
                 <p style={{ marginTop: '10px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', color: '#45a36a' }}>
                   ✓ {file.name}

@@ -283,6 +283,9 @@ export default function NewVehiclePage() {
               <p style={{ marginTop: '8px', fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', color: 'var(--ink-muted)', textTransform: 'uppercase' }}>
                 Klick auf ein Feld um ein Bild auszuwählen · <FontAwesomeIcon icon={faXmark} /> zum Entfernen
               </p>
+              <p style={{ marginTop: 4, fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                JPG, PNG, WebP · max. 5 MB
+              </p>
             </div>
 
             <div className="vehicle-form-actions">

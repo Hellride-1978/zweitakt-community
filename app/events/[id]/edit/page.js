@@ -228,6 +228,9 @@ export default function EditEventPage({ params }) {
                   ✕ Bild entfernen
                 </button>
               )}
+              <p style={{ marginTop: 8, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                JPG, PNG, WebP · max. 5 MB
+              </p>
             </div>
 
             <div>
