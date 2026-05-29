@@ -131,27 +131,7 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
       {/* ── Controls ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 2 }}>
 
-        {/* View toggle — immer ganz links */}
-        <div className="tab-pills" role="group" aria-label="Ansicht">
-          <button
-            className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
-            onClick={() => switchView('list')}
-            aria-pressed={viewMode === 'list'}
-            title="Listenansicht"
-          >
-            <FontAwesomeIcon icon={faList} style={{ fontSize: 12 }} />
-          </button>
-          <button
-            className={`tab-pill${viewMode === 'grid' ? ' on' : ''}`}
-            onClick={() => switchView('grid')}
-            aria-pressed={viewMode === 'grid'}
-            title="Kachelansicht"
-          >
-            <FontAwesomeIcon icon={faTableCells} style={{ fontSize: 12 }} />
-          </button>
-        </div>
-
-        {/* PLZ-Filter */}
+        {/* Links: PLZ-Filter */}
         <form onSubmit={lookupPlz} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <label htmlFor="plz-input" className="zh-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>PLZ</label>
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -199,7 +179,7 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           </span>
         )}
 
-        {/* Sortierung + + Termin — immer ganz rechts */}
+        {/* Mitte: Datum/Entfernung + Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
           <div className="tab-pills" role="group" aria-label="Sortierung">
             <button
@@ -220,10 +200,30 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
               Entfernung
             </button>
           </div>
-          <Link href="/events/new" className="zd-btn accent" style={{ fontSize: 15, padding: '9px 18px', textDecoration: 'none' }}>
-            + Termin
-          </Link>
+          <div className="tab-pills" role="group" aria-label="Ansicht">
+            <button
+              className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
+              onClick={() => switchView('list')}
+              aria-pressed={viewMode === 'list'}
+              title="Listenansicht"
+            >
+              <FontAwesomeIcon icon={faList} style={{ fontSize: 12 }} />
+            </button>
+            <button
+              className={`tab-pill${viewMode === 'grid' ? ' on' : ''}`}
+              onClick={() => switchView('grid')}
+              aria-pressed={viewMode === 'grid'}
+              title="Kachelansicht"
+            >
+              <FontAwesomeIcon icon={faTableCells} style={{ fontSize: 12 }} />
+            </button>
+          </div>
         </div>
+
+        {/* Rechts: + Termin */}
+        <Link href="/events/new" className="zd-btn accent" style={{ fontSize: 15, padding: '9px 18px', textDecoration: 'none', flexShrink: 0 }}>
+          + Termin
+        </Link>
 
       </div>
 
