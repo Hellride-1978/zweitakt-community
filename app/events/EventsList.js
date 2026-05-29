@@ -130,6 +130,8 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
     <>
       {/* ── Sort controls ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 2 }}>
+        {/* Toggle + Sortierung bleiben als Gruppe immer links */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
         <div className="tab-pills" role="group" aria-label="Ansicht">
           <button
             className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
@@ -168,6 +170,7 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
             Entfernung
           </button>
         </div>
+        </div>{/* Ende Toggle+Sortierung-Gruppe */}
 
         <form onSubmit={lookupPlz} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <label htmlFor="plz-input" className="zh-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>PLZ</label>
