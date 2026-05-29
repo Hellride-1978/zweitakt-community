@@ -1303,11 +1303,7 @@ body::before {
 }
 .zh-roller-btn {
   color: var(--accent);
-  animation: zh-roller-colors 1.4s linear infinite;
-  animation-play-state: paused;
-}
-.zh-roller-btn:hover {
-  animation-play-state: running;
+  animation: zh-roller-colors 4s linear infinite;
 }
 
 /* ─── ANIMATIONS ─── */

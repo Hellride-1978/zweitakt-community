@@ -6,10 +6,18 @@ import { PALETTES } from '@/lib/palettes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaintRoller } from '@fortawesome/free-solid-svg-icons'
 
+const SWATCHES = ['rgb(155,195,214)', '#FF5C8F', '#7DC4A0', '#E8A045', '#A99BD4']
+
 export default function ThemeToggle() {
   const { palette, setPalette } = useTheme()
   const [open, setOpen] = useState(false)
+  const [colorIdx, setColorIdx] = useState(0)
   const ref = useRef(null)
+
+  useEffect(() => {
+    const id = setInterval(() => setColorIdx(i => (i + 1) % SWATCHES.length), 800)
+    return () => clearInterval(id)
+  }, [])
 
   useEffect(() => {
     function handleClick(e) {
@@ -37,7 +45,7 @@ export default function ThemeToggle() {
           transition: 'background 0.18s, border-color 0.18s',
         }}
       >
-        <FontAwesomeIcon icon={faPaintRoller} />
+        <FontAwesomeIcon icon={faPaintRoller} style={{ color: open ? 'var(--ink)' : SWATCHES[colorIdx], transition: 'color 0.4s' }} />
       </button>
 
       {open && (
