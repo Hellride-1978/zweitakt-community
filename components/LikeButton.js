@@ -63,6 +63,7 @@ export default function LikeButton({ targetType, targetId, initialCount = 0 }) {
       <button
         onClick={toggle}
         disabled={loading}
+        aria-label={user ? (liked ? 'Like entfernen' : 'Liken') : 'Zum Liken bitte einloggen'}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 7,
           fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: '1.5px', textTransform: 'uppercase',

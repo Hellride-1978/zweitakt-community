@@ -35,7 +35,7 @@ export default function ThemeToggle() {
         title="Farbe wählen"
         className="zh-roller-btn"
         style={{
-          width: 36, height: 36,
+          width: 44, height: 44,
           borderRadius: '50%',
           background: open ? 'var(--parchment)' : 'none',
           border: '1.5px solid ' + (open ? 'var(--hairline)' : 'transparent'),
@@ -72,7 +72,7 @@ export default function ThemeToggle() {
               aria-label={p.label}
               title={p.label}
               style={{
-                width: 20, height: 20,
+                width: 28, height: 28,
                 borderRadius: '50%',
                 background: p.swatch,
                 border: palette === key ? '2.5px solid var(--ink)' : '2px solid transparent',
@@ -80,7 +80,7 @@ export default function ThemeToggle() {
                 padding: 0,
                 flexShrink: 0,
                 transition: 'transform 0.18s, border-color 0.18s',
-                transform: palette === key ? 'scale(1.25)' : 'scale(1)',
+                transform: palette === key ? 'scale(1.2)' : 'scale(1)',
               }}
             />
           ))}
