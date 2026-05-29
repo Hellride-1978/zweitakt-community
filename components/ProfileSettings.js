@@ -55,6 +55,7 @@ function SaveRow({ saving, success, label = 'Speichern →' }) {
 // ─── Tab 1: Profildaten ──────────────────────────────────────
 
 function TabProfile({ user }) {
+  const router = useRouter()
   const [form, setForm] = useState({ name: '', first_name: '', last_name: '', location: '', description: '' })
   const [email, setEmail] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
@@ -122,6 +123,7 @@ function TabProfile({ user }) {
       setFile(null); setPreviewUrl(null)
       setSuccess('Profildaten gespeichert.')
       setTimeout(() => setSuccess(null), 4000)
+      router.refresh()
     } catch (err) { setError(err?.message || 'Fehler beim Speichern') }
     finally { setSaving(false) }
   }
@@ -220,15 +222,25 @@ function TabSecurity({ user }) {
 
   const handleDeleteAccount = async () => {
     setDeleting(true)
-    const res = await fetch('/api/delete-account', { method: 'DELETE' })
-    if (res.ok) {
-      await supabase.auth.signOut()
-      router.push('/')
-    } else {
-      const { error } = await res.json()
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/delete-account', {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${session?.access_token}` },
+      })
+      if (res.ok) {
+        await supabase.auth.signOut()
+        router.push('/')
+      } else {
+        const { error } = await res.json()
+        setError(error || 'Fehler beim Löschen des Accounts.')
+        setDeleting(false)
+        setDeleteStep(0)
+      }
+    } catch (err) {
+      setError(err.message || 'Fehler beim Löschen')
       setDeleting(false)
       setDeleteStep(0)
-      alert(error || 'Fehler beim Löschen des Accounts.')
     }
   }
 
