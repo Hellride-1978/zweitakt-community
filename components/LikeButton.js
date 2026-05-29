@@ -9,6 +9,7 @@ export default function LikeButton({ targetType, targetId, initialCount = 0 }) {
   const [liked, setLiked] = useState(false)
   const [count, setCount] = useState(initialCount)
   const [loading, setLoading] = useState(false)
+  const [hint, setHint] = useState(false)
 
   useEffect(() => {
     if (!targetId) return
@@ -32,7 +33,12 @@ export default function LikeButton({ targetType, targetId, initialCount = 0 }) {
   }, [user, targetType, targetId, initialCount])
 
   const toggle = async () => {
-    if (!user || loading) return
+    if (!user) {
+      setHint(true)
+      setTimeout(() => setHint(false), 3000)
+      return
+    }
+    if (loading) return
     setLoading(true)
     if (liked) {
       await supabase.from('likes').delete()
@@ -50,32 +56,42 @@ export default function LikeButton({ targetType, targetId, initialCount = 0 }) {
   }
 
   return (
-    <button
-      onClick={toggle}
-      disabled={loading}
-      title={user ? (liked ? 'Like entfernen' : 'Liken') : 'Zum Liken bitte einloggen'}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 7,
-        fontFamily: 'var(--mono)',
-        fontSize: 12,
-        letterSpacing: '1.5px',
-        textTransform: 'uppercase',
-        color: liked ? 'var(--accent-hot)' : 'var(--ink-muted)',
-        background: 'none',
-        border: '1.5px solid',
-        borderColor: liked ? 'var(--accent-hot)' : 'var(--hairline)',
-        borderRadius: 100,
-        padding: '7px 14px',
-        cursor: user ? 'pointer' : 'default',
-        transition: 'color .18s, border-color .18s',
-        opacity: loading ? 0.6 : 1,
-      }}
-    >
-      <span style={{ fontSize: 16, lineHeight: 1 }}>{liked ? '♥' : '♡'}</span>
-      {count > 0 && <span>{count}</span>}
-      {count === 0 && <span>Like</span>}
-    </button>
+    <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 6 }}>
+      <button
+        onClick={toggle}
+        disabled={loading}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 7,
+          fontFamily: 'var(--mono)',
+          fontSize: 12,
+          letterSpacing: '1.5px',
+          textTransform: 'uppercase',
+          color: liked ? 'var(--accent-hot)' : 'var(--ink-muted)',
+          background: 'none',
+          border: '1.5px solid',
+          borderColor: liked ? 'var(--accent-hot)' : 'var(--hairline)',
+          borderRadius: 100,
+          padding: '7px 14px',
+          cursor: 'pointer',
+          transition: 'color .18s, border-color .18s',
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
+        <span style={{ fontSize: 16, lineHeight: 1 }}>{liked ? '♥' : '♡'}</span>
+        {count > 0 && <span>{count}</span>}
+        {count === 0 && <span>Like</span>}
+      </button>
+      {hint && (
+        <span style={{
+          fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: 1.4,
+          textTransform: 'uppercase', color: 'var(--ink-muted)',
+        }}>
+          <a href="/auth/login" style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 2 }}>Einloggen</a>
+          {' '}um zu liken
+        </span>
+      )}
+    </div>
   )
 }
