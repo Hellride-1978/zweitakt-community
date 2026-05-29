@@ -33,6 +33,7 @@ export default function NewVehiclePage() {
   }
 
   const openCrop = (rawFile, slotIndex) => {
+    if (rawFile.size > 5 * 1024 * 1024) { setError('Bild zu groß — maximal 5 MB erlaubt.'); return }
     setCropSlot(slotIndex)
     setCropSrc(URL.createObjectURL(rawFile))
   }

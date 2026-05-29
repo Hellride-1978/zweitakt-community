@@ -79,7 +79,10 @@ function TabProfile({ user }) {
       })
   }, [user])
 
-  const openCrop = (rawFile) => { setCropSrc(URL.createObjectURL(rawFile)) }
+  const openCrop = (rawFile) => {
+    if (rawFile.size > 5 * 1024 * 1024) { setError('Bild zu groß — maximal 5 MB erlaubt.'); return }
+    setCropSrc(URL.createObjectURL(rawFile))
+  }
 
   const handleCropConfirm = (blob) => {
     const f = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })

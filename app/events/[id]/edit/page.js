@@ -214,6 +214,7 @@ export default function EditEventPage({ params }) {
                 onChange={(e) => {
                   const file = e.target.files?.[0]
                   if (!file) return
+                  if (file.size > 5 * 1024 * 1024) { setError('Bild zu groß — maximal 5 MB erlaubt.'); return }
                   setImageFile(file)
                   setImagePreview(URL.createObjectURL(file))
                 }}

@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
+import Image from 'next/image'
 import HeroActions from '@/components/HeroActions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -142,7 +143,7 @@ export default async function Home() {
                 <Link key={v.id} href={`/vehicles/${v.id}`} className="zh-bike-card" style={{ textDecoration: 'none' }}>
                   <div className="zh-bike-img">
                     {image
-                      ? <img src={image} alt={`${v.make} ${v.model}`} />
+                      ? <Image src={image} alt={`${v.make} ${v.model}`} fill sizes="(max-width: 640px) 100vw, 280px" style={{ objectFit: 'cover' }} />
                       : <span className="zh-bike-img-placeholder">{v.make?.[0] ?? '?'}</span>
                     }
                   </div>
@@ -160,7 +161,7 @@ export default async function Home() {
                   <div className="zh-bike-footer">
                     <div className="zh-avatar offline" style={{ width: 26, height: 26, fontSize: 11, flexShrink: 0 }}>
                       {v.profiles?.avatar_url
-                        ? <img src={v.profiles.avatar_url} alt={v.profiles.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        ? <Image src={v.profiles.avatar_url} alt={v.profiles.name} width={26} height={26} style={{ borderRadius: '50%', objectFit: 'cover' }} />
                         : ownerInitial
                       }
                     </div>
@@ -288,7 +289,7 @@ export default async function Home() {
                   <div className="zh-member-top">
                     <div className="zh-avatar">
                       {m.avatar_url
-                        ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        ? <Image src={m.avatar_url} alt={m.name} width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover' }} />
                         : initial
                       }
                     </div>

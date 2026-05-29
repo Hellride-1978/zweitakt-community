@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
@@ -83,7 +84,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
               <Link href={`/vehicles/${v.id}`} className="vog-link" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div className="vog-img">
                   {v.image_url
-                    ? <img src={v.image_url} alt={`${v.make} ${v.model}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ? <Image src={v.image_url} alt={`${v.make} ${v.model}`} fill sizes="(max-width: 640px) 100vw, 280px" style={{ objectFit: 'cover' }} />
                     : <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--ink-muted)', opacity: 0.5 }}>kein foto</span>
                   }
                 </div>
@@ -109,7 +110,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
                   <Link href={`/profile/${owner.id}`} className="vog-owner" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 7 }} onClick={e => e.stopPropagation()}>
                     <div className="zh-avatar offline" style={{ width: 24, height: 24, fontSize: 10, flexShrink: 0 }}>
                       {owner.avatar_url
-                        ? <img src={owner.avatar_url} alt={owner.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        ? <Image src={owner.avatar_url} alt={owner.name} width={24} height={24} style={{ borderRadius: '50%', objectFit: 'cover' }} />
                         : (owner.name || '?').charAt(0).toUpperCase()
                       }
                     </div>

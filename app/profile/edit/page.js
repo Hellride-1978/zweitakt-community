@@ -49,6 +49,7 @@ function EditProfilePageInner() {
   }
 
   const openCrop = (rawFile) => {
+    if (rawFile.size > 5 * 1024 * 1024) { setError('Bild zu groß — maximal 5 MB erlaubt.'); return }
     const url = URL.createObjectURL(rawFile)
     setCropSrc(url)
   }
