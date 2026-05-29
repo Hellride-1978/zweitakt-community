@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import Image from 'next/image'
 import HeroActions from '@/components/HeroActions'
+import ContactForm from '@/components/ContactForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
@@ -331,6 +332,7 @@ export default async function Home() {
         )}
       </section>
 
+      <ContactForm />
 
     </>
   )

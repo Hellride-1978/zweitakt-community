@@ -1151,7 +1151,7 @@ body::before {
 
 /* ─── PAGE SHELL ─── */
 .zh-page {
-  padding: clamp(40px, 6vw, 80px) var(--gutter);
+  padding: clamp(32px, 4vw, 56px) var(--gutter);
 }
 .zh-page-inner {
   width: 100%;
@@ -2168,6 +2168,9 @@ body::before {
 /* ─── Inner page content wrapper ─── */
 .zd-inner {
   padding: clamp(32px, 4vw, 56px) var(--gutter);
+}
+.zd-inner .zh-page {
+  padding: 0;
 }
 
 /* Responsive grids: collapse on smaller desktop */

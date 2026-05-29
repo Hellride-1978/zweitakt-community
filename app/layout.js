@@ -9,7 +9,6 @@ import ThemeProvider from "@/components/ThemeProvider";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import CookieConsent from "@/components/CookieConsent";
-import ContactForm from "@/components/ContactForm";
 import Link from "next/link";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
@@ -69,7 +68,6 @@ export default function RootLayout({ children }) {
         <FeedbackWidget />
         <OnboardingTour />
         <CookieConsent />
-        <ContactForm />
         <footer className="zh-footer">
           <div className="zh-footer-top">
             <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>

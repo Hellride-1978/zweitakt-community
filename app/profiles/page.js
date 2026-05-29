@@ -1,7 +1,7 @@
 import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
 import MembersGrid from './MembersGrid'
-import Breadcrumb from '@/components/Breadcrumb'
+import DesktopLayout from '@/components/DesktopLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,8 +13,7 @@ export default async function ProfilesPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <>
-    <Breadcrumb />
+    <DesktopLayout crumb="Schrauber">
     <div className="zh-page">
       <div className="zh-page-inner">
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 40 }}>
@@ -38,6 +37,6 @@ export default async function ProfilesPage() {
         )}
       </div>
     </div>
-    </>
+    </DesktopLayout>
   )
 }
