@@ -130,6 +130,25 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
     <>
       {/* ── Sort controls ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 2 }}>
+        <div className="tab-pills" role="group" aria-label="Ansicht">
+          <button
+            className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
+            onClick={() => switchView('list')}
+            aria-pressed={viewMode === 'list'}
+            title="Listenansicht"
+          >
+            <FontAwesomeIcon icon={faList} style={{ fontSize: 12 }} />
+          </button>
+          <button
+            className={`tab-pill${viewMode === 'grid' ? ' on' : ''}`}
+            onClick={() => switchView('grid')}
+            aria-pressed={viewMode === 'grid'}
+            title="Kachelansicht"
+          >
+            <FontAwesomeIcon icon={faTableCells} style={{ fontSize: 12 }} />
+          </button>
+        </div>
+
         <div className="tab-pills" role="group" aria-label="Sortierung">
           <button
             className={`tab-pill${sortMode === 'date' ? ' on' : ''}`}
@@ -197,25 +216,7 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           </span>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
-          <div className="tab-pills" role="group" aria-label="Ansicht">
-            <button
-              className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
-              onClick={() => switchView('list')}
-              aria-pressed={viewMode === 'list'}
-              title="Listenansicht"
-            >
-              <FontAwesomeIcon icon={faList} style={{ fontSize: 12 }} />
-            </button>
-            <button
-              className={`tab-pill${viewMode === 'grid' ? ' on' : ''}`}
-              onClick={() => switchView('grid')}
-              aria-pressed={viewMode === 'grid'}
-              title="Kachelansicht"
-            >
-              <FontAwesomeIcon icon={faTableCells} style={{ fontSize: 12 }} />
-            </button>
-          </div>
+        <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
           <Link href="/events/new" className="zd-btn accent" style={{ fontSize: 15, padding: '9px 18px', textDecoration: 'none' }}>
             + Termin
           </Link>
