@@ -122,7 +122,11 @@ export default async function EventDetailPage({ params }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, minWidth: 0 }}>
 
           {/* Hero — with stats overlay */}
-          <div className="detail-hero" style={{ background: '#000' }}>
+          <div className="detail-hero" style={{
+            background: event.image_url
+              ? `linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 100%), url(${event.image_url}) center/cover no-repeat`
+              : '#000'
+          }}>
 
             <div className="hero-pad" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 20 }}>
               {/* Left: title + date */}

@@ -21,6 +21,8 @@ export default function NewEventPage() {
     start_time: '',
     max_participants: '',
   })
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
   const [lat, setLat] = useState(null)
   const [lng, setLng] = useState(null)
   const [saving, setSaving] = useState(false)
@@ -47,6 +49,18 @@ export default function NewEventPage() {
         ? `${form.start_date}T${form.start_time}:00`
         : `${form.start_date}T00:00:00`
 
+      let image_url = null
+      if (imageFile) {
+        const ext = imageFile.name.split('.').pop() || 'jpg'
+        const path = `${user.id}/${Date.now()}.${ext}`
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('event-images')
+          .upload(path, imageFile, { upsert: true, contentType: imageFile.type })
+        if (uploadError) throw new Error(`Bild-Upload fehlgeschlagen: ${uploadError.message}`)
+        const { data: { publicUrl } } = supabase.storage.from('event-images').getPublicUrl(uploadData.path)
+        image_url = publicUrl
+      }
+
       const payload = {
         creator_id: user.id,
         title: form.title.trim(),
@@ -56,6 +70,7 @@ export default function NewEventPage() {
         max_participants: form.max_participants ? parseInt(form.max_participants) : null,
         location_lat: lat ?? null,
         location_lng: lng ?? null,
+        image_url,
       }
 
       const { error: insertError } = await supabase.from('rides').insert(payload)
@@ -130,6 +145,48 @@ export default function NewEventPage() {
             <div>
               <label htmlFor="description" className="zh-label">Beschreibung</label>
               <textarea id="description" name="description" value={form.description} onChange={handleChange} className="zh-input" rows={4} style={{ resize: 'vertical' }} placeholder="Route, Infos, was ihr mitbringen sollt…" />
+            </div>
+
+            {/* Bild */}
+            <div>
+              <label className="zh-label">Bild <span style={{ fontWeight: 400, color: 'var(--ink-muted)' }}>(optional)</span></label>
+              <label
+                htmlFor="image-upload"
+                style={{
+                  display: 'block', border: '2px dashed var(--hairline)', borderRadius: 12,
+                  overflow: 'hidden', cursor: 'pointer', background: 'var(--surface)',
+                  minHeight: imagePreview ? 0 : 80, position: 'relative',
+                }}
+              >
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Vorschau" style={{ width: '100%', maxHeight: 260, objectFit: 'cover', display: 'block' }} />
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 80, fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                    + Bild auswählen
+                  </div>
+                )}
+              </label>
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  setImageFile(file)
+                  setImagePreview(URL.createObjectURL(file))
+                }}
+              />
+              {imagePreview && (
+                <button
+                  type="button"
+                  onClick={() => { setImageFile(null); setImagePreview(null) }}
+                  style={{ marginTop: 8, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--ink-muted)' }}
+                >
+                  ✕ Bild entfernen
+                </button>
+              )}
             </div>
 
             {/* Map */}
