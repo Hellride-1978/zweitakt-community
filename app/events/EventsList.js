@@ -128,10 +128,10 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
 
   return (
     <>
-      {/* ── Sort controls ── */}
+      {/* ── Controls ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 2 }}>
-        {/* Toggle + Sortierung bleiben als Gruppe immer links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+
+        {/* View toggle — immer ganz links */}
         <div className="tab-pills" role="group" aria-label="Ansicht">
           <button
             className={`tab-pill${viewMode === 'list' ? ' on' : ''}`}
@@ -151,27 +151,7 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           </button>
         </div>
 
-        <div className="tab-pills" role="group" aria-label="Sortierung">
-          <button
-            className={`tab-pill${sortMode === 'date' ? ' on' : ''}`}
-            onClick={() => setSortMode('date')}
-            aria-pressed={sortMode === 'date'}
-          >
-            Datum
-          </button>
-          <button
-            className={`tab-pill${sortMode === 'distance' ? ' on' : ''}`}
-            onClick={() => userLat != null && setSortMode('distance')}
-            aria-pressed={sortMode === 'distance'}
-            aria-disabled={userLat == null}
-            style={{ opacity: userLat == null ? 0.4 : 1, cursor: userLat == null ? 'default' : 'pointer' }}
-            title={userLat == null ? 'Zuerst PLZ eingeben oder Standort freigeben' : undefined}
-          >
-            Entfernung
-          </button>
-        </div>
-        </div>{/* Ende Toggle+Sortierung-Gruppe */}
-
+        {/* PLZ-Filter */}
         <form onSubmit={lookupPlz} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <label htmlFor="plz-input" className="zh-label" style={{ margin: 0, whiteSpace: 'nowrap' }}>PLZ</label>
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -219,11 +199,32 @@ export default function EventsList({ events, filter, likeCounts = {} }) {
           </span>
         )}
 
-        <div style={{ marginLeft: 'auto', flexShrink: 0 }}>
+        {/* Sortierung + + Termin — immer ganz rechts */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
+          <div className="tab-pills" role="group" aria-label="Sortierung">
+            <button
+              className={`tab-pill${sortMode === 'date' ? ' on' : ''}`}
+              onClick={() => setSortMode('date')}
+              aria-pressed={sortMode === 'date'}
+            >
+              Datum
+            </button>
+            <button
+              className={`tab-pill${sortMode === 'distance' ? ' on' : ''}`}
+              onClick={() => userLat != null && setSortMode('distance')}
+              aria-pressed={sortMode === 'distance'}
+              aria-disabled={userLat == null}
+              style={{ opacity: userLat == null ? 0.4 : 1, cursor: userLat == null ? 'default' : 'pointer' }}
+              title={userLat == null ? 'Zuerst PLZ eingeben oder Standort freigeben' : undefined}
+            >
+              Entfernung
+            </button>
+          </div>
           <Link href="/events/new" className="zd-btn accent" style={{ fontSize: 15, padding: '9px 18px', textDecoration: 'none' }}>
             + Termin
           </Link>
         </div>
+
       </div>
 
       {/* ── Event list ── */}
