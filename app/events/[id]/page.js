@@ -122,11 +122,7 @@ export default async function EventDetailPage({ params }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, minWidth: 0 }}>
 
           {/* Hero — with stats overlay */}
-          <div className="detail-hero" style={{
-            background: event.image_url
-              ? `linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 100%), url(${event.image_url}) center/cover no-repeat`
-              : '#000'
-          }}>
+          <div className="detail-hero" style={{ background: '#000' }}>
 
             <div className="hero-pad" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 20 }}>
               {/* Left: title + date */}
@@ -167,6 +163,20 @@ export default async function EventDetailPage({ params }) {
               </div>
             </div>
           </div>
+
+          {/* Flyer / Poster */}
+          {event.image_url && (
+            <div className="zd-card" style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
+              <div style={{ padding: '12px 16px 10px', borderBottom: '1px solid var(--hairline)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className="zd-mono accent" style={{ fontSize: 10 }}>Flyer / Poster</span>
+              </div>
+              <img
+                src={event.image_url}
+                alt={`Flyer: ${event.title}`}
+                style={{ width: '100%', display: 'block', maxHeight: 600, objectFit: 'contain', background: 'var(--surface)' }}
+              />
+            </div>
+          )}
 
           {/* Map tile + Beschreibung nebeneinander */}
           {(hasMap || hasDesc) && (
