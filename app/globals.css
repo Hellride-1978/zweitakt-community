@@ -467,9 +467,7 @@ body::before {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  padding: clamp(40px, 6vw, 80px) var(--gutter);
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
+  padding: clamp(28px, 4vw, 56px) var(--gutter);
 }
 .zh-credo-card {
   padding: clamp(28px, 3vw, 40px);
@@ -537,7 +535,7 @@ body::before {
 
 /* ─── CLOSING ─── */
 .zh-closing {
-  padding: clamp(56px, 8vw, 112px) var(--gutter);
+  padding: clamp(28px, 4vw, 56px) var(--gutter);
   background: var(--ink);
   color: var(--cream);
   position: relative;
@@ -583,8 +581,7 @@ body::before {
 
 /* ─── PREVIEW (shared) ─── */
 .zh-preview {
-  padding: clamp(56px, 8vw, 112px) var(--gutter);
-  border-bottom: 1px solid var(--hairline);
+  padding: clamp(28px, 4vw, 56px) var(--gutter);
 }
 .zh-preview-head {
   display: flex;
@@ -861,7 +858,7 @@ body::before {
   color: var(--ink-muted);
 }
 
-.zh-members { padding-top: clamp(32px, 4vw, 48px); }
+.zh-members { }
 .zh-members-mark::before { content: none; }
 .zh-members-grid {
   display: grid;
@@ -1057,11 +1054,27 @@ body::before {
 }
 .zh-teaser-item:hover .zh-teaser-arrow { color: var(--accent); transform: translateX(4px); }
 
+/* ─── CONTACT ─── */
+.zh-contact {
+  padding: clamp(28px, 4vw, 56px) var(--gutter);
+}
+.zh-contact-form {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.zh-contact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 520px) {
+  .zh-contact-row { grid-template-columns: 1fr; }
+}
+
 /* ─── FOOTER ─── */
 .zh-footer {
   padding: clamp(40px, 5vw, 64px) var(--gutter) 0;
   background: var(--cream);
-  border-top: 1px solid var(--hairline);
 }
 .zh-footer-top {
   display: flex;
