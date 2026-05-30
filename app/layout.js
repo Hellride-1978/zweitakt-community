@@ -9,6 +9,8 @@ import ThemeProvider from "@/components/ThemeProvider";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import OnboardingTour from "@/components/OnboardingTour";
 import CookieConsent from "@/components/CookieConsent";
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
@@ -68,6 +70,8 @@ export default function RootLayout({ children }) {
         <FeedbackWidget />
         <OnboardingTour />
         <CookieConsent />
+        <Analytics />
+        <SpeedInsights />
         <footer className="zh-footer">
           <div className="zh-footer-top">
             <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
