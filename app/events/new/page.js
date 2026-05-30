@@ -73,13 +73,26 @@ export default function NewEventPage() {
         image_url,
       }
 
-      const { error: insertError } = await supabase.from('rides').insert(payload)
+      const { data: insertedEvent, error: insertError } = await supabase.from('rides').insert(payload).select('id').single()
       if (insertError) {
         if (insertError.message?.includes('location_lat') || insertError.message?.includes('location_lng')) {
           throw new Error('Die Spalten location_lat / location_lng fehlen in der rides-Tabelle. Bitte in Supabase ausführen:\nALTER TABLE rides ADD COLUMN IF NOT EXISTS location_lat DOUBLE PRECISION;\nALTER TABLE rides ADD COLUMN IF NOT EXISTS location_lng DOUBLE PRECISION;')
         }
         throw insertError
       }
+
+      fetch('/api/notify-new-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: form.title.trim(),
+          date: form.start_date + (form.start_time ? ` ${form.start_time}` : ''),
+          location: form.location.trim() || null,
+          creatorEmail: user.email,
+          eventId: insertedEvent?.id ?? null,
+        }),
+      }).catch(() => {})
+
       router.push('/events')
     } catch (err) {
       setError(err?.message || 'Fehler beim Speichern')
