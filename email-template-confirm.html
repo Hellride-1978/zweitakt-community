@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zweitakthoden – E-Mail bestätigen</title>
 </head>
-<body style="margin:0;padding:0;background:#e8e8e8;font-family:'DM Sans',system-ui,-apple-system,sans-serif;">
+<body style="margin:0;padding:0;background:#e8e8e8;">
 
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#e8e8e8;padding:48px 16px 64px;">
     <tr>
@@ -17,42 +17,39 @@
           <!-- Header -->
           <tr>
             <td style="background:#1a1108;padding:24px 32px;">
-              <span style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;font-family:Georgia,serif;">
-                Zweitakt<span style="color:#9ca3af;font-weight:400;">hoden</span>
-              </span>
+              <p style="margin:0;font-family:ui-monospace,'Courier New',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#9bc3d6;">Zweitakthoden</p>
+              <p style="margin:8px 0 0;font-family:Arial,system-ui,sans-serif;font-size:30px;font-weight:800;color:#ffffff;line-height:1.15;">Fast dabei.</p>
             </td>
           </tr>
 
           <!-- Body -->
           <tr>
-            <td style="padding:40px 32px 32px;">
+            <td style="background:#ffffff;padding:36px 32px 32px;">
 
-              <p style="margin:0 0 10px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#5e5248;font-family:ui-monospace,'DM Mono',monospace;">
-                Fast dabei.
+              <p style="margin:0 0 10px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#5e5248;font-family:ui-monospace,'Courier New',monospace;">
+                E-Mail bestätigen
               </p>
 
-              <h1 style="margin:0 0 24px;font-size:34px;line-height:1.0;color:#1a1108;font-weight:800;font-family:Georgia,serif;">
-                Bestätig<br>deine E-Mail.
-              </h1>
-
-              <p style="margin:0 0 32px;font-size:15px;color:#3a3028;line-height:1.65;">
+              <p style="margin:0 0 24px;font-family:Arial,system-ui,sans-serif;font-size:20px;font-weight:700;color:#1a1108;line-height:1.3;">
                 Ein Klick — und du bist Teil der Crew.<br>
                 Kein Antrag. Keine Aufnahmegebühr. Nur Zweitakt.
               </p>
 
+              <div style="height:1px;background:rgba(26,17,8,0.15);margin:0 0 24px;"></div>
+
               <!-- CTA -->
-              <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+              <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   <td style="background:#1a1108;border-radius:100px;">
                     <a href="{{ .ConfirmationURL }}"
-                       style="display:inline-block;padding:15px 36px;font-size:16px;font-weight:600;color:#ffffff;text-decoration:none;letter-spacing:0.2px;">
+                       style="display:inline-block;padding:13px 28px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#ffffff;text-decoration:none;">
                       E-Mail bestätigen &rarr;
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <p style="margin:0;font-size:12px;color:#5e5248;line-height:1.6;">
+              <p style="margin:0;font-size:13px;color:#5e5248;line-height:1.65;font-family:Arial,system-ui,sans-serif;">
                 Du hast dich nicht registriert? Einfach ignorieren — es wird kein Account angelegt.
               </p>
 
@@ -68,22 +65,29 @@
 
           <!-- Link fallback -->
           <tr>
-            <td style="padding:20px 32px 28px;">
-              <p style="margin:0;font-size:11px;color:#5e5248;line-height:1.7;font-family:ui-monospace,'DM Mono',monospace;">
-                LINK NICHT KLICKBAR? HIER KOPIEREN:<br>
-                <a href="{{ .ConfirmationURL }}" style="color:#4b5563;word-break:break-all;font-size:10px;">
+            <td style="padding:18px 32px 24px;">
+              <p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5e5248;font-family:ui-monospace,'Courier New',monospace;line-height:1.7;">
+                Link nicht klickbar? Hier kopieren:<br>
+                <a href="{{ .ConfirmationURL }}" style="color:#5e5248;word-break:break-all;font-size:9px;letter-spacing:0;">
                   {{ .ConfirmationURL }}
                 </a>
               </p>
             </td>
           </tr>
 
-        </table>
+          <!-- Footer -->
+          <tr>
+            <td style="padding:0 32px 0;">
+              <div style="height:1px;background:rgba(26,17,8,0.15);"></div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 32px 24px;">
+              <p style="margin:0;font-size:11px;color:#5e5248;letter-spacing:1.5px;text-transform:uppercase;font-family:ui-monospace,'Courier New',monospace;">zweitakthoden.de — Die Community für Zweitakt-Schrauber</p>
+            </td>
+          </tr>
 
-        <!-- Sub-footer -->
-        <p style="margin:24px 0 0;font-size:11px;color:#5e5248;text-align:center;letter-spacing:1.5px;text-transform:uppercase;">
-          Zweitakthoden &nbsp;&middot;&nbsp; Die Community
-        </p>
+        </table>
 
       </td>
     </tr>

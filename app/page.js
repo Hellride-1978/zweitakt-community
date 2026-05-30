@@ -81,7 +81,7 @@ export default async function Home() {
       .order('created_at', { ascending: false })
       .limit(6),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase.from('rides').select('*', { count: 'exact', head: true }),
+    supabase.from('rides').select('*', { count: 'exact', head: true }).gte('start_date', new Date().toISOString()),
   ])
 
   const eventAddresses = {}
@@ -113,14 +113,14 @@ export default async function Home() {
         <HeroActions />
 
         <div className="zh-hero-stats">
-          <div className="zh-stat">
+          <Link href="/profiles" className="zh-stat zh-stat-link">
             <div className="zh-stat-num">{memberCount > 0 ? <>{memberCount}<em>+</em></> : '—'}</div>
             <div className="zh-stat-label">Schrauber</div>
-          </div>
-          <div className="zh-stat">
+          </Link>
+          <Link href="/events" className="zh-stat zh-stat-link">
             <div className="zh-stat-num">{eventCount > 0 ? <>{eventCount}<em>+</em></> : '—'}</div>
             <div className="zh-stat-label">Termine</div>
-          </div>
+          </Link>
         </div>
       </section>
 
