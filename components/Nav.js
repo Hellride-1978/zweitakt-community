@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -47,11 +47,18 @@ export default function Nav() {
                 </Link>
               </li>
               {user?.email === 'martin@delavega.de' && (
-                <li>
-                  <Link href="/admin/feedback" className={`zh-nav-icon${pathname.startsWith('/admin') ? ' active' : ''}`} title="Admin: Feedback">
-                    <FontAwesomeIcon icon={faBug} style={{ fontSize: 15 }} />
-                  </Link>
-                </li>
+                <>
+                  <li>
+                    <Link href="/admin/feedback" className={`zh-nav-icon${pathname.startsWith('/admin') ? ' active' : ''}`} title="Admin: Feedback">
+                      <FontAwesomeIcon icon={faBug} style={{ fontSize: 15 }} />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/styleguide" className={`zh-nav-icon${pathname.startsWith('/styleguide') ? ' active' : ''}`} title="Style Guide">
+                      <FontAwesomeIcon icon={faPalette} style={{ fontSize: 15 }} />
+                    </Link>
+                  </li>
+                </>
               )}
             </>
           ) : !loading ? (
@@ -109,12 +116,20 @@ export default function Nav() {
               </span>
             </Link>
             {user?.email === 'martin@delavega.de' && (
-              <Link href="/admin/feedback" onClick={close}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <FontAwesomeIcon icon={faBug} style={{ fontSize: 14 }} />
-                  Feedback Admin
-                </span>
-              </Link>
+              <>
+                <Link href="/admin/feedback" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <FontAwesomeIcon icon={faBug} style={{ fontSize: 14 }} />
+                    Feedback Admin
+                  </span>
+                </Link>
+                <Link href="/styleguide" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <FontAwesomeIcon icon={faPalette} style={{ fontSize: 14 }} />
+                    Style Guide
+                  </span>
+                </Link>
+              </>
             )}
             <button className="mm-cta" onClick={handleLogout} style={{ fontFamily: 'var(--display)', fontSize: '22px', textAlign: 'center', borderBottom: 0 }}>
               Abmelden <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} />

@@ -44,7 +44,8 @@ const TECH = [
   {
     cat: 'E-Mail',
     items: [
-      { name: 'Resend', desc: 'Transaktions-E-Mail für Registrierungsbenachrichtigungen — versendet von info@zweitakthoden.de', url: 'https://resend.com' },
+      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) — versendet von info@zweitakthoden.de', url: 'https://resend.com' },
+      { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de', url: null },
     ],
   },
   {
@@ -61,6 +62,13 @@ const TECH = [
     ],
   },
   {
+    cat: 'Analytics',
+    items: [
+      { name: 'Vercel Analytics', desc: 'Cookieloser Pageview-Tracker — keine IP-Speicherung, keine Nutzerprofile, DSGVO-konform', url: 'https://vercel.com/docs/analytics' },
+      { name: 'Vercel Speed Insights', desc: 'Core Web Vitals Monitoring (LCP, FID, CLS) — cookielos, vollständig anonymisiert', url: 'https://vercel.com/docs/speed-insights' },
+    ],
+  },
+  {
     cat: 'Features & Extras',
     items: [
       { name: 'Color Theming', desc: '5 Farbpaletten (Blau, Rosa, Grün, Amber, Lila) — localStorage-persistent, Flash-frei via inline <script> in <head>', url: null },
@@ -69,6 +77,13 @@ const TECH = [
       { name: 'Account Deletion', desc: 'Zweistufige Bestätigung, löscht Profile + Fahrzeuge + Teilnahmen + Storage + Auth-User via Service Role Key', url: null },
       { name: 'Onboarding Flow', desc: 'Neue User werden nach Login/OAuth-Callback zu /profile/edit weitergeleitet wenn kein Name gesetzt ist', url: null },
       { name: 'OG Meta Tags', desc: 'Dynamische OpenGraph-Tags für Termin- und Profilseiten via generateMetadata', url: null },
+      { name: 'Like-System', desc: 'Likes auf Terminen, Profilen und Fahrzeugen — Supabase likes-Tabelle (target_type + target_id), optimistisches UI, Login-Prompt für Gäste', url: null },
+      { name: 'Privat-Nachrichten', desc: 'Inbox mit thread-basierter Ansicht, Ungelesen-Badge in Desktop-Nav und Mobile-Burger-Menü, E-Mail-Benachrichtigung bei neuer Nachricht', url: null },
+      { name: 'Kontaktformular', desc: 'DSGVO-Checkbox, serverseitige Validierung, Speicherung in contact_messages-Tabelle (Supabase, RLS), nur auf Startseite', url: null },
+      { name: 'Admin-Benachrichtigungen', desc: 'Automatische E-Mail bei: neuem Mitglied, neuem Termin, neuem Bike — jeweils per SMTP-Route', url: null },
+      { name: 'Feedback-Widget', desc: 'Floating-Button (unten rechts), speichert Feedback in feedbacks-Tabelle, Admin-Übersicht unter /admin/feedback', url: null },
+      { name: 'Onboarding-Tour', desc: 'Schritt-für-Schritt Tour für neue User nach erster Anmeldung — localStorage-Trigger', url: null },
+      { name: 'Cookie Consent', desc: 'Minimaler Banner (nur technisch notwendige Cookies), einmalig per localStorage dismissed', url: null },
     ],
   },
 ]
@@ -358,9 +373,13 @@ export default function StyleguidePage() {
               ['zh-section-mark', 'Abschnitts-Markierung (Pill + Text)'],
               ['zh-members-grid', '4-Spalten Member-Karten-Grid'],
               ['zh-member-card',  'Einzelne Member-Kachel'],
-              ['zh-bubble-stack', 'Hero-Schriftzug (animiert, 3 Zeilen)'],
-              ['zd-ride',         'Event-Zeile mit Datum-Block'],
-              ['zd-bike',         'Fahrzeug-Kachel in Garage-Grid'],
+              ['zh-bubble-stack',   'Hero-Schriftzug (animiert, 3 Zeilen)'],
+              ['zh-hero-stats',     'Stats-Leiste im Hero (klickbare Links)'],
+              ['zh-stat / zh-stat-link', 'Einzelne Stat-Zahl + Label, als Link'],
+              ['zd-ride',           'Event-Zeile mit Datum-Block'],
+              ['zd-bike',           'Fahrzeug-Kachel in Garage-Grid'],
+              ['msg-badge',         'Ungelesen-Zahl-Badge (rot, rund)'],
+              ['zh-contact-form',   'Kontaktformular-Wrapper (max 680px, zentriert)'],
             ].map(([cls, desc]) => (
               <div key={cls} style={{ display: 'flex', gap: 20, borderBottom: '1px solid var(--hairline)', padding: '10px 0', flexWrap: 'wrap' }}>
                 <code style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.5px', minWidth: 180 }}>.{cls}</code>
