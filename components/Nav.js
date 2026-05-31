@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -105,12 +105,33 @@ export default function Nav() {
       <div id="mobile-menu" className={`zh-mobile-menu${open ? ' open' : ''}`} aria-hidden={!open}>
         {!loading && user ? (
           <>
-            <Link href="/events"       onClick={close}>Termine</Link>
-            <Link href="/vehicles"     onClick={close}>Bikes</Link>
-            <Link href="/profiles"     onClick={close}>Schrauber</Link>
-            <Link href={`/profile/${user.id}`} onClick={close}>Profil</Link>
-            <Link href="/messages"     onClick={close}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Link href="/events" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faCalendarDays} style={{ fontSize: 14, width: 16 }} />
+                Termine
+              </span>
+            </Link>
+            <Link href="/vehicles" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 14, width: 16 }} />
+                Bikes
+              </span>
+            </Link>
+            <Link href="/profiles" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faUsers} style={{ fontSize: 14, width: 16 }} />
+                Schrauber
+              </span>
+            </Link>
+            <Link href={`/profile/${user.id}`} onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faUser} style={{ fontSize: 14, width: 16 }} />
+                Profil
+              </span>
+            </Link>
+            <Link href="/messages" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 14, width: 16 }} />
                 Nachrichten
                 <MessagesBadge />
               </span>
