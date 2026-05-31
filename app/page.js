@@ -6,6 +6,16 @@ import ContactForm from '@/components/ContactForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
+export const metadata = {
+  title: 'Zweitakt-Community – Moped, Mofa & Simson-Schrauber in Deutschland',
+  description: 'Zweitakthoden: Das Moped-Forum für Zweitakt-Schrauber. Simson-Treffen, Ausfahrten planen, Bikes vorstellen – für Fans von Simson, Puch, Zündapp, Tomos & Co. Kostenlos und ohne Verpflichtung.',
+  openGraph: {
+    title: 'Zweitakthoden – Moped & Mofa Community für Schrauber',
+    description: 'Das Moped-Forum für Zweitakt-Fans: Simson-Treffen, Ausfahrten, Schrauber-Profil anlegen. Kostenlos.',
+    type: 'website',
+  },
+}
+
 async function getReverseGeocode(lat, lng) {
   try {
     const res = await fetch(
@@ -95,8 +105,24 @@ export default async function Home() {
     )
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Zweitakthoden',
+    url: 'https://zweitakthoden.de',
+    description: 'Community für Zweitakt-Schrauber in Deutschland. Moped-Forum, Simson-Treffen, Ausfahrten und Bike-Profile.',
+    sameAs: ['https://www.instagram.com/zweitakt_hoden/'],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'info@zweitakthoden.de',
+      contactType: 'customer support',
+      availableLanguage: 'German',
+    },
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* ── HERO ── */}
       <section className="zh-hero">
         <h1 className="zh-bubble-stack">
@@ -106,8 +132,8 @@ export default async function Home() {
         </h1>
 
         <p className="zh-hero-tagline">
-          Weil viele Zweitakt-Fans alleine vor sich hin schrauben — und das verdammt schade ist.<br /><br />
-          Unsere Community soll Leute zusammenbringen, die das gleiche Hobby teilen. Locker, offen und ohne Verpflichtung.
+          Das Moped-Forum für Zweitakt-Schrauber in Deutschland — Simson, Puch, Zündapp, Tomos und alles, was qualmt.<br /><br />
+          Unsere Community bringt Schrauber zusammen: Ausfahrten planen, Bikes vorstellen, Treffen organisieren. Locker, offen und kostenlos.
         </p>
 
         <HeroActions />

@@ -20,12 +20,14 @@ const dmMono   = DM_Mono({ subsets: ["latin"], weight: ["400","500"], variable: 
 export const metadata = {
   metadataBase: new URL('https://zweitakthoden.de'),
   title: {
-    default: 'Zweitakthoden — Die Community',
+    default: 'Zweitakthoden – Moped & Mofa Community für Schrauber',
     template: '%s — Zweitakthoden',
   },
-  description: 'Community für Zweitakt-Schrauber. Profile, Fahrzeuge und Ausfahrten.',
+  description: 'Die Community für Zweitakt-Schrauber in Deutschland. Simson, Puch, Zündapp, Tomos – Moped-Forum, Ausfahrten und Bike-Profile. Kostenlos mitmachen.',
+  keywords: ['Zweitakt Community', 'Moped Forum', 'Mofa Community', 'Simson Treffen', 'Zweitakt schrauben', 'Moped Schrauber', 'Simson Community Deutschland', 'Zündapp Forum', 'Puch Maxi Community', 'Zweitakt Forum'],
   openGraph: {
-    title: 'ZWEITAKTHODEN',
+    title: 'Zweitakthoden – Moped & Mofa Community',
+    description: 'Die Community für Zweitakt-Schrauber. Simson-Treffen, Ausfahrten planen, Bikes vorstellen.',
     siteName: 'Zweitakthoden',
     locale: 'de_DE',
     type: 'website',

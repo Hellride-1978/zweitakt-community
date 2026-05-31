@@ -114,8 +114,28 @@ export default async function EventDetailPage({ params }) {
   const hasMap = hasCoords && !!tileInfo
   const hasDesc = !!event.description
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    startDate: event.start_date,
+    ...(event.location && {
+      location: { '@type': 'Place', name: event.location },
+    }),
+    ...(event.description && { description: event.description }),
+    organizer: {
+      '@type': 'Organization',
+      name: 'Zweitakthoden',
+      url: 'https://zweitakthoden.de',
+    },
+    url: `https://zweitakthoden.de/events/${id}`,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  }
+
   return (
     <DesktopLayout crumb={event.title}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="detail-grid">
 
         {/* ── Left column ── */}
