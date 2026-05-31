@@ -57,6 +57,15 @@ function getTileInfo(lat, lng, zoom = 15) {
   return { tiles, fracX, fracY }
 }
 
+function linkify(text) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) =>
+    /^https?:\/\//.test(part)
+      ? <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)', wordBreak: 'break-all', textDecoration: 'underline', textUnderlineOffset: 3 }}>{part}</a>
+      : part
+  )
+}
+
 const chip = {
   background: 'rgba(255,255,255,0.10)',
   backdropFilter: 'blur(8px)',
@@ -221,7 +230,7 @@ export default async function EventDetailPage({ params }) {
                 <div className="zd-card" style={{ margin: 0 }}>
                   <div className="zd-mono accent" style={{ marginBottom: 10 }}>Beschreibung</div>
                   <p style={{ fontSize: 14, color: 'var(--ink-soft)', lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0 }}>
-                    {event.description}
+                    {linkify(event.description)}
                   </p>
                 </div>
               )}
