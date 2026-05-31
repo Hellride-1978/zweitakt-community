@@ -20,6 +20,9 @@ export default function ThreadClient({ id }) {
   const [deleteStep, setDeleteStep] = useState({})
   const [deleting, setDeleting] = useState({})
   const bottomRef = useRef(null)
+  const firstUnreadRef = useRef(null)
+  const lastMsgRef = useRef(null)
+  const initialScrollDone = useRef(false)
 
   useEffect(() => {
     if (loading || !user) return
@@ -50,8 +53,19 @@ export default function ThreadClient({ id }) {
   }, [id, user, loading])
 
   useEffect(() => {
-    if (messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messages.length === 0) return
+    if (!initialScrollDone.current) {
+      initialScrollDone.current = true
+      setTimeout(() => {
+        const target = firstUnreadRef.current || lastMsgRef.current
+        if (target) {
+          const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64
+          const top = target.getBoundingClientRect().top + window.scrollY - navH - 16
+          window.scrollTo({ top, behavior: 'smooth' })
+        }
+      }, 0)
+    } else {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
   }, [messages])
 
@@ -180,12 +194,19 @@ export default function ThreadClient({ id }) {
           </h1>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 32 }}>
-            {messages.map(msg => {
+            {messages.map((msg, idx) => {
               const isOwn = msg.sender_id === user.id
               const initial = (msg.sender?.name || '?').charAt(0).toUpperCase()
               const step = deleteStep[msg.id] ?? 0
+              const isFirstUnread = !msg.read && msg.recipient_id === user.id &&
+                messages.slice(0, idx).every(m => m.read || m.recipient_id !== user.id)
+              const isLast = idx === messages.length - 1
               return (
-                <div key={msg.id} className={`msg-bubble${isOwn ? ' own' : ''}`}>
+                <div
+                  key={msg.id}
+                  ref={isFirstUnread ? firstUnreadRef : isLast ? lastMsgRef : null}
+                  className={`msg-bubble${isOwn ? ' own' : ''}`}
+                >
                   <div className="msg-bubble-header">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <div className="zh-avatar offline" style={{ width: 36, height: 36, fontSize: 14, flexShrink: 0 }}>
