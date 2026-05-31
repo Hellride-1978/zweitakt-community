@@ -66,6 +66,7 @@ export default function Nav() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
           <ThemeToggle />
+
 {!loading && (
             user ? (
               <button className="zh-nav-cta" onClick={handleLogout}>
@@ -87,6 +88,7 @@ export default function Nav() {
             <span className="burger-icon-wrap">
               <IconBurger className="i-burger" />
               <IconBurgerFries className="i-close" />
+              {!loading && user && <MessagesBadge />}
             </span>
             <span className="burger-label">{open ? 'schließen' : 'menu'}</span>
           </button>

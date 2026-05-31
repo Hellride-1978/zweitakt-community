@@ -2378,6 +2378,19 @@ body::before {
   flex-shrink: 0;
 }
 
+/* ─── BURGER BADGE (ungelesene Nachrichten) ─── */
+.zh-burger .burger-icon-wrap .msg-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 9px;
+  height: 9px;
+  padding: 0;
+  font-size: 0;
+  border: 1.5px solid var(--cream);
+  border-radius: 50%;
+}
+
 /* ─── FEEDBACK WIDGET ─── */
 .zh-feedback-btn {
   position: fixed;
