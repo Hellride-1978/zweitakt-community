@@ -20,7 +20,7 @@ export default function DatenschutzPage() {
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Martin de la Vega<br />
               Verladestr. 3, 29574 Ebstorf<br />
-              E-Mail: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent)' }}>info@zweitakthoden.de</a>
+              E-Mail: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-ink)' }}>info@zweitakthoden.de</a>
             </p>
           </section>
 
@@ -52,27 +52,27 @@ export default function DatenschutzPage() {
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Supabase</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Wir nutzen Supabase (Supabase Inc., 970 Trestle Glen Rd, Oakland, CA 94610, USA) für Datenbank, Authentifizierung und Datei-Speicher. Supabase verarbeitet Daten auf EU-Servern (Frankfurt) und ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>supabase.com/privacy</a>
+              Wir nutzen Supabase (Supabase Inc., 970 Trestle Glen Rd, Oakland, CA 94610, USA) für Datenbank, Authentifizierung und Datei-Speicher. Supabase verarbeitet Daten auf EU-Servern (Frankfurt) und ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>supabase.com/privacy</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Vercel</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Das Hosting erfolgt über Vercel Inc. (340 Pine Street, Suite 701, San Francisco, CA 94104, USA). Dabei können technische Zugriffsdaten (IP-Adresse, Browser, Zeitpunkt) kurzfristig in Logdateien gespeichert werden. Weitere Informationen: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>vercel.com/legal/privacy-policy</a>
+              Das Hosting erfolgt über Vercel Inc. (340 Pine Street, Suite 701, San Francisco, CA 94104, USA). Dabei können technische Zugriffsdaten (IP-Adresse, Browser, Zeitpunkt) kurzfristig in Logdateien gespeichert werden. Weitere Informationen: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>vercel.com/legal/privacy-policy</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Vercel Analytics &amp; Speed Insights</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Wir nutzen Vercel Analytics und Vercel Speed Insights (Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA) zur Analyse des Nutzungsverhaltens und der Seitenperformance. Beide Dienste arbeiten <strong>cookielos</strong> und erheben keine personenbezogenen Daten — es werden keine IP-Adressen gespeichert und keine Nutzerprofile erstellt. Die Auswertung erfolgt vollständig anonymisiert. Weitere Informationen: <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>vercel.com/docs/analytics/privacy-policy</a>
+              Wir nutzen Vercel Analytics und Vercel Speed Insights (Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA) zur Analyse des Nutzungsverhaltens und der Seitenperformance. Beide Dienste arbeiten <strong>cookielos</strong> und erheben keine personenbezogenen Daten — es werden keine IP-Adressen gespeichert und keine Nutzerprofile erstellt. Die Auswertung erfolgt vollständig anonymisiert. Weitere Informationen: <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>vercel.com/docs/analytics/privacy-policy</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Resend</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Für den Versand von Benachrichtigungs-E-Mails bei neuen Registrierungen nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei werden Name und E-Mail-Adresse des neuen Mitglieds einmalig zum Versand der Benachrichtigung übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>resend.com/legal/privacy-policy</a>
+              Für den Versand von Benachrichtigungs-E-Mails bei neuen Registrierungen nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei werden Name und E-Mail-Adresse des neuen Mitglieds einmalig zum Versand der Benachrichtigung übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>resend.com/legal/privacy-policy</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>OpenStreetMap / Nominatim</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Zur Anzeige von Kartenausschnitten und Ortsbezeichnungen bei Terminen nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Koordinaten von Treffpunkten übermittelt, jedoch keine personenbezogenen Daten. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
+              Zur Anzeige von Kartenausschnitten und Ortsbezeichnungen bei Terminen nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Koordinaten von Treffpunkten übermittelt, jedoch keine personenbezogenen Daten. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
             </p>
           </section>
 
@@ -86,7 +86,7 @@ export default function DatenschutzPage() {
           <section>
             <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>6. Deine Rechte</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Du hast jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner gespeicherten Daten sowie das Recht auf Datenübertragbarkeit. Wende dich dazu an: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent)' }}>info@zweitakthoden.de</a>
+              Du hast jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner gespeicherten Daten sowie das Recht auf Datenübertragbarkeit. Wende dich dazu an: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-ink)' }}>info@zweitakthoden.de</a>
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
               Du hast außerdem das Recht, dich bei der zuständigen Datenschutzaufsichtsbehörde zu beschweren.
@@ -96,14 +96,14 @@ export default function DatenschutzPage() {
           <section>
             <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>7. Kontakt Datenschutz</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Bei Fragen zum Datenschutz erreichst du uns unter: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent)' }}>info@zweitakthoden.de</a>
+              Bei Fragen zum Datenschutz erreichst du uns unter: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-ink)' }}>info@zweitakthoden.de</a>
             </p>
           </section>
 
         </div>
 
         <div style={{ marginTop: '32px' }}>
-          <Link href="/" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+          <Link href="/" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
             ← Zurück zur Startseite
           </Link>
         </div>

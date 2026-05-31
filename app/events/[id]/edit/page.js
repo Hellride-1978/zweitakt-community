@@ -133,7 +133,7 @@ export default function EditEventPage({ params }) {
   )
   if (!user) return (
     <DesktopLayout crumb="Event bearbeiten">
-      <div className="zh-page"><div className="zh-page-inner-sm"><div className="zh-card">Bitte zuerst <a href="/auth/login" style={{ color: 'var(--accent)' }}>anmelden</a>.</div></div></div>
+      <div className="zh-page"><div className="zh-page-inner-sm"><div className="zh-card">Bitte zuerst <a href="/auth/login" style={{ color: 'var(--accent-ink)' }}>anmelden</a>.</div></div></div>
     </DesktopLayout>
   )
 

@@ -27,7 +27,7 @@ export default function CookieConsent() {
     }}>
       <p style={{ flex: 1, minWidth: 220, margin: 0, fontSize: 13, lineHeight: 1.5, color: 'rgba(255,255,255,0.8)' }}>
         Wir verwenden notwendige Cookies für den Login und den Betrieb der Seite. Keine Tracking- oder Werbe-Cookies.{' '}
-        <Link href="/datenschutz" style={{ color: 'var(--accent)', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+        <Link href="/datenschutz" style={{ color: 'var(--accent-2)', textDecoration: 'underline', textUnderlineOffset: 3 }}>
           Datenschutz
         </Link>
       </p>

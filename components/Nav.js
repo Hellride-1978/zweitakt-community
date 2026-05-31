@@ -97,7 +97,7 @@ export default function Nav() {
               <IconBurgerFries className="i-close" />
               {!loading && user && <MessagesBadge />}
             </span>
-            <span className="burger-label">{open ? 'schließen' : 'menu'}</span>
+            <span className="burger-label" aria-hidden="true">{open ? 'schließen' : 'menu'}</span>
           </button>
         </div>
       </nav>

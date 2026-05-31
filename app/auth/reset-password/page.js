@@ -81,7 +81,7 @@ function ResetPasswordForm() {
           ) : error && !ready ? (
             <div>
               <div className="zh-error" role="alert" style={{ marginBottom: '20px' }}>{error}</div>
-              <a href="/auth/forgot-password" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+              <a href="/auth/forgot-password" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
                 Neuen Link anfordern →
               </a>
             </div>

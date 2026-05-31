@@ -295,7 +295,7 @@ export default async function Home() {
                       }
                     </div>
                     <div className="zh-member-name">
-                      <h4>{m.name || 'Unbekannt'}</h4>
+                      <h3>{m.name || 'Unbekannt'}</h3>
                       <div className="loc">{m.location || 'Community'}</div>
                     </div>
                   </div>

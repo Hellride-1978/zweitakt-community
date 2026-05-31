@@ -93,7 +93,7 @@ body::before {
   display: inline-flex;
   align-items: baseline;
 }
-.zh-nav-logo span { color: var(--accent-hot); -webkit-text-stroke: 1px var(--accent-hot); }
+.zh-nav-logo span { color: var(--accent-ink); -webkit-text-stroke: 1px var(--accent-ink); }
 .zh-nav-links {
   position: absolute;
   left: 50%;
@@ -367,7 +367,7 @@ body::before {
   -webkit-text-stroke: 0.5px var(--ink);
   paint-order: stroke fill;
 }
-.zh-stat-num em { font-style: normal; color: var(--accent); }
+.zh-stat-num em { font-style: normal; color: var(--accent-ink); }
 .zh-stat-label {
   margin-top: 4px;
   font-family: var(--mono);
@@ -459,7 +459,7 @@ body::before {
   max-width: 18ch;
   margin-bottom: clamp(24px, 3vw, 36px);
 }
-.zh-manifest-headline em { font-style: normal; color: var(--accent); }
+.zh-manifest-headline em { font-style: normal; color: var(--accent-ink); }
 .zh-manifest-lead {
   font-size: clamp(18px, 2vw, 24px);
   color: var(--ink-soft);
@@ -490,7 +490,7 @@ body::before {
 .zh-credo-card:nth-child(1) .lede,
 .zh-credo-card:nth-child(1) ul li { color: var(--cream); }
 .zh-credo-card:nth-child(1) ul { border-top-color: rgba(255,255,255,0.2); }
-.zh-credo-card:nth-child(1) .kicker { color: var(--accent-3); }
+.zh-credo-card:nth-child(1) .kicker { color: var(--ink-soft); }
 .zh-credo-card:nth-child(1) ul li::before { color: var(--accent-3); }
 .zh-credo-card .num {
   font-family: var(--mono);
@@ -533,7 +533,7 @@ body::before {
   padding-top: 18px;
   font-family: var(--display);
   font-size: clamp(18px, 1.8vw, 22px);
-  color: var(--accent);
+  color: var(--ink-soft);
   letter-spacing: 0.3px;
   line-height: 1.2;
 }
@@ -623,7 +623,7 @@ body::before {
   color: var(--ink);
   max-width: 14ch;
 }
-.zh-preview-head h2 em { font-style: normal; color: var(--accent-hot); }
+.zh-preview-head h2 em { font-style: normal; color: var(--accent-ink); }
 .zh-preview-head .all {
   font-family: var(--mono);
   font-size: 11px;
@@ -1099,7 +1099,7 @@ body::before {
   align-items: baseline;
   flex-shrink: 0;
 }
-.zh-footer-logo span { color: var(--accent); -webkit-text-stroke: 0.5px var(--accent); }
+.zh-footer-logo span { color: var(--accent-ink); -webkit-text-stroke: 0.5px var(--accent-ink); }
 .zh-footer-cols {
   display: flex;
   gap: 48px;
@@ -1776,9 +1776,9 @@ body::before {
 
 /* ─── Typography helpers ─── */
 .zd-h1 { font-family: var(--display); font-size: 56px; line-height: 0.92; letter-spacing: 0.3px; -webkit-text-stroke: 0.6px var(--ink); paint-order: stroke fill; }
-.zd-h1 em { color: var(--accent); font-style: normal; }
+.zd-h1 em { color: var(--accent-ink); font-style: normal; }
 .zd-h2 { font-family: var(--display); font-size: 32px; line-height: 0.96; letter-spacing: 0.3px; }
-.zd-h2 em { color: var(--accent); font-style: normal; }
+.zd-h2 em { color: var(--accent-ink); font-style: normal; }
 .zd-h3 { font-family: var(--display); font-size: 22px; line-height: 1; letter-spacing: 0.3px; }
 .zd-mono { font-family: var(--mono); font-size: 14px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--ink-muted); }
 .zd-mono.accent { color: var(--ink-muted); }
@@ -1800,7 +1800,7 @@ body::before {
   cursor: pointer; text-decoration: none; transition: transform .18s, background .18s;
 }
 .zd-btn:hover { transform: translate(-1px,-1px); }
-.zd-btn.accent { background: var(--accent); }
+.zd-btn.accent { background: var(--accent); color: var(--ink); }
 .zd-btn.outline { background: var(--cream); color: var(--ink); }
 .zd-btn-sm {
   font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.6px; text-transform: uppercase;

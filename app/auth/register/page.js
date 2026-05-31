@@ -287,7 +287,7 @@ export default function RegisterPage() {
 
           <p style={{ marginTop: '24px', fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textAlign: 'center' }}>
             Bereits registriert?{' '}
-            <Link href="/auth/login" style={{ color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>
+            <Link href="/auth/login" style={{ color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
               Anmelden
             </Link>
           </p>

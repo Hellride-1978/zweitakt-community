@@ -175,10 +175,10 @@ export default async function ProfilePage({ params }) {
                   </div>
                   <div className="info">
                     <div className="model">
-                      {v.make} <span style={{ color: 'var(--accent)' }}>{v.model}</span>
+                      {v.make} <span style={{ color: 'var(--accent-ink)' }}>{v.model}</span>
                     </div>
                     {v.title && (
-                      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent)', marginTop: 4 }}>
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginTop: 4 }}>
                         {v.title}
                       </div>
                     )}
