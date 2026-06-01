@@ -6,6 +6,7 @@ import ProfileActions from '@/components/ProfileActions'
 import ProfileSettings from '@/components/ProfileSettings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMotorcycle, faArrowRight, faArrowLeft, faImage, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
+import AvatarLightbox from '@/components/AvatarLightbox'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
@@ -86,12 +87,7 @@ export default async function ProfilePage({ params }) {
 
           {/* ID card */}
           <div className="profile-id">
-            <div className="zh-avatar offline" style={{ width: 100, height: 100, fontSize: 36, margin: '0 auto 14px', boxShadow: '4px 4px 0 var(--ink)' }}>
-              {profile.avatar_url
-                ? <img src={profile.avatar_url} alt={profile.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                : initial
-              }
-            </div>
+            <AvatarLightbox src={profile.avatar_url} alt={profile.name} initial={initial} />
             <div className="nm">{profile.name || 'Unbekannt'}</div>
             <div className="hn">{profile.location || `Dabei seit ${joinedDate}`}</div>
             {profile.location && (
