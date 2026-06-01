@@ -1079,7 +1079,7 @@ body::before {
 /* ─── FOOTER ─── */
 .zh-footer {
   padding: clamp(40px, 5vw, 64px) var(--gutter) 0;
-  background: var(--cream);
+  background: var(--cream-2);
 }
 .zh-footer-top {
   display: flex;
