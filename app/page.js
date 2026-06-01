@@ -206,11 +206,11 @@ export default async function Home() {
         <article className="zh-credo-card">
           <span className="num">Worum geht&rsquo;s hier?</span>
           <h3>Schrauben.<br />Fahren.<br />Bock haben.</h3>
-          <p className="lede">Kurz gesagt: Zweitakt, Schrauben und gemeinsam Bock haben. Bei Zweitakt Hoden treffen sich Leute, die —</p>
+          <p className="lede">Kurz gesagt: Zweitakt, Schrauben und gemeinsam Spaß haben. Bei Zweitakt Hoden treffen sich Zweitakt-Fans, die —</p>
           <ul>
-            <li>gerne schrauben (oder es lernen wollen)</li>
-            <li>lieber machen als diskutieren</li>
-            <li>keinen Stress mit Fehlern haben</li>
+            <li>gerne an Zweitakt-Motorrädern schrauben (oder es lernen wollen)</li>
+            <li>lieber selbst anpacken als endlos diskutieren</li>
+            <li>keine Angst vor Fehlern haben</li>
           </ul>
           <p className="kicker">Marke, Hubraum, Erfahrung? Zweitrangig. Hauptsache Zweitakt.</p>
         </article>
@@ -219,22 +219,18 @@ export default async function Home() {
           <h3>Garage statt Gallery.</h3>
           <p className="lede">Bei Zweitakt Hoden geht&rsquo;s <strong>nicht</strong> um —</p>
           <ul>
-            <li>perfekte Builds</li>
-            <li>PS-Vergleiche</li>
-            <li>Instagram-Tuning</li>
+            <li>perfekte Builds &amp; Showbikes</li>
+            <li>PS-Vergleiche &amp; Spec-Wars</li>
+            <li>Instagram-Tuning &amp; Social-Media-Auftritte</li>
           </ul>
-          <p className="kicker">Sondern um Garage, Austausch und ehrliches Schrauben.</p>
+          <p className="kicker">Sondern um echte Zweitakt-Community, Wissen rund ums Schrauben und ehrlichen Austausch unter Gleichgesinnten.</p>
         </article>
         <article className="zh-credo-card">
           <span className="num">Mitmachen ist einfach.</span>
-          <h3>Wenn du<br />… dann komm.</h3>
-          <p className="lede">Wenn du —</p>
-          <ul>
-            <li>Zweitakt liebst</li>
-            <li>schraubst oder anfangen willst</li>
-            <li>Lust auf Austausch hast</li>
-          </ul>
-          <p className="kicker">Dann meld dich an. Kein Antrag. Keine Aufnahmegebühr.</p>
+          <h3>Dein Platz in<br />der Garage.</h3>
+          <p className="lede">Du musst kein Experte sein. Kein teures Bike haben. Kein perfektes Setup vorweisen.</p>
+          <p className="lede">Du brauchst nur Bock auf Zweitakt — und Lust, dich mit Leuten auszutauschen, die genauso ticken wie du.</p>
+          <p className="kicker">Kostenlos anmelden. Einfach loslegen.</p>
         </article>
       </section>
 
