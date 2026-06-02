@@ -324,7 +324,6 @@ export default async function Home() {
                     </div>
                     <div className="zh-member-name">
                       <h3>{m.name || 'Unbekannt'}</h3>
-                      <div className="loc">{m.location || 'Irgendwo im Nirgendwo'}</div>
                     </div>
                   </div>
                   {latestVehicle && (

@@ -69,10 +69,11 @@ export default function Nav() {
             </>
           ) : !loading ? (
             <>
-              <li><Link href="/events"      className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
-              <li><Link href="/vehicles"    className={pathname.startsWith('/vehicles') ? 'active' : ''}>Bikes</Link></li>
-              <li><Link href="/profiles"    className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
-              <li><Link href="/auth/login"  className={pathname === '/auth/login'       ? 'active' : ''}>Anmelden</Link></li>
+              <li><Link href="/events"         className={pathname.startsWith('/events')         ? 'active' : ''}>Termine</Link></li>
+              <li><Link href="/vehicles"       className={pathname.startsWith('/vehicles')       ? 'active' : ''}>Bikes</Link></li>
+              <li><Link href="/profiles"       className={pathname.startsWith('/profiles')       ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/schrauberhalle" className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
+              <li><Link href="/auth/login"     className={pathname === '/auth/login'             ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
         </ul>
@@ -170,11 +171,11 @@ export default function Nav() {
           </>
         ) : (
           <>
-            <Link href="/events"        onClick={close}>Termine</Link>
-            <Link href="/vehicles"      onClick={close}>Bikes</Link>
-            <Link href="/profiles"      onClick={close}>Schrauber</Link>
-            <Link href="/schrauberhalle"     onClick={close}>Schrauberhalle</Link>
-            <Link href="/auth/login"    onClick={close}>Anmelden</Link>
+            <Link href="/events"         onClick={close}>Termine</Link>
+            <Link href="/vehicles"       onClick={close}>Bikes</Link>
+            <Link href="/profiles"       onClick={close}>Schrauber</Link>
+            <Link href="/schrauberhalle" onClick={close}>Schrauberhalle</Link>
+            <Link href="/auth/login"     onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
           </>
         )}

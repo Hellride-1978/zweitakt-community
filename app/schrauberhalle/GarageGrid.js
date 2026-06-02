@@ -203,12 +203,12 @@ export default function GarageGrid({ garages }) {
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: 17, lineHeight: 1.1 }}>{prof?.name || 'Unbekannt'}</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-                        {prof?.location && (
+                        {user && prof?.location && (
                           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
                             {prof.location}
                           </span>
                         )}
-                        {g.distance_km !== null && (
+                        {user && g.distance_km !== null && (
                           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.2px', color: 'var(--accent-ink)' }}>
                             · {g.distance_km} km
                           </span>

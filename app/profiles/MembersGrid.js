@@ -239,7 +239,7 @@ export default function MembersGrid({ members }) {
                   </div>
                   <div className="zh-member-name">
                     <h4>{m.name || 'Unbekannt'}</h4>
-                    <div className="loc">{m.location || 'Irgendwo im Nirgendwo'}</div>
+                    {user && <div className="loc">{m.location || 'Irgendwo im Nirgendwo'}</div>}
                   </div>
                 </div>
 
