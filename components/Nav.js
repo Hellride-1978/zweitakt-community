@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faShield } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -39,6 +39,7 @@ export default function Nav() {
               <li><Link id="tour-termine" href="/events"       className={pathname.startsWith('/events')    ? 'active' : ''}>Termine</Link></li>
               <li><Link id="tour-bikes"   href="/vehicles"     className={pathname.startsWith('/vehicles')  ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"                       className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/clubs"                          className={pathname.startsWith('/clubs')     ? 'active' : ''}>Klubs</Link></li>
               <li><Link id="tour-profil"  href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
               <li>
                 <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`} title="Nachrichten">
@@ -66,6 +67,7 @@ export default function Nav() {
               <li><Link href="/events"      className={pathname.startsWith('/events')   ? 'active' : ''}>Termine</Link></li>
               <li><Link href="/vehicles"    className={pathname.startsWith('/vehicles') ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"    className={pathname.startsWith('/profiles') ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link href="/clubs"       className={pathname.startsWith('/clubs')    ? 'active' : ''}>Klubs</Link></li>
               <li><Link href="/auth/login"  className={pathname === '/auth/login'       ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
@@ -123,6 +125,12 @@ export default function Nav() {
                 Schrauber
               </span>
             </Link>
+            <Link href="/clubs" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faShield} style={{ fontSize: 14, width: 16 }} />
+                Klubs
+              </span>
+            </Link>
             <Link href={`/profile/${user.id}`} onClick={close}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FontAwesomeIcon icon={faUser} style={{ fontSize: 14, width: 16 }} />
@@ -161,6 +169,7 @@ export default function Nav() {
             <Link href="/events"        onClick={close}>Termine</Link>
             <Link href="/vehicles"      onClick={close}>Bikes</Link>
             <Link href="/profiles"      onClick={close}>Schrauber</Link>
+            <Link href="/clubs"         onClick={close}>Klubs</Link>
             <Link href="/auth/login"    onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
           </>
