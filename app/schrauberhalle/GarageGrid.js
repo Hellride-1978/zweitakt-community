@@ -240,7 +240,7 @@ export default function GarageGrid({ garages }) {
             const firstPhoto = [g.photo_1, g.photo_2, g.photo_3, g.photo_4, g.photo_5].find(Boolean)
             const initial = (prof?.name || '?').charAt(0).toUpperCase()
             return (
-              <Link key={g.id} href={`/profile/${prof?.id}`} className="zh-card" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 14, padding: 0, overflow: 'hidden' }}>
+              <Link key={g.id} href={`/schrauberhalle/${g.id}`} className="zh-card" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 14, padding: 0, overflow: 'hidden' }}>
                 {firstPhoto ? (
                   <div style={{ width: '100%', height: 160, overflow: 'hidden', flexShrink: 0 }}>
                     <img src={firstPhoto} alt={prof?.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

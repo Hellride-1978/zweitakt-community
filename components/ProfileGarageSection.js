@@ -113,11 +113,16 @@ export default function ProfileGarageSection({ profileId, vehicles, vehicleLikeC
                   {garage.description}
                 </p>
               )}
-              {isOwner && (
-                <Link href={`/schrauberhalle/new`} style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', textDecoration: 'none', marginTop: 4 }}>
-                  Schrauberhalle bearbeiten →
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                <Link href={`/schrauberhalle/${garage.id}`} style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', textDecoration: 'none' }}>
+                  Schrauberhalle ansehen →
                 </Link>
-              )}
+                {isOwner && (
+                  <Link href={`/schrauberhalle/new`} style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textDecoration: 'none' }}>
+                    Bearbeiten →
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         ) : isOwner ? (
