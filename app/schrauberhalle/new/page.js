@@ -34,7 +34,7 @@ function SchrauberhalleNewInner() {
           <h1 className="zh-page-title" style={{ marginTop: 6 }}>Schrauberhalle <em>einrichten.</em></h1>
         </div>
         <div className="zh-card" style={{ marginTop: 28 }}>
-          <GarageEdit user={user} onSaved={() => router.push(`/profile/${user.id}`)} />
+          <GarageEdit user={user} onSaved={() => { router.refresh(); router.push(`/profile/${user.id}`) }} />
         </div>
       </div>
     </div>
