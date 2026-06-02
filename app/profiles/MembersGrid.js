@@ -226,11 +226,12 @@ export default function MembersGrid({ members }) {
             const distLabel = m.distance_km !== null && m.distance_km !== undefined
               ? `${m.distance_km} km`
               : (hasCoords ? '?' : null)
+            const isOnline = m.last_seen && (Date.now() - new Date(m.last_seen).getTime()) < 10 * 60 * 1000
 
             return (
               <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>
                 <div className="zh-member-top">
-                  <div className="zh-avatar">
+                  <div className={`zh-avatar${isOnline ? '' : ' offline'}`}>
                     {m.avatar_url
                       ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                       : initial

@@ -35,7 +35,7 @@ export default async function ProfilePage({ params }) {
     { data: vehicles },
     { data: participations },
   ] = await Promise.all([
-    supabase.from('profiles').select('*, plz').eq('id', id).single(),
+    supabase.from('profiles').select('*, plz, last_seen').eq('id', id).single(),
     supabase.from('vehicles').select('*').eq('user_id', id).order('created_at', { ascending: false }),
     supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
   ])
@@ -71,6 +71,7 @@ export default async function ProfilePage({ params }) {
   }
 
   const initial = (profile.name || '?').charAt(0).toUpperCase()
+  const isOnline = profile.last_seen && (Date.now() - new Date(profile.last_seen).getTime()) < 10 * 60 * 1000
   const joinedDate = new Date(profile.created_at).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })
 
   return (
@@ -87,7 +88,7 @@ export default async function ProfilePage({ params }) {
 
           {/* ID card */}
           <div className="profile-id">
-            <AvatarLightbox src={profile.avatar_url} alt={profile.name} initial={initial} />
+            <AvatarLightbox src={profile.avatar_url} alt={profile.name} initial={initial} isOnline={!!isOnline} />
             <div className="nm">{profile.name || 'Unbekannt'}</div>
             <div className="hn">{profile.location || `Dabei seit ${joinedDate}`}</div>
             {profile.location && (

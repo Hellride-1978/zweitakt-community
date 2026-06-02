@@ -1,13 +1,13 @@
 'use client'
 import { useState } from 'react'
 
-export default function AvatarLightbox({ src, alt, initial }) {
+export default function AvatarLightbox({ src, alt, initial, isOnline = false }) {
   const [open, setOpen] = useState(false)
 
   return (
     <>
       <div
-        className="zh-avatar offline"
+        className={`zh-avatar${isOnline ? '' : ' offline'}`}
         onClick={src ? () => setOpen(true) : undefined}
         style={{
           width: 100, height: 100, fontSize: 36,
