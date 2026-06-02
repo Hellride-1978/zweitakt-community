@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from './CropModal'
 import { validateImageFile } from '@/lib/validateImage'
+import { resolvePostalCode } from '@/lib/geocoding'
 
 // ─── Passwort-Regeln ─────────────────────────────────────────
 
@@ -56,7 +57,7 @@ function SaveRow({ saving, success, label = 'Speichern →' }) {
 
 function TabProfile({ user }) {
   const router = useRouter()
-  const [form, setForm] = useState({ name: '', first_name: '', last_name: '', location: '', description: '' })
+  const [form, setForm] = useState({ name: '', first_name: '', last_name: '', location: '', description: '', plz: '', land: 'DE' })
   const [email, setEmail] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [file, setFile] = useState(null)
@@ -66,18 +67,54 @@ function TabProfile({ user }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+  const [plzStatus, setPlzStatus] = useState(null) // 'loading' | 'found' | 'notfound'
   const fileRef = useRef(null)
+  const plzDebounceRef = useRef(null)
 
   useEffect(() => {
     supabase.from('profiles').select('*').eq('id', user.id).single()
       .then(({ data: p }) => {
         if (p) {
-          setForm({ name: p.name || '', first_name: p.first_name || '', last_name: p.last_name || '', location: p.location || '', description: p.description || '' })
+          setForm({ name: p.name || '', first_name: p.first_name || '', last_name: p.last_name || '', location: p.location || '', description: p.description || '', plz: p.plz || '', land: 'DE' })
           setAvatarUrl(p.avatar_url || '')
         }
         setEmail(user.email || '')
       })
   }, [user])
+
+  // PLZ → Wohnort automatisch erkennen (debounced)
+  useEffect(() => {
+    const plz = form.plz.trim()
+    const minLen = form.land === 'DE' ? 5 : 4
+    if (plz.length < minLen) { setPlzStatus(null); return }
+
+    clearTimeout(plzDebounceRef.current)
+    setPlzStatus('loading')
+
+    plzDebounceRef.current = setTimeout(async () => {
+      try {
+        const countryPath = form.land.toLowerCase()
+        const res = await fetch(
+          `https://openplzapi.org/${countryPath}/Localities?postalCode=${encodeURIComponent(plz)}`,
+          { headers: { Accept: 'application/json' } }
+        )
+        if (!res.ok) { setPlzStatus('notfound'); return }
+        const data = await res.json()
+        if (!Array.isArray(data) || data.length === 0) { setPlzStatus('notfound'); return }
+        const ort = data[0].name
+        if (ort) {
+          setForm(f => ({ ...f, location: ort }))
+          setPlzStatus('found')
+        } else {
+          setPlzStatus('notfound')
+        }
+      } catch {
+        setPlzStatus('notfound')
+      }
+    }, 450)
+
+    return () => clearTimeout(plzDebounceRef.current)
+  }, [form.plz, form.land])
 
   const openCrop = (rawFile) => {
     if (rawFile.size > 5 * 1024 * 1024) { setError('Bild zu groß — maximal 5 MB erlaubt.'); return }
@@ -120,7 +157,20 @@ function TabProfile({ user }) {
         const { data: pd } = supabase.storage.from('avatars').getPublicUrl(path)
         url = pd?.publicUrl ? `${pd.publicUrl}?t=${Date.now()}` : url
       }
-      const { error: pe } = await supabase.from('profiles').upsert({ id: user.id, name: form.name, first_name: form.first_name || null, last_name: form.last_name || null, location: form.location || null, description: form.description || null, avatar_url: url || null })
+      // PLZ → Koordinaten für Umkreissuche
+      let lat = null; let lng = null
+      if (form.plz.trim()) {
+        const coords = await resolvePostalCode(form.plz.trim(), form.land)
+        if (coords) { lat = coords.lat; lng = coords.lng }
+      }
+
+      const { error: pe } = await supabase.from('profiles').upsert({
+        id: user.id, name: form.name,
+        first_name: form.first_name || null, last_name: form.last_name || null,
+        location: form.location || null, description: form.description || null,
+        avatar_url: url || null,
+        plz: form.plz.trim() || null, lat, lng,
+      })
       if (pe) throw pe
       setAvatarUrl(url)
       setFile(null); setPreviewUrl(null)
@@ -177,9 +227,51 @@ function TabProfile({ user }) {
         <input value={email} disabled className="zh-input" style={{ opacity: 0.55, cursor: 'not-allowed' }} />
       </div>
 
+      <div style={{ paddingTop: 14, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
+        <div>
+          <label htmlFor="ps-plz" className="zh-label">Postleitzahl</label>
+          <input
+            id="ps-plz"
+            value={form.plz}
+            onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
+            className="zh-input"
+            placeholder="z.B. 10115"
+            maxLength={10}
+          />
+        </div>
+        <div>
+          <label htmlFor="ps-land" className="zh-label">Land</label>
+          <select
+            id="ps-land"
+            value={form.land}
+            onChange={e => setForm(f => ({ ...f, land: e.target.value }))}
+            className="zh-input"
+            style={{ height: 'auto', cursor: 'pointer' }}
+          >
+            <option value="DE">🇩🇪 DE</option>
+            <option value="AT">🇦🇹 AT</option>
+            <option value="CH">🇨🇭 CH</option>
+          </select>
+        </div>
+      </div>
+
       <div style={{ paddingTop: 14 }}>
-        <label htmlFor="ps-loc" className="zh-label">Wohnort</label>
-        <input id="ps-loc" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} className="zh-input" placeholder="z.B. München, Wien…" />
+        <label htmlFor="ps-loc" className="zh-label">
+          Wohnort
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginLeft: 8 }}>
+            {plzStatus === 'loading' && 'wird erkannt…'}
+            {plzStatus === 'found'   && '✓ automatisch erkannt'}
+            {plzStatus === 'notfound' && 'PLZ nicht gefunden'}
+          </span>
+        </label>
+        <input
+          id="ps-loc"
+          value={form.location}
+          readOnly
+          className="zh-input"
+          placeholder="wird aus PLZ befüllt"
+          style={{ cursor: 'default', opacity: form.location ? 1 : 0.5 }}
+        />
       </div>
 
       <div style={{ paddingTop: 14 }}>

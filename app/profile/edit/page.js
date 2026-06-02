@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef, Suspense } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
 import { validateImageFile } from '@/lib/validateImage'
+import { resolvePostalCode } from '@/lib/geocoding'
 
 export default function EditProfilePage() {
   return (
@@ -22,13 +23,15 @@ function EditProfilePageInner() {
   const searchParams = useSearchParams()
   const isWelcome = searchParams.get('welcome') === '1'
   const fileInputRef = useRef(null)
-  const [form, setForm] = useState({ name: '', description: '', avatar_url: '', location: '' })
+  const [form, setForm] = useState({ name: '', description: '', avatar_url: '', location: '', plz: '', land: 'DE' })
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
   const [cropSrc, setCropSrc] = useState(null)
   const [saving, setSaving] = useState(false)
   const [picking, setPicking] = useState(false)
   const [error, setError] = useState(null)
+  const [plzStatus, setPlzStatus] = useState(null) // 'loading' | 'found' | 'notfound'
+  const plzDebounceRef = useRef(null)
   const [deleteStep, setDeleteStep] = useState(0)
   const [deleting, setDeleting] = useState(false)
 
@@ -38,10 +41,44 @@ function EditProfilePageInner() {
       const { data, error } = await supabase.from('profiles').select('*').eq('id', user.id)
       if (error) { setError(error.message); return }
       const profile = Array.isArray(data) ? data[0] : data
-      if (profile) setForm({ name: profile.name || '', description: profile.description || '', avatar_url: profile.avatar_url || '', location: profile.location || '' })
+      if (profile) setForm({ name: profile.name || '', description: profile.description || '', avatar_url: profile.avatar_url || '', location: profile.location || '', plz: profile.plz || '', land: 'DE' })
     }
     if (!loading) fetchProfile()
   }, [user, loading])
+
+  // PLZ → Ort automatisch erkennen (debounced, direkt via OpenPLZ API)
+  useEffect(() => {
+    const plz = form.plz.trim()
+    const minLen = form.land === 'DE' ? 5 : 4
+    if (plz.length < minLen) { setPlzStatus(null); return }
+
+    clearTimeout(plzDebounceRef.current)
+    setPlzStatus('loading')
+
+    plzDebounceRef.current = setTimeout(async () => {
+      try {
+        const countryPath = form.land.toLowerCase()
+        const res = await fetch(
+          `https://openplzapi.org/${countryPath}/Localities?postalCode=${encodeURIComponent(plz)}`,
+          { headers: { Accept: 'application/json' } }
+        )
+        if (!res.ok) { setPlzStatus('notfound'); return }
+        const data = await res.json()
+        if (!Array.isArray(data) || data.length === 0) { setPlzStatus('notfound'); return }
+        const ort = data[0].name
+        if (ort) {
+          setForm(f => ({ ...f, location: ort }))
+          setPlzStatus('found')
+        } else {
+          setPlzStatus('notfound')
+        }
+      } catch {
+        setPlzStatus('notfound')
+      }
+    }, 450)
+
+    return () => clearTimeout(plzDebounceRef.current)
+  }, [form.plz, form.land])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -114,8 +151,23 @@ function EditProfilePageInner() {
         const { data: publicData } = supabase.storage.from('avatars').getPublicUrl(filePath)
         avatarUrl = publicData?.publicUrl ? `${publicData.publicUrl}?t=${Date.now()}` : avatarUrl
       }
+      // PLZ → Koordinaten auflösen (im Hintergrund, kein Pflichtfeld)
+      let lat = null
+      let lng = null
+      if (form.plz.trim()) {
+        const coords = await resolvePostalCode(form.plz.trim(), form.land)
+        if (coords) { lat = coords.lat; lng = coords.lng }
+      }
+
       const { error: upsertError } = await supabase.from('profiles').upsert({
-        id: user.id, name: form.name, description: form.description, avatar_url: avatarUrl, location: form.location || null,
+        id: user.id,
+        name: form.name,
+        description: form.description,
+        avatar_url: avatarUrl,
+        location: form.location || null,
+        plz: form.plz.trim() || null,
+        lat,
+        lng,
       })
       if (upsertError) throw upsertError
       router.push(`/profile/${user.id}`)
@@ -179,9 +231,54 @@ function EditProfilePageInner() {
               <input id="name" name="name" value={form.name} onChange={handleChange} className="zh-input" />
             </div>
 
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
+              <div>
+                <label htmlFor="plz" className="zh-label">Postleitzahl</label>
+                <input
+                  id="plz"
+                  name="plz"
+                  value={form.plz}
+                  onChange={handleChange}
+                  className="zh-input"
+                  placeholder="z.B. 10115"
+                  maxLength={10}
+                />
+              </div>
+              <div>
+                <label htmlFor="land" className="zh-label">Land</label>
+                <select
+                  id="land"
+                  name="land"
+                  value={form.land}
+                  onChange={handleChange}
+                  className="zh-input"
+                  style={{ height: 'auto', cursor: 'pointer' }}
+                >
+                  <option value="DE">🇩🇪 DE</option>
+                  <option value="AT">🇦🇹 AT</option>
+                  <option value="CH">🇨🇭 CH</option>
+                </select>
+              </div>
+            </div>
+
             <div>
-              <label htmlFor="location" className="zh-label">Region / Ort</label>
-              <input id="location" name="location" value={form.location} onChange={handleChange} className="zh-input" placeholder="z.B. Berlin, Wien, Zürich…" />
+              <label htmlFor="location" className="zh-label">
+                Region / Ort
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginLeft: 8 }}>
+                  {plzStatus === 'loading'  && 'wird erkannt…'}
+                  {plzStatus === 'found'    && '✓ automatisch erkannt'}
+                  {plzStatus === 'notfound' && 'PLZ nicht gefunden'}
+                </span>
+              </label>
+              <input
+                id="location"
+                name="location"
+                value={form.location}
+                readOnly
+                className="zh-input"
+                placeholder="wird aus PLZ befüllt"
+                style={{ cursor: 'default', opacity: form.location ? 1 : 0.5 }}
+              />
             </div>
 
             <div>

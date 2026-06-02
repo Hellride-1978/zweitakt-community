@@ -8,7 +8,8 @@ import ScrollReset from "@/components/ScrollReset";
 import ThemeProvider from "@/components/ThemeProvider";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import OnboardingTour from "@/components/OnboardingTour";
-import CookieConsent from "@/components/CookieConsent";
+import CookieConsent from "@/components/CookieConsent"
+import PlzNudgeBanner from "@/components/PlzNudgeBanner";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
         <FeedbackWidget />
         <OnboardingTour />
         <CookieConsent />
+        <PlzNudgeBanner />
         <Analytics />
         <SpeedInsights />
         <footer className="zh-footer">

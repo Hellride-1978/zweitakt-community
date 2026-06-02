@@ -35,7 +35,7 @@ export default async function ProfilePage({ params }) {
     { data: vehicles },
     { data: participations },
   ] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', id).single(),
+    supabase.from('profiles').select('*, plz').eq('id', id).single(),
     supabase.from('vehicles').select('*').eq('user_id', id).order('created_at', { ascending: false }),
     supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
   ])
@@ -115,7 +115,7 @@ export default async function ProfilePage({ params }) {
           )}
 
 
-          <Suspense fallback={null}><ProfileActions profileId={id} /></Suspense>
+          <Suspense fallback={null}><ProfileActions profileId={id} hasPlz={!!profile.plz} /></Suspense>
         </div>
 
         {/* ── Right: Garage grid ── */}

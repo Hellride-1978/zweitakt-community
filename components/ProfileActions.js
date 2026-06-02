@@ -3,9 +3,9 @@ import { useAuth } from '@/lib/useAuth'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 
-export default function ProfileActions({ profileId }) {
+export default function ProfileActions({ profileId, hasPlz }) {
   const { user, loading } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
@@ -16,17 +16,38 @@ export default function ProfileActions({ profileId }) {
 
   if (user.id === profileId) {
     return (
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={() => router.push(settingsOpen ? pathname : `${pathname}?settings=1`)}
-          className="zd-btn outline"
-          style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}
-        >
-          {settingsOpen ? 'Schließen' : 'Bearbeiten'}
-        </button>
-        <Link href="/vehicles/new" className="zd-btn accent" style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}>
-          + Bike
-        </Link>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* PLZ-Nudge: nur wenn eigenes Profil und keine PLZ hinterlegt */}
+        {!hasPlz && (
+          <Link
+            href="/profile/edit"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '10px 14px', borderRadius: 12,
+              background: 'color-mix(in oklab, var(--accent) 12%, var(--cream))',
+              border: '1.5px solid var(--accent)',
+              fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--accent-ink)',
+              textDecoration: 'none', lineHeight: 1.4,
+            }}
+          >
+            <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 14, flexShrink: 0 }} />
+            <span>
+              <strong>PLZ hinterlegen</strong> — damit andere Schrauber dich in der Umkreissuche finden können.
+            </span>
+          </Link>
+        )}
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={() => router.push(settingsOpen ? pathname : `${pathname}?settings=1`)}
+            className="zd-btn outline"
+            style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}
+          >
+            {settingsOpen ? 'Schließen' : 'Bearbeiten'}
+          </button>
+          <Link href="/vehicles/new" className="zd-btn accent" style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}>
+            + Bike
+          </Link>
+        </div>
       </div>
     )
   }

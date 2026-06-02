@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useAuth } from '@/lib/useAuth'
 
 function formatTimeAgo(dateStr) {
   const now = new Date()
@@ -18,10 +19,24 @@ function formatTimeAgo(dateStr) {
   return `${Math.floor(months / 12)} J.`
 }
 
+/** Haversine-Formel – Entfernung in km */
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLng = (lng2 - lng1) * Math.PI / 180
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
 const SORT_OPTIONS = [
-  { key: 'newest', label: 'Neueste' },
-  { key: 'oldest', label: 'Älteste' },
-  { key: 'name',   label: 'Name A–Z' },
+  { key: 'newest',   label: 'Neueste' },
+  { key: 'oldest',   label: 'Älteste' },
+  { key: 'name',     label: 'Name A–Z' },
+  { key: 'distance', label: 'Nächste zuerst' },
 ]
 
 const FILTER_OPTIONS = [
@@ -30,35 +45,100 @@ const FILTER_OPTIONS = [
   { key: 'nobike', label: 'Ohne Fahrzeug' },
 ]
 
+const RADIUS_OPTIONS = [
+  { key: 0,   label: 'Alle' },
+  { key: 25,  label: '25 km' },
+  { key: 50,  label: '50 km' },
+  { key: 100, label: '100 km' },
+  { key: 200, label: '200 km' },
+]
+
 export default function MembersGrid({ members }) {
+  const { user } = useAuth()
   const [filter, setFilter] = useState('all')
   const [sort,   setSort]   = useState('newest')
+  const [radius, setRadius] = useState(0)
+
+  // Koordinaten des eingeloggten Users aus der Members-Liste
+  const currentUserProfile = useMemo(
+    () => members.find(m => m.id === user?.id) ?? null,
+    [members, user]
+  )
+  const hasCoords = !!(currentUserProfile?.lat && currentUserProfile?.lng)
+
+  // Wenn Radius aktiviert wird: automatisch auf "Nächste zuerst" wechseln
+  const handleRadiusChange = (newRadius) => {
+    setRadius(newRadius)
+    if (newRadius > 0 && sort !== 'distance') setSort('distance')
+  }
 
   const visible = useMemo(() => {
     let list = [...members]
 
+    // Fahrzeug-Filter
     if (filter === 'bike')   list = list.filter(m => m.vehicles?.length > 0)
     if (filter === 'nobike') list = list.filter(m => !m.vehicles?.length)
 
-    if (sort === 'newest') list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    if (sort === 'oldest') list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-    if (sort === 'name')   list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'de'))
+    // Entfernung für alle Member berechnen (null wenn keine Koordinaten)
+    const refLat = currentUserProfile?.lat
+    const refLng = currentUserProfile?.lng
+
+    if (refLat && refLng) {
+      list = list.map(m => ({
+        ...m,
+        distance_km: (m.lat && m.lng)
+          ? Math.round(haversineKm(refLat, refLng, m.lat, m.lng) * 10) / 10
+          : null,
+      }))
+    } else {
+      list = list.map(m => ({ ...m, distance_km: null }))
+    }
+
+    // Radius-Filter: User ohne Koordinaten ans Ende, nicht ausblenden
+    if (radius > 0 && refLat && refLng) {
+      const inRadius  = list.filter(m => m.distance_km !== null && m.distance_km <= radius)
+      const noCoords  = list.filter(m => m.distance_km === null)
+      list = [...inRadius, ...noCoords]
+    }
+
+    // Sortierung
+    if (sort === 'newest')   list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    if (sort === 'oldest')   list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    if (sort === 'name')     list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'de'))
+    if (sort === 'distance') {
+      list.sort((a, b) => {
+        if (a.distance_km === null && b.distance_km === null) return 0
+        if (a.distance_km === null) return 1
+        if (b.distance_km === null) return -1
+        return a.distance_km - b.distance_km
+      })
+    }
 
     return list
-  }, [members, filter, sort])
+  }, [members, filter, sort, radius, currentUserProfile])
+
+  // Tooltip für deaktivierten Radius-Selector
+  const radiusDisabled = !user || !hasCoords
+  const radiusTooltip  = !user
+    ? 'Anmelden um Umkreissuche zu nutzen'
+    : 'Trag deine PLZ im Profil ein'
 
   return (
     <>
       {/* ── Controls ── */}
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          {/* Fahrzeug-Filter */}
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Filter</span>
           {FILTER_OPTIONS.map(o => (
             <button key={o.key} className={`zh-filter-btn${filter === o.key ? ' active' : ''}`} onClick={() => setFilter(o.key)}>
               {o.label}
             </button>
           ))}
+
           <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 4px' }} />
+
+          {/* Sortierung */}
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
@@ -69,12 +149,39 @@ export default function MembersGrid({ members }) {
               <option key={o.key} value={o.key}>{o.label}</option>
             ))}
           </select>
+
+          <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 4px' }} />
+
+          {/* Radius-Filter */}
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Umkreis</span>
+          <span title={radiusDisabled ? radiusTooltip : undefined} style={{ display: 'inline-flex' }}>
+            <select
+              value={radius}
+              onChange={e => handleRadiusChange(Number(e.target.value))}
+              disabled={radiusDisabled}
+              className="zh-input"
+              style={{
+                padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)',
+                letterSpacing: '1.5px', textTransform: 'uppercase',
+                height: 'auto', width: 'auto',
+                cursor: radiusDisabled ? 'not-allowed' : 'pointer',
+                opacity: radiusDisabled ? 0.45 : 1,
+              }}
+            >
+              {RADIUS_OPTIONS.map(o => (
+                <option key={o.key} value={o.key}>{o.label}</option>
+              ))}
+            </select>
+          </span>
         </div>
       </div>
 
-      {/* ── Result count ── */}
+      {/* ── Ergebniszeile ── */}
       <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 20 }}>
         {visible.length} {visible.length === 1 ? 'Schrauber' : 'Schrauber'}
+        {radius > 0 && hasCoords && (
+          <span style={{ marginLeft: 10, color: 'var(--accent-ink)' }}>· {radius} km Umkreis</span>
+        )}
       </div>
 
       {/* ── Grid ── */}
@@ -88,6 +195,10 @@ export default function MembersGrid({ members }) {
             const initial = (m.name || '?').charAt(0).toUpperCase()
             const since = formatTimeAgo(m.created_at)
             const latestVehicle = m.vehicles?.[0]
+            const distLabel = m.distance_km !== null && m.distance_km !== undefined
+              ? `${m.distance_km} km`
+              : (hasCoords ? '?' : null)
+
             return (
               <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>
                 <div className="zh-member-top">
@@ -124,6 +235,14 @@ export default function MembersGrid({ members }) {
                     <div className="n">{since}</div>
                     <div className="k">dabei</div>
                   </div>
+                  {distLabel && (
+                    <div className="item">
+                      <div className="n" style={{ color: distLabel === '?' ? 'var(--ink-muted)' : 'var(--accent-ink)' }}>
+                        {distLabel}
+                      </div>
+                      <div className="k">entfernt</div>
+                    </div>
+                  )}
                 </div>
               </Link>
             )
