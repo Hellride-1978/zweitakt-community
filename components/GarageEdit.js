@@ -13,6 +13,8 @@ export default function GarageEdit({ user, onSaved }) {
   const [photos, setPhotos] = useState({}) // slot → URL
   const [uploading, setUploading] = useState(null) // slot number
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState(null)
   const fileRefs = useRef({})
@@ -66,6 +68,25 @@ export default function GarageEdit({ user, onSaved }) {
       await supabase.storage.from('garage').remove([`garage/${user.id}/${slot}.jpg`])
     } catch {}
     setPhotos(prev => { const n = { ...prev }; delete n[slot]; return n })
+  }
+
+  const handleDelete = async () => {
+    setDeleting(true); setError(null)
+    try {
+      // Alle Fotos aus Storage löschen
+      const paths = PHOTO_SLOTS.map(n => `${user.id}/${n}.jpg`)
+      await supabase.storage.from('garage').remove(paths)
+      // Skills löschen
+      await supabase.from('garage_skills').delete().eq('user_id', user.id)
+      // Garage-Eintrag löschen
+      const { error: delErr } = await supabase.from('garage').delete().eq('user_id', user.id)
+      if (delErr) throw delErr
+      onSaved?.()
+    } catch (err) {
+      setError(err.message || 'Fehler beim Löschen')
+      setDeleting(false)
+      setConfirmDelete(false)
+    }
   }
 
   const handleSave = async () => {
@@ -179,16 +200,46 @@ export default function GarageEdit({ user, onSaved }) {
         </p>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <button
           type="button"
           onClick={handleSave}
-          disabled={saving}
+          disabled={saving || deleting}
           className="zh-btn"
           style={{ opacity: saving ? 0.6 : 1, background: success ? '#22c55e' : undefined, borderColor: success ? '#22c55e' : undefined }}
         >
           {saving ? 'Speichert…' : success ? '✓ Gespeichert!' : 'Schrauberhalle speichern →'}
         </button>
+
+        {!confirmDelete ? (
+          <button
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+            disabled={saving || deleting}
+            style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline' }}
+          >
+            Schrauberhalle löschen
+          </button>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', borderRadius: 10, background: '#fee2e2', border: '1.5px solid #fca5a5' }}>
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#b91c1c' }}>Wirklich löschen?</span>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting}
+              style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', background: '#b91c1c', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 12px', cursor: 'pointer' }}
+            >
+              {deleting ? '…' : 'Ja, löschen'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(false)}
+              style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', background: 'none', color: '#b91c1c', border: 'none', cursor: 'pointer', padding: '4px 0' }}
+            >
+              Abbrechen
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
