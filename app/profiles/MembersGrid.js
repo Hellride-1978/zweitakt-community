@@ -1,8 +1,11 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/useAuth'
+import { supabase } from '@/lib/supabase'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
 
 function formatTimeAgo(dateStr) {
   const now = new Date()
@@ -39,12 +42,6 @@ const SORT_OPTIONS = [
   { key: 'distance', label: 'Nächste zuerst' },
 ]
 
-const FILTER_OPTIONS = [
-  { key: 'all',    label: 'Alle' },
-  { key: 'bike',   label: 'Mit Fahrzeug' },
-  { key: 'nobike', label: 'Ohne Fahrzeug' },
-]
-
 const RADIUS_OPTIONS = [
   { key: 0,   label: 'Alle' },
   { key: 25,  label: '25 km' },
@@ -55,16 +52,45 @@ const RADIUS_OPTIONS = [
 
 export default function MembersGrid({ members }) {
   const { user } = useAuth()
-  const [filter, setFilter] = useState('all')
   const [sort,   setSort]   = useState('newest')
   const [radius, setRadius] = useState(0)
+  // Eigenes Profil direkt von Supabase — unabhängig vom Server-Fetch
+  const [myProfile, setMyProfile] = useState(null)
+  const resolvingRef = useRef(false)
 
-  // Koordinaten des eingeloggten Users aus der Members-Liste
-  const currentUserProfile = useMemo(
-    () => members.find(m => m.id === user?.id) ?? null,
-    [members, user]
-  )
-  const hasCoords = !!(currentUserProfile?.lat && currentUserProfile?.lng)
+  // Eigenes Profil mit plz/lat/lng laden
+  useEffect(() => {
+    if (!user?.id) return
+    supabase
+      .from('profiles')
+      .select('id, plz, lat, lng')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => { if (data) setMyProfile(data) })
+  }, [user?.id])
+
+  // Koordinaten: aus DB oder on-demand via OpenPLZ aufgelöst
+  const [resolvedCoords, setResolvedCoords] = useState(null)
+
+  useEffect(() => {
+    if (!myProfile?.plz || myProfile?.lat || resolvedCoords || resolvingRef.current) return
+    resolvingRef.current = true
+    fetch(`https://openplzapi.org/de/Localities?postalCode=${encodeURIComponent(myProfile.plz)}`, {
+      headers: { Accept: 'application/json' },
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data[0]?.latitude) {
+          setResolvedCoords({ lat: parseFloat(data[0].latitude), lng: parseFloat(data[0].longitude) })
+        }
+      })
+      .catch(() => {})
+      .finally(() => { resolvingRef.current = false })
+  }, [myProfile, resolvedCoords])
+
+  const refLat = myProfile?.lat ?? resolvedCoords?.lat ?? null
+  const refLng = myProfile?.lng ?? resolvedCoords?.lng ?? null
+  const radiusEnabled = !!(user && myProfile?.plz)
 
   // Wenn Radius aktiviert wird: automatisch auf "Nächste zuerst" wechseln
   const handleRadiusChange = (newRadius) => {
@@ -75,13 +101,7 @@ export default function MembersGrid({ members }) {
   const visible = useMemo(() => {
     let list = [...members]
 
-    // Fahrzeug-Filter
-    if (filter === 'bike')   list = list.filter(m => m.vehicles?.length > 0)
-    if (filter === 'nobike') list = list.filter(m => !m.vehicles?.length)
-
     // Entfernung für alle Member berechnen (null wenn keine Koordinaten)
-    const refLat = currentUserProfile?.lat
-    const refLng = currentUserProfile?.lng
 
     if (refLat && refLng) {
       list = list.map(m => ({
@@ -115,30 +135,18 @@ export default function MembersGrid({ members }) {
     }
 
     return list
-  }, [members, filter, sort, radius, currentUserProfile])
+  }, [members, sort, radius, refLat, refLng])
 
-  // Tooltip für deaktivierten Radius-Selector
-  const radiusDisabled = !user || !hasCoords
-  const radiusTooltip  = !user
-    ? 'Anmelden um Umkreissuche zu nutzen'
-    : 'Trag deine PLZ im Profil ein'
+  const hasCoords = !!(refLat && refLng)
+  const radiusDisabled = !radiusEnabled
 
   return (
     <>
       {/* ── Controls ── */}
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
-          {/* Fahrzeug-Filter */}
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Filter</span>
-          {FILTER_OPTIONS.map(o => (
-            <button key={o.key} className={`zh-filter-btn${filter === o.key ? ' active' : ''}`} onClick={() => setFilter(o.key)}>
-              {o.label}
-            </button>
-          ))}
-
-          <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 4px' }} />
-
           {/* Sortierung */}
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Sortierung</span>
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
@@ -154,26 +162,42 @@ export default function MembersGrid({ members }) {
 
           {/* Radius-Filter */}
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Umkreis</span>
-          <span title={radiusDisabled ? radiusTooltip : undefined} style={{ display: 'inline-flex' }}>
-            <select
-              value={radius}
-              onChange={e => handleRadiusChange(Number(e.target.value))}
-              disabled={radiusDisabled}
-              className="zh-input"
-              style={{
-                padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)',
-                letterSpacing: '1.5px', textTransform: 'uppercase',
-                height: 'auto', width: 'auto',
-                cursor: radiusDisabled ? 'not-allowed' : 'pointer',
-                opacity: radiusDisabled ? 0.45 : 1,
-              }}
-            >
-              {RADIUS_OPTIONS.map(o => (
-                <option key={o.key} value={o.key}>{o.label}</option>
-              ))}
-            </select>
-          </span>
+          <select
+            value={radius}
+            onChange={e => handleRadiusChange(Number(e.target.value))}
+            disabled={radiusDisabled}
+            className="zh-input"
+            style={{
+              padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)',
+              letterSpacing: '1.5px', textTransform: 'uppercase',
+              height: 'auto', width: 'auto',
+              cursor: radiusDisabled ? 'not-allowed' : 'pointer',
+              opacity: radiusDisabled ? 0.4 : 1,
+            }}
+          >
+            {RADIUS_OPTIONS.map(o => (
+              <option key={o.key} value={o.key}>{o.label}</option>
+            ))}
+          </select>
         </div>
+
+        {/* Hinweis wenn Umkreis nicht nutzbar */}
+        {radiusDisabled && (
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', color: 'var(--ink-muted)' }}>
+            <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 10 }} />
+            {!user
+              ? <span>Anmelden um Umkreissuche zu nutzen</span>
+              : <span>PLZ im <a href={`/profile/${user.id}?settings=1`} style={{ color: 'var(--accent-ink)', textDecoration: 'underline' }}>Profil eintragen</a> um Umkreissuche zu aktivieren</span>
+            }
+          </div>
+        )}
+        {/* Hinweis aktiver Radius */}
+        {!radiusDisabled && radius > 0 && (
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', color: 'var(--accent-ink)' }}>
+            <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 10 }} />
+            <span>Umkreis {radius} km ab deiner PLZ ({myProfile?.plz})</span>
+          </div>
+        )}
       </div>
 
       {/* ── Ergebniszeile ── */}
