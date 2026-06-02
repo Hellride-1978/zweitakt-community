@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faXmark } from '@fortawesome/free-solid-svg-icons'
 
-const STORAGE_KEY = 'zh-plz-nudge-dismissed'
+const STORAGE_KEY = 'zh-plz-nudge-v2-dismissed'
 
 export default function PlzNudgeBanner() {
   const { user, loading } = useAuth()
