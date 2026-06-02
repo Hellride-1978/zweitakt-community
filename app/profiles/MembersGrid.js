@@ -146,39 +146,43 @@ export default function MembersGrid({ members }) {
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
           {/* Sortierung */}
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Sortierung</span>
-          <select
-            value={sort}
-            onChange={e => setSort(e.target.value)}
-            className="zh-input"
-            style={{ padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)', letterSpacing: '1.5px', textTransform: 'uppercase', height: 'auto', width: 'auto', cursor: 'pointer' }}
-          >
-            {SORT_OPTIONS.map(o => (
-              <option key={o.key} value={o.key}>{o.label}</option>
-            ))}
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Sortierung</span>
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value)}
+              className="zh-input"
+              style={{ padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)', letterSpacing: '1.5px', textTransform: 'uppercase', height: 'auto', width: 'auto', cursor: 'pointer' }}
+            >
+              {SORT_OPTIONS.map(o => (
+                <option key={o.key} value={o.key}>{o.label}</option>
+              ))}
+            </select>
+          </div>
 
-          <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 4px' }} />
+          <span style={{ width: 1, height: 20, background: 'var(--hairline)', margin: '0 2px', flexShrink: 0 }} />
 
-          {/* Radius-Filter */}
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Umkreis</span>
-          <select
-            value={radius}
-            onChange={e => handleRadiusChange(Number(e.target.value))}
-            disabled={radiusDisabled}
-            className="zh-input"
-            style={{
-              padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)',
-              letterSpacing: '1.5px', textTransform: 'uppercase',
-              height: 'auto', width: 'auto',
-              cursor: radiusDisabled ? 'not-allowed' : 'pointer',
-              opacity: radiusDisabled ? 0.4 : 1,
-            }}
-          >
-            {RADIUS_OPTIONS.map(o => (
-              <option key={o.key} value={o.key}>{o.label}</option>
-            ))}
-          </select>
+          {/* Radius-Filter — bleibt als Einheit zusammen beim Umbruch */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>Umkreis</span>
+            <select
+              value={radius}
+              onChange={e => handleRadiusChange(Number(e.target.value))}
+              disabled={radiusDisabled}
+              className="zh-input"
+              style={{
+                padding: '7px 14px', fontSize: 11, fontFamily: 'var(--mono)',
+                letterSpacing: '1.5px', textTransform: 'uppercase',
+                height: 'auto', width: 'auto',
+                cursor: radiusDisabled ? 'not-allowed' : 'pointer',
+                opacity: radiusDisabled ? 0.4 : 1,
+              }}
+            >
+              {RADIUS_OPTIONS.map(o => (
+                <option key={o.key} value={o.key}>{o.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Hinweis wenn Umkreis nicht nutzbar */}
