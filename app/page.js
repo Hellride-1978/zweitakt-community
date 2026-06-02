@@ -76,9 +76,9 @@ export default async function Home() {
   ] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, name, avatar_url, location, created_at, vehicles(id, make, model, title, year, displacement_cc)')
+      .select('id, name, avatar_url, location, last_seen, created_at, vehicles(id, make, model, title, year, displacement_cc)')
       .order('created_at', { ascending: false })
-      .limit(4),
+      .limit(8),
     supabase
       .from('rides')
       .select('id, title, start_date, location, location_lat, location_lng, description, max_participants, profiles(id, name), ride_participants(count)')
@@ -89,7 +89,7 @@ export default async function Home() {
       .from('vehicles')
       .select('id, make, model, title, year, displacement_cc, image_url, profiles(id, name, avatar_url)')
       .order('created_at', { ascending: false })
-      .limit(6),
+      .limit(12),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
   ])
@@ -132,8 +132,8 @@ export default async function Home() {
         </h1>
 
         <p className="zh-hero-tagline">
-          Das Moped-Forum für Zweitakt-Schrauber in Deutschland — Simson, Puch, Zündapp, Tomos und alles, was qualmt.<br /><br />
-          Unsere Community bringt Schrauber zusammen: Ausfahrten planen, Bikes vorstellen, Treffen organisieren. Locker, offen und kostenlos.
+          Das Moped-Forum für leidenschaftliche Zweitakt-Schrauber. Community für Simson, Puch, Zündapp, Vespa, Tomos, Piaggio und alles, was qualmt.<br /><br />
+          Unsere Plattform bringt Moped-Fans und Zweitakt-Schrauber zusammen: Bikes vorstellen, Ausfahrten planen, Treffen organisieren und gegenseitig in der Schrauberhalle helfen. Komplett locker, offen und kostenlos.
         </p>
 
         <HeroActions />
@@ -162,6 +162,7 @@ export default async function Home() {
             </div>
             <Link href="/vehicles" className="all">Alle Bikes →</Link>
           </div>
+          <div className="zh-preview-row">
           <div className="zh-bikes-grid">
             {vehicles.map((v) => {
               const image = v.image_url ?? null
@@ -197,6 +198,7 @@ export default async function Home() {
                 </Link>
               )
             })}
+          </div>
           </div>
         </section>
       )}
@@ -245,6 +247,7 @@ export default async function Home() {
             </div>
             <Link href="/events" className="all">Alle Termine →</Link>
           </div>
+          <div className="zh-preview-row">
           <div className="events-card-grid">
             {events.map((ev) => {
               const participantCount = ev.ride_participants?.[0]?.count ?? 0
@@ -288,6 +291,7 @@ export default async function Home() {
               )
             })}
           </div>
+          </div>
         </section>
       )}
 
@@ -302,15 +306,17 @@ export default async function Home() {
         </div>
 
         {members && members.length > 0 ? (
+          <div className="zh-preview-row">
           <div className="zh-members-grid">
             {members.map((m) => {
               const latestVehicle = m.vehicles?.[0]
               const initial = (m.name || '?').charAt(0).toUpperCase()
               const since = formatTimeAgo(m.created_at)
+              const isOnline = m.last_seen && (Date.now() - new Date(m.last_seen).getTime()) < 10 * 60 * 1000
               return (
                 <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>
                   <div className="zh-member-top">
-                    <div className="zh-avatar">
+                    <div className={`zh-avatar${isOnline ? '' : ' offline'}`}>
                       {m.avatar_url
                         ? <Image src={m.avatar_url} alt={m.name} width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover' }} />
                         : initial
@@ -345,6 +351,7 @@ export default async function Home() {
                 </Link>
               )
             })}
+          </div>
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: '48px', border: '2px dashed var(--hairline)', borderRadius: '18px' }}>

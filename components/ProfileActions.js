@@ -36,18 +36,13 @@ export default function ProfileActions({ profileId, hasPlz }) {
             </span>
           </Link>
         )}
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button
-            onClick={() => router.push(settingsOpen ? pathname : `${pathname}?settings=1`)}
-            className="zd-btn outline"
-            style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}
-          >
-            {settingsOpen ? 'Schließen' : 'Bearbeiten'}
-          </button>
-          <Link href="/vehicles/new" className="zd-btn accent" style={{ flex: 1, fontSize: 15, padding: '10px 16px' }}>
-            + Bike
-          </Link>
-        </div>
+        <button
+          onClick={() => router.push(settingsOpen ? pathname : `${pathname}?settings=1`)}
+          className="zd-btn outline"
+          style={{ width: '100%', fontSize: 15, padding: '10px 16px' }}
+        >
+          {settingsOpen ? 'Schließen' : 'Bearbeiten'}
+        </button>
       </div>
     )
   }

@@ -87,6 +87,7 @@ export default function RootLayout({ children }) {
                 <ul className="zh-footer-links">
                   <li><Link href="/events">Termine</Link></li>
                   <li><Link href="/profiles">Schrauber</Link></li>
+                  <li><Link href="/schrauberhalle">Schrauberhalle</Link></li>
                   <li><Link href="/auth/register">Registrieren</Link></li>
                 </ul>
               </div>

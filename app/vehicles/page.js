@@ -32,7 +32,7 @@ export default async function VehiclesPage() {
         <div className="feed-col">
           <div className="feed-head">
             <div>
-              <div className="zd-mono accent">Garage</div>
+              <div className="zd-mono accent">Schrauberhalle</div>
               <h1 className="zd-h1" style={{ marginTop: 6 }}>alle <em>bikes.</em></h1>
             </div>
           </div>

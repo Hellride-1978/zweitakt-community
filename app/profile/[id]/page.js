@@ -5,8 +5,9 @@ import DesktopLayout from '@/components/DesktopLayout'
 import ProfileActions from '@/components/ProfileActions'
 import ProfileSettings from '@/components/ProfileSettings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMotorcycle, faArrowRight, faArrowLeft, faImage, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
 import AvatarLightbox from '@/components/AvatarLightbox'
+import ProfileGarageSection from '@/components/ProfileGarageSection'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
@@ -34,10 +35,14 @@ export default async function ProfilePage({ params }) {
     { data: profile, error },
     { data: vehicles },
     { data: participations },
+    { data: garage },
+    { data: garageSkills },
   ] = await Promise.all([
     supabase.from('profiles').select('*, plz, last_seen').eq('id', id).single(),
     supabase.from('vehicles').select('*').eq('user_id', id).order('created_at', { ascending: false }),
     supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
+    supabase.from('garage').select('*').eq('user_id', id).single(),
+    supabase.from('garage_skills').select('skill').eq('user_id', id),
   ])
 
   let vehicleLikeCounts = {}
@@ -119,77 +124,14 @@ export default async function ProfilePage({ params }) {
           <Suspense fallback={null}><ProfileActions profileId={id} hasPlz={!!profile.plz} /></Suspense>
         </div>
 
-        {/* ── Right: Garage grid ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <div>
-            <div className="zd-mono accent">Garage</div>
-            <h2 className="zd-h2" style={{ marginTop: 6 }}>meine <em>bikes.</em></h2>
-          </div>
-
-          {!vehicles || vehicles.length === 0 ? (
-            <div className="zd-card" style={{ textAlign: 'center', padding: '48px 24px', border: '2px dashed var(--hairline)' }}>
-              <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.3, color: 'var(--ink-muted)' }}><FontAwesomeIcon icon={faMotorcycle} /></div>
-              <p style={{ fontFamily: 'var(--display)', fontSize: 20, color: 'var(--ink-muted)' }}>Noch keine Fahrzeuge eingetragen.</p>
-              <Link href="/vehicles/new" className="zd-btn accent" style={{ display: 'inline-flex', marginTop: 16, fontSize: 15 }}>
-                Erstes Bike eintragen <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
-              </Link>
-            </div>
-          ) : (
-            <div className="garage-grid">
-              {vehicles.map((v) => {
-                const vLikes = vehicleLikeCounts[v.id] ?? 0
-                return (
-                <Link key={v.id} href={`/vehicles/${v.id}`} className="zd-bike" style={{ textDecoration: 'none' }}>
-                  <div className="img" style={{ position: 'relative' }}>
-                    {v.image_url
-                      ? <img src={v.image_url} alt={`${v.make} ${v.model}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                      : <FontAwesomeIcon icon={faMotorcycle} style={{ fontSize: 40, opacity: 0.3, color: 'var(--ink-muted)' }} />
-                    }
-                    {[v.image_url_2, v.image_url_3, v.image_url_4].filter(Boolean).length > 0 && (
-                      <div style={{
-                        position: 'absolute', bottom: 8, right: 8,
-                        background: 'rgba(26,17,8,0.75)', backdropFilter: 'blur(4px)',
-                        color: '#fff', borderRadius: 6,
-                        padding: '3px 7px',
-                        display: 'flex', alignItems: 'center', gap: 4,
-                        fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px',
-                      }}>
-                        <FontAwesomeIcon icon={faImage} style={{ fontSize: 11 }} />
-                        {1 + [v.image_url_2, v.image_url_3, v.image_url_4].filter(Boolean).length}
-                      </div>
-                    )}
-                    {vLikes > 0 && (
-                      <div style={{
-                        position: 'absolute', top: 8, right: 8,
-                        background: 'rgba(26,17,8,0.75)', backdropFilter: 'blur(4px)',
-                        color: '#fff', borderRadius: 6,
-                        padding: '3px 7px',
-                        fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px',
-                      }}>
-                        ♥ {vLikes}
-                      </div>
-                    )}
-                  </div>
-                  <div className="info">
-                    <div className="model">
-                      {v.make} <span style={{ color: 'var(--accent-ink)' }}>{v.model}</span>
-                    </div>
-                    {v.title && (
-                      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginTop: 4 }}>
-                        {v.title}
-                      </div>
-                    )}
-                    <div className="yr">{[v.year, v.displacement_cc ? `${v.displacement_cc} ccm` : null].filter(Boolean).join(' · ') || '—'}</div>
-                    <div className="specs">
-                      {v.year && <div className="s"><div className="lbl">BJ</div><div className="v">{v.year}</div></div>}
-                      {v.displacement_cc && <div className="s"><div className="lbl">Hubraum</div><div className="v">{v.displacement_cc} cc</div></div>}
-                    </div>
-                  </div>
-                </Link>
-              )})}
-            </div>
-          )}
-        </div>
+        {/* ── Right: Bikes + Garage ── */}
+        <ProfileGarageSection
+          profileId={id}
+          vehicles={vehicles}
+          vehicleLikeCounts={vehicleLikeCounts}
+          garage={garage}
+          garageSkills={(garageSkills || []).map(s => s.skill)}
+        />
       </div>
 
       {/* ── Angemeldete Termine ── */}
