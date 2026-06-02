@@ -75,13 +75,13 @@ export default function MembersGrid({ members }) {
   useEffect(() => {
     if (!myProfile?.plz || myProfile?.lat || resolvedCoords || resolvingRef.current) return
     resolvingRef.current = true
-    fetch(`https://openplzapi.org/de/Localities?postalCode=${encodeURIComponent(myProfile.plz)}`, {
-      headers: { Accept: 'application/json' },
+    fetch(`https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(myProfile.plz)}&country=DE&format=json&limit=1`, {
+      headers: { Accept: 'application/json', 'User-Agent': 'zweitakthoden/1.0' },
     })
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data) && data[0]?.latitude) {
-          setResolvedCoords({ lat: parseFloat(data[0].latitude), lng: parseFloat(data[0].longitude) })
+        if (Array.isArray(data) && data[0]?.lat) {
+          setResolvedCoords({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) })
         }
       })
       .catch(() => {})
