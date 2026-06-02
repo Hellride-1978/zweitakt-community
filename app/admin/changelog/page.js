@@ -119,9 +119,9 @@ const FEATURES = [
 ]
 
 const TODO = [
-  { text: 'migration_garage_skills_add.sql im Supabase SQL Editor ausführen', done: false },
+  { text: 'migration_garage_skills_add.sql im Supabase SQL Editor ausführen', done: true },
   { text: 'migration_garage_rls_fix.sql im Supabase SQL Editor ausführen', done: true },
-  { text: 'migration_garage_storage.sql im Supabase SQL Editor ausführen', done: false },
+  { text: 'migration_garage_storage.sql im Supabase SQL Editor ausführen', done: true },
 ]
 
 const CAT_COLORS = {
