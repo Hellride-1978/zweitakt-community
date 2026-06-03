@@ -16,6 +16,10 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
   const [liked, setLiked] = useState({})
   const [working, setWorking] = useState({})
   const [visible, setVisible] = useState(PAGE_SIZE)
+  const [activeMake, setActiveMake] = useState(null)
+
+  const makes = [...new Set(vehicles.map(v => v.make).filter(Boolean))].sort()
+  const filtered = activeMake ? vehicles.filter(v => v.make === activeMake) : vehicles
 
   // Load user's own likes on mount
   useEffect(() => {
@@ -68,14 +72,39 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
     )
   }
 
+  const handleMakeFilter = (make) => {
+    setActiveMake(prev => prev === make ? null : make)
+    setVisible(PAGE_SIZE)
+  }
+
   return (
     <>
-      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 20 }}>
-        {vehicles.length} {vehicles.length === 1 ? 'Bike' : 'Bikes'}
+      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
+        {filtered.length} {filtered.length === 1 ? 'Bike' : 'Bikes'}
+        {activeMake && <span style={{ color: 'var(--accent-ink)' }}> · {activeMake}</span>}
       </div>
 
+      {makes.length > 1 && (
+        <div className="feed-head filters" style={{ marginBottom: 24, flexWrap: 'wrap' }}>
+          {makes.map(make => (
+            <button
+              key={make}
+              onClick={() => handleMakeFilter(make)}
+              className={`zh-filter-btn${activeMake === make ? ' active' : ''}`}
+            >
+              {make}
+            </button>
+          ))}
+          {activeMake && (
+            <button onClick={() => { setActiveMake(null); setVisible(PAGE_SIZE) }} className="zh-filter-btn">
+              Alle ×
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="vehicles-overview-grid">
-        {vehicles.slice(0, visible).map(v => {
+        {filtered.slice(0, visible).map(v => {
           const isLiked = !!liked[v.id]
           const count = counts[v.id] ?? 0
           const owner = v.profiles
@@ -142,7 +171,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
         })}
       </div>
 
-      {visible < vehicles.length && (
+      {visible < filtered.length && (
         <div style={{ textAlign: 'center', marginTop: 32 }}>
           <button
             onClick={() => setVisible(v => v + PAGE_SIZE)}

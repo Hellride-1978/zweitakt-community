@@ -1460,7 +1460,7 @@ body::before {
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 8px 18px;
+  padding: 5px 12px;
   border: 1.5px solid var(--hairline);
   border-radius: 999px;
   color: var(--ink-muted);
@@ -1898,7 +1898,7 @@ body::before {
 .feed-grid { display: grid; grid-template-columns: 1fr 320px; gap: 26px; }
 .feed-col { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
 .feed-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
-.feed-head .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.feed-head .filters { display: flex; row-gap: 2px; column-gap: 4px; flex-wrap: wrap; }
 .feed-rail { display: flex; flex-direction: column; gap: 16px; }
 
 /* ─── Ride card in feed ─── */
