@@ -53,7 +53,7 @@ export default function GarageEdit({ user, onSaved }) {
     setUploading(slot)
     setError(null)
     try {
-      const path = `garage/${user.id}/${slot}.jpg`
+      const path = `${user.id}/${slot}.jpg`
       const { error: upErr } = await supabase.storage
         .from('garage')
         .upload(path, file, { upsert: true, contentType: 'image/jpeg' })
@@ -69,7 +69,7 @@ export default function GarageEdit({ user, onSaved }) {
 
   const removePhoto = async (slot) => {
     try {
-      await supabase.storage.from('garage').remove([`garage/${user.id}/${slot}.jpg`])
+      await supabase.storage.from('garage').remove([`${user.id}/${slot}.jpg`])
     } catch {}
     setPhotos(prev => { const n = { ...prev }; delete n[slot]; return n })
   }
