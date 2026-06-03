@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HeroActions from '@/components/HeroActions'
 import ContactForm from '@/components/ContactForm'
+import MemberMapWrapper from '@/components/MemberMapWrapper'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
@@ -73,6 +74,7 @@ export default async function Home() {
     { data: vehicles },
     { count: memberCount },
     { count: vehicleCount },
+    { data: mapMembers },
   ] = await Promise.all([
     supabase
       .from('profiles')
@@ -92,6 +94,11 @@ export default async function Home() {
       .limit(12),
     supabase.from('profiles').select('*', { count: 'exact', head: true }),
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
+    supabase
+      .from('profiles')
+      .select('id, name, location, lat, lng')
+      .not('lat', 'is', null)
+      .not('lng', 'is', null),
   ])
 
   const eventAddresses = {}
