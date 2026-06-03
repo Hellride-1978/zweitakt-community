@@ -72,36 +72,43 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
     )
   }
 
-  const handleMakeFilter = (make) => {
-    setActiveMake(prev => prev === make ? null : make)
-    setVisible(PAGE_SIZE)
-  }
-
   return (
     <>
-      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
-        {filtered.length} {filtered.length === 1 ? 'Bike' : 'Bikes'}
-        {activeMake && <span style={{ color: 'var(--accent-ink)' }}> · {activeMake}</span>}
-      </div>
-
-      {makes.length > 1 && (
-        <div className="feed-head filters" style={{ marginBottom: 24, flexWrap: 'wrap' }}>
-          {makes.map(make => (
-            <button
-              key={make}
-              onClick={() => handleMakeFilter(make)}
-              className={`zh-filter-btn${activeMake === make ? ' active' : ''}`}
-            >
-              {make}
-            </button>
-          ))}
-          {activeMake && (
-            <button onClick={() => { setActiveMake(null); setVisible(PAGE_SIZE) }} className="zh-filter-btn">
-              Alle ×
-            </button>
-          )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+          {filtered.length} {filtered.length === 1 ? 'Bike' : 'Bikes'}
         </div>
-      )}
+
+        {makes.length > 1 && (
+          <select
+            value={activeMake ?? ''}
+            onChange={e => { setActiveMake(e.target.value || null); setVisible(PAGE_SIZE) }}
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              padding: '6px 12px',
+              border: '1.5px solid var(--hairline)',
+              borderRadius: 999,
+              background: activeMake ? 'var(--parchment)' : 'none',
+              color: activeMake ? 'var(--ink)' : 'var(--ink-muted)',
+              borderColor: activeMake ? 'var(--ink)' : 'var(--hairline)',
+              cursor: 'pointer',
+              appearance: 'none',
+              paddingRight: 28,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235e5248'/%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 10px center',
+            }}
+          >
+            <option value="">Alle Marken</option>
+            {makes.map(make => (
+              <option key={make} value={make}>{make}</option>
+            ))}
+          </select>
+        )}
+      </div>
 
       <div className="vehicles-overview-grid">
         {filtered.slice(0, visible).map(v => {
