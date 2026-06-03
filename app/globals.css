@@ -981,15 +981,14 @@ body::before {
   paint-order: stroke fill;
   flex-shrink: 0;
   position: relative;
-  overflow: hidden;
   transition: transform 0.25s;
 }
 .zh-member-card:hover .zh-avatar { transform: rotate(5deg); }
 .zh-avatar::after {
   content: "";
   position: absolute;
-  bottom: 1px; right: 1px;
-  width: 12px; height: 12px;
+  bottom: -2px; right: -2px;
+  width: 14px; height: 14px;
   border-radius: 50%;
   background: #45a36a;
   border: 2px solid var(--cream);
@@ -1004,6 +1003,7 @@ body::before {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 50%;
 }
 .zh-member-name h4 {
   font-family: var(--display);
