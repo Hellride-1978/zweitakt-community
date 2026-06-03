@@ -12,6 +12,8 @@ export default function GarageEdit({ user, onSaved }) {
   const [selectedSkills, setSelectedSkills] = useState([])
   const [photos, setPhotos] = useState({}) // slot → URL
   const [uploading, setUploading] = useState(null) // slot number
+  const [isNew, setIsNew] = useState(true) // false wenn schon eine Garage existiert
+  const [garageId, setGarageId] = useState(null)
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -27,6 +29,8 @@ export default function GarageEdit({ user, onSaved }) {
       supabase.from('garage_skills').select('skill').eq('user_id', user.id),
     ]).then(([{ data: g }, { data: skills }]) => {
       if (g) {
+        setIsNew(false)
+        setGarageId(g.id)
         setDescription(g.description || '')
         const loaded = {}
         PHOTO_SLOTS.forEach(n => { if (g[`photo_${n}`]) loaded[n] = g[`photo_${n}`] })
@@ -110,6 +114,23 @@ export default function GarageEdit({ user, onSaved }) {
           selectedSkills.map(skill => ({ user_id: user.id, skill }))
         )
         if (skillErr) throw skillErr
+      }
+
+      // Mail nur beim ersten Anlegen
+      if (isNew) {
+        const { data: newGarage } = await supabase.from('garage').select('id').eq('user_id', user.id).single()
+        if (newGarage?.id) setGarageId(newGarage.id)
+        fetch('/api/notify-new-garage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ownerName:  user.user_metadata?.name || user.email,
+            ownerEmail: user.email,
+            skills:     selectedSkills,
+            garageId:   newGarage?.id,
+          }),
+        }).catch(() => {})
+        setIsNew(false)
       }
 
       setSuccess('Schrauberhalle gespeichert.')
