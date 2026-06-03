@@ -2035,7 +2035,7 @@ body::before {
 .vog-info { padding: 14px 16px 10px; flex: 1; }
 .vog-footer { padding: 10px 16px 14px; border-top: 1px dashed var(--hairline); display: flex; align-items: center; justify-content: space-between; gap: 8; margin-top: auto; }
 @media (max-width: 960px) { .vehicles-overview-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .vehicles-overview-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .vehicles-overview-grid { grid-template-columns: 1fr; } }
 
 /* ─── Event Card Grid ─── */
 .events-card-grid { display: grid; grid-template-columns: repeat(auto-fill, 280px); justify-content: start; gap: 16px; padding-top: 24px; }
