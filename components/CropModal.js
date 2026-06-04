@@ -30,7 +30,18 @@ export default function CropModal({ src, onConfirm, onCancel, aspect, circularCr
 
   const handleConfirm = useCallback(() => {
     const img = imgRef.current
-    if (!img || !completedCrop?.width || !completedCrop?.height) return
+    if (!img) return
+
+    // Falls der User den Crop nicht bewegt hat, completedCrop aus aktuellem crop ableiten
+    const activeCrop = completedCrop?.width && completedCrop?.height
+      ? completedCrop
+      : crop
+        ? convertToPixelCrop(crop, img.width, img.height)
+        : null
+
+    if (!activeCrop?.width || !activeCrop?.height) return
+    // Lokale Variable statt closure-Variable für den Rest der Funktion
+    const completedCropLocal = activeCrop
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -39,8 +50,8 @@ export default function CropModal({ src, onConfirm, onCancel, aspect, circularCr
     const scaleX = img.naturalWidth  / img.width
     const scaleY = img.naturalHeight / img.height
 
-    const naturalW = Math.round(completedCrop.width  * scaleX)
-    const naturalH = Math.round(completedCrop.height * scaleY)
+    const naturalW = Math.round(completedCropLocal.width  * scaleX)
+    const naturalH = Math.round(completedCropLocal.height * scaleY)
     const MAX = 1200
     const ratio = Math.min(1, MAX / Math.max(naturalW, naturalH))
 
@@ -54,18 +65,32 @@ export default function CropModal({ src, onConfirm, onCancel, aspect, circularCr
 
     ctx.drawImage(
       img,
-      completedCrop.x * scaleX,
-      completedCrop.y * scaleY,
+      completedCropLocal.x * scaleX,
+      completedCropLocal.y * scaleY,
       naturalW,
       naturalH,
       0, 0, W, H
     )
 
     canvas.toBlob(
-      (blob) => { if (blob) onConfirm(blob) },
+      (blob) => {
+        if (blob) {
+          onConfirm(blob)
+        } else {
+          // Fallback: toBlob failed, convert dataURL to Blob manually
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92)
+          const arr = dataUrl.split(',')
+          const mime = arr[0].match(/:(.*?);/)[1]
+          const bstr = atob(arr[1])
+          let n = bstr.length
+          const u8arr = new Uint8Array(n)
+          while (n--) u8arr[n] = bstr.charCodeAt(n)
+          onConfirm(new Blob([u8arr], { type: mime }))
+        }
+      },
       'image/jpeg', 0.92
     )
-  }, [completedCrop, onConfirm, outputWidth, outputHeight])
+  }, [crop, completedCrop, onConfirm, outputWidth, outputHeight])
 
   return (
     <div style={{
@@ -93,6 +118,7 @@ export default function CropModal({ src, onConfirm, onCancel, aspect, circularCr
             </div>
           </div>
           <button
+            type="button"
             onClick={onCancel}
             style={{
               width: '32px', height: '32px', border: '1.5px solid var(--ink)',
@@ -133,10 +159,10 @@ export default function CropModal({ src, onConfirm, onCancel, aspect, circularCr
           padding: '18px 24px', borderTop: '1px solid var(--hairline)',
           display: 'flex', gap: '10px', justifyContent: 'flex-end',
         }}>
-          <button onClick={onCancel} className="zh-btn zh-btn-outline" style={{ fontSize: '14px', padding: '10px 20px' }}>
+          <button type="button" onClick={onCancel} className="zh-btn zh-btn-outline" style={{ fontSize: '14px', padding: '10px 20px' }}>
             Abbrechen
           </button>
-          <button onClick={handleConfirm} className="zh-btn" style={{ fontSize: '14px', padding: '10px 20px' }}>
+          <button type="button" onClick={handleConfirm} className="zh-btn" style={{ fontSize: '14px', padding: '10px 20px' }}>
             Übernehmen →
           </button>
         </div>

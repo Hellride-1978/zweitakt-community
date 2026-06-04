@@ -94,10 +94,11 @@ function EditProfilePageInner() {
   const handleCropConfirm = (blob) => {
     const croppedFile = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
     setFile(croppedFile)
-    if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setPreviewUrl(URL.createObjectURL(blob))
     URL.revokeObjectURL(cropSrc)
     setCropSrc(null)
+    const reader = new FileReader()
+    reader.onloadend = () => setPreviewUrl(reader.result)
+    reader.readAsDataURL(blob)
   }
 
   const handleCropCancel = () => {

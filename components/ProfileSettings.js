@@ -124,10 +124,11 @@ function TabProfile({ user }) {
   const handleCropConfirm = (blob) => {
     const f = new File([blob], 'avatar.jpg', { type: 'image/jpeg' })
     setFile(f)
-    if (previewUrl) URL.revokeObjectURL(previewUrl)
-    setPreviewUrl(URL.createObjectURL(blob))
     URL.revokeObjectURL(cropSrc)
     setCropSrc(null)
+    const reader = new FileReader()
+    reader.onloadend = () => setPreviewUrl(reader.result)
+    reader.readAsDataURL(blob)
   }
 
   const handlePickFile = async () => {

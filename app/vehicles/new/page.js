@@ -40,15 +40,17 @@ export default function NewVehiclePage() {
 
   const handleCropConfirm = (blob) => {
     const croppedFile = new File([blob], 'vehicle.jpg', { type: 'image/jpeg' })
-    const newPreview = URL.createObjectURL(blob)
-    setImages(prev => prev.map((img, i) => {
-      if (i !== cropSlot) return img
-      if (img.previewUrl) URL.revokeObjectURL(img.previewUrl)
-      return { file: croppedFile, previewUrl: newPreview }
-    }))
     URL.revokeObjectURL(cropSrc)
     setCropSrc(null)
     setCropSlot(null)
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setImages(prev => prev.map((img, i) => {
+        if (i !== cropSlot) return img
+        return { file: croppedFile, previewUrl: reader.result }
+      }))
+    }
+    reader.readAsDataURL(blob)
   }
 
   const handleCropCancel = () => {
