@@ -96,7 +96,7 @@ export default async function Home() {
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
     supabase
       .from('profiles')
-      .select('id, name, location, lat, lng')
+      .select('id, name, location, avatar_url, lat, lng')
       .not('lat', 'is', null)
       .not('lng', 'is', null),
   ])
@@ -366,6 +366,20 @@ export default async function Home() {
           </div>
         )}
       </section>
+
+      {/* ── MEMBER MAP ── */}
+      {mapMembers && mapMembers.length > 0 && (
+        <section className="zh-preview">
+          <div className="zh-preview-head">
+            <div>
+              <div className="mark zh-members-mark">Wo seid ihr?</div>
+              <h2>die <em>crew.</em> auf der Karte.</h2>
+            </div>
+            <Link href="/profiles" className="all">Alle Schrauber →</Link>
+          </div>
+          <MemberMapWrapper members={mapMembers} />
+        </section>
+      )}
 
       <ContactForm />
 

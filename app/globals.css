@@ -936,6 +936,156 @@ body::before {
 
 .zh-members { }
 .zh-members-mark::before { content: none; }
+
+/* ── Member Map Split ── */
+.mms-root { width: 100%; }
+
+/* Tabs: nur auf Mobile */
+.mms-tabs {
+  display: none;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.mms-tab {
+  padding: 9px 20px;
+  border-radius: 100px;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.mms-tab.active {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* Desktop: immer split, beide Spalten sichtbar */
+.mms-split {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: 480px;
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.mms-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--cream);
+  border-right: 1.5px solid var(--hairline);
+}
+.mms-map { display: block; height: 100%; min-height: 0; }
+
+.mms-list::-webkit-scrollbar { width: 4px; }
+.mms-list::-webkit-scrollbar-track { background: transparent; }
+.mms-list::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 2px; }
+
+.mms-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 1px solid var(--ink-faint);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.12s;
+}
+.mms-row:last-child { border-bottom: none; }
+.mms-row:hover { background: var(--parchment); }
+.mms-row.active { background: color-mix(in oklab, var(--accent) 20%, var(--cream)); }
+
+.mms-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: var(--parchment);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 16px;
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.mms-info { flex: 1; min-width: 0; }
+.mms-name {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mms-loc {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mms-profile-link {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent-ink);
+  flex-shrink: 0;
+  padding: 2px 4px;
+  text-decoration: none;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.mms-profile-link.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mms-loading {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+  background: var(--parchment);
+}
+
+/* Mobile: Tabs zeigen, eine Spalte, Tab-State steuert Sichtbarkeit */
+@media (max-width: 768px) {
+  .mms-tabs { display: flex; }
+  .mms-split {
+    grid-template-columns: 1fr;
+    height: 460px;
+    border-radius: 14px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .mms-list { border-right: none; }
+
+  /* Liste aktiv: Karte ausblenden */
+  .mms-active-liste .mms-map { display: none !important; }
+  /* Karte aktiv: Liste ausblenden */
+  .mms-active-karte .mms-list { display: none !important; }
+  .mms-active-karte .mms-map { display: block !important; height: 100%; }
+}
 .zh-members-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

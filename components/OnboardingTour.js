@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/useAuth'
+import { supabase } from '@/lib/supabase'
 
 const TOUR_KEY = 'zh-tour-v1'
+const NEW_USER_WINDOW_MS = 15 * 60 * 1000 // 15 Minuten
 
 const STEPS = [
   {
@@ -49,12 +51,28 @@ export default function OnboardingTour() {
   const [phase, setPhase] = useState('idle') // idle | welcome | touring | done
   const [step, setStep]   = useState(0)
   const [pos,  setPos]    = useState(null)
+  const [hasPLZ, setHasPLZ] = useState(false)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024
 
   useEffect(() => {
     if (loading || !user) return
-    if (!localStorage.getItem(TOUR_KEY)) setPhase('welcome')
+    if (localStorage.getItem(TOUR_KEY)) return
+
+    // Nur für frisch registrierte User (< 15 Min)
+    const isNewUser = Date.now() - new Date(user.created_at).getTime() < NEW_USER_WINDOW_MS
+    if (!isNewUser) {
+      localStorage.setItem(TOUR_KEY, '1')
+      return
+    }
+
+    setPhase('welcome')
   }, [user, loading])
+
+  useEffect(() => {
+    if (!user) return
+    supabase.from('profiles').select('plz').eq('id', user.id).single()
+      .then(({ data }) => { if (data?.plz) setHasPLZ(true) })
+  }, [user])
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') skip() }
@@ -150,11 +168,23 @@ export default function OnboardingTour() {
         <span className="zh-tour-modal-icon">🤙</span>
         <span className="zh-tour-modal-mark">Alles klar</span>
         <h2 className="zh-tour-modal-title">Bereit<br />loszulegen.</h2>
-        <p className="zh-tour-modal-text">Trag deine PLZ im Profil ein — dann erscheinst du auf der Karte und andere Schrauber in deiner Nähe können dich finden.</p>
-        <div className="zh-tour-modal-actions">
-          <Link href={`/profile/${user.id}?settings=1`} className="zh-btn" onClick={finish}>PLZ eintragen →</Link>
-          <Link href="/events" className="zh-btn zh-btn-outline" onClick={finish}>Termine ansehen →</Link>
-        </div>
+        {hasPLZ ? (
+          <>
+            <p className="zh-tour-modal-text">Alles eingerichtet — viel Spaß in der Crew.</p>
+            <div className="zh-tour-modal-actions">
+              <Link href="/events" className="zh-btn" onClick={finish}>Termine ansehen →</Link>
+              <Link href="/profiles" className="zh-btn zh-btn-outline" onClick={finish}>Crew entdecken →</Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="zh-tour-modal-text">Trag deine PLZ im Profil ein — dann erscheinst du auf der Karte und andere Schrauber in deiner Nähe können dich finden.</p>
+            <div className="zh-tour-modal-actions">
+              <Link href={`/profile/${user.id}?settings=1`} className="zh-btn" onClick={finish}>PLZ eintragen →</Link>
+              <Link href="/events" className="zh-btn zh-btn-outline" onClick={finish}>Termine ansehen →</Link>
+            </div>
+          </>
+        )}
         <button onClick={finish} className="zh-tour-skip-link">Jetzt nicht</button>
       </div>
     </div>

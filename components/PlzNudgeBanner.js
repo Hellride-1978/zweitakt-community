@@ -29,10 +29,14 @@ export default function PlzNudgeBanner() {
       .eq('id', user.id)
       .single()
       .then(({ data }) => {
-        if (data && !data.plz) {
-          setProfileId(data.id)
-          setShow(true)
+        if (!data) return
+        if (data.plz) {
+          // PLZ vorhanden → dauerhaft kein Nudge mehr
+          localStorage.setItem(STORAGE_KEY, String(Date.now() + 365 * 86400_000))
+          return
         }
+        setProfileId(data.id)
+        setShow(true)
       })
   }, [user, loading, pathname])
 

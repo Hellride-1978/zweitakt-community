@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic'
 
-const MemberMap = dynamic(() => import('@/components/MemberMap'), { ssr: false })
+const MemberMapSplit = dynamic(() => import('@/components/MemberMapSplit'), { ssr: false })
 
 export default function MemberMapWrapper({ members }) {
-  return <MemberMap members={members} />
+  return <MemberMapSplit members={members} />
 }
