@@ -2642,7 +2642,7 @@ body::before {
   position: fixed;
   bottom: 28px;
   right: 28px;
-  z-index: 90;
+  z-index: 1000;
   width: 52px;
   height: 52px;
   background: var(--ink);
@@ -2663,7 +2663,7 @@ body::before {
 .zh-feedback-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 1001;
   background: rgba(0,0,0,0.45);
   display: flex;
   align-items: flex-end;
