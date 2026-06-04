@@ -227,14 +227,23 @@ function TabProfile({ user }) {
         <input value={email} disabled className="zh-input" style={{ opacity: 0.55, cursor: 'not-allowed' }} />
       </div>
 
-      <div style={{ paddingTop: 14, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
+      <div style={{ paddingTop: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, padding: '8px 12px', background: 'color-mix(in oklab, var(--accent) 10%, var(--cream))', border: '1px solid color-mix(in oklab, var(--accent) 30%, transparent)', borderRadius: 10 }}>
+          <span style={{ fontSize: 15 }}>📍</span>
+          <span style={{ fontFamily: 'var(--sans)', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.4 }}>
+            Mit deiner PLZ erscheinst du auf der Schrauber-Karte und kannst Leute in deiner Nähe finden.
+          </span>
+        </div>
+      </div>
+
+      <div style={{ paddingTop: 6, display: 'grid', gridTemplateColumns: '1fr auto', gap: 12 }}>
         <div>
           <label htmlFor="ps-plz" className="zh-label">Postleitzahl</label>
           <input
             id="ps-plz"
             value={form.plz}
             onChange={e => setForm(f => ({ ...f, plz: e.target.value }))}
-            className="zh-input"
+            className={`zh-input${!form.plz ? ' zh-input-highlight' : ''}`}
             placeholder="z.B. 10115"
             maxLength={10}
           />

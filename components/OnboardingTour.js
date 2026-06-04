@@ -150,9 +150,9 @@ export default function OnboardingTour() {
         <span className="zh-tour-modal-icon">🤙</span>
         <span className="zh-tour-modal-mark">Alles klar</span>
         <h2 className="zh-tour-modal-title">Bereit<br />loszulegen.</h2>
-        <p className="zh-tour-modal-text">Jetzt Profil anlegen und die erste Ausfahrt eintragen.</p>
+        <p className="zh-tour-modal-text">Trag deine PLZ im Profil ein — dann erscheinst du auf der Karte und andere Schrauber in deiner Nähe können dich finden.</p>
         <div className="zh-tour-modal-actions">
-          <Link href={`/profile/${user.id}`} className="zh-btn" onClick={finish}>Profil anlegen →</Link>
+          <Link href={`/profile/${user.id}?settings=1`} className="zh-btn" onClick={finish}>PLZ eintragen →</Link>
           <Link href="/events" className="zh-btn zh-btn-outline" onClick={finish}>Termine ansehen →</Link>
         </div>
         <button onClick={finish} className="zh-tour-skip-link">Jetzt nicht</button>
