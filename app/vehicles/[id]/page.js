@@ -22,7 +22,7 @@ export default async function VehiclePage({ params }) {
       <DesktopLayout crumb="Nicht gefunden">
         <div style={{ padding: '40px 0' }}>
           <div className="zd-card">
-            <h1 className="zh-page-title" style={{ fontSize: 36 }}>Fahrzeug nicht gefunden.</h1>
+            <h1 className="zd-h1" style={{ fontSize: 36 }}>Fahrzeug nicht gefunden.</h1>
             <Link href="/profiles" className="zd-btn outline" style={{ display: 'inline-flex', marginTop: 20 }}>← Community</Link>
           </div>
         </div>

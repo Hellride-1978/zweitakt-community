@@ -1,6 +1,6 @@
 import { createServerClient } from '@/lib/supabase'
 import Link from 'next/link'
-import MembersGrid from './MembersGrid'
+import ProfilesClient from './ProfilesClient'
 import DesktopLayout from '@/components/DesktopLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
@@ -12,14 +12,19 @@ export default async function ProfilesPage() {
     .select('id, name, avatar_url, location, plz, lat, lng, last_seen, created_at, vehicles(id, make, model, title, year)')
     .order('created_at', { ascending: false })
 
+  const mapMembers = (members ?? []).filter(m => {
+    const lat = parseFloat(m.lat)
+    const lng = parseFloat(m.lng)
+    return isFinite(lat) && isFinite(lng)
+  })
+
   return (
     <DesktopLayout crumb="Schrauber">
-    <div className="zh-page">
-      <div className="zh-page-inner">
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 40 }}>
+      <div className="feed-col">
+        <div className="feed-head">
           <div>
-            <div className="zh-section-mark zh-members-mark">Schrauber</div>
-            <h1 className="zh-page-title" style={{ marginTop: 12 }}>die <em>crew.</em></h1>
+            <div className="zd-mono accent">Schrauber</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>die <em>crew.</em></h1>
           </div>
         </div>
 
@@ -33,10 +38,9 @@ export default async function ProfilesPage() {
             </Link>
           </div>
         ) : (
-          <MembersGrid members={members} />
+          <ProfilesClient members={members} mapMembers={mapMembers} />
         )}
       </div>
-    </div>
     </DesktopLayout>
   )
 }

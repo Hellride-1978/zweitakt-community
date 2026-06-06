@@ -1,0 +1,48 @@
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  padding: 5px 16px;
+  border-radius: 100px;
+  border: 2px solid var(--hairline);
+  background: transparent;
+  color: var(--ink-muted);
+  box-shadow: 2px 2px 0 var(--hairline);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s, border-color 0.15s, color 0.15s;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.skill-badge:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.skill-badge.active {
+  background: var(--accent);
+  border-color: var(--accent-ink);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--accent-ink);
+}
+
+.skill-badge.active:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--accent-ink);
+}
+
+.skill-badge.reset {
+  color: #c04040;
+  border-color: #c04040;
+  box-shadow: 2px 2px 0 #c04040;
+}
+
+.skill-badge.reset:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #c04040;
+  background: rgba(180,40,40,0.05);
+}

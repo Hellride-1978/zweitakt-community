@@ -187,7 +187,7 @@ export default function ThreadClient({ id }) {
           </div>
 
           <h1
-            className="zh-page-title"
+            className="zd-h1"
             style={{ fontSize: 'clamp(24px, 4vw, 40px)', marginBottom: 28 }}
           >
             {root.subject}

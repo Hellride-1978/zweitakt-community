@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -29,6 +29,7 @@ export default function Nav() {
   return (
     <>
       <nav className="zh-nav">
+        <div className="zh-nav-inner">
         <Link href="/" className="zh-nav-logo" onClick={close}>
           Zweitakt<span>hoden</span>
         </Link>
@@ -36,10 +37,11 @@ export default function Nav() {
         <ul className="zh-nav-links">
           {!loading && user ? (
             <>
-              <li><Link id="tour-termine" href="/events"       className={pathname.startsWith('/events')    ? 'active' : ''}>Termine</Link></li>
-              <li><Link id="tour-bikes"   href="/vehicles"     className={pathname.startsWith('/vehicles')  ? 'active' : ''}>Bikes</Link></li>
-              <li><Link href="/profiles"                       className={pathname.startsWith('/profiles')  ? 'active' : ''}>Schrauber</Link></li>
-              <li><Link href="/schrauberhalle"                      className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
+              <li><Link id="tour-termine" href="/events"       className={pathname.startsWith('/events')         ? 'active' : ''}>Termine</Link></li>
+              <li><Link id="tour-bikes"   href="/vehicles"     className={pathname.startsWith('/vehicles')       ? 'active' : ''}>Bikes</Link></li>
+              <li><Link href="/profiles"                       className={pathname.startsWith('/profiles')       ? 'active' : ''}>Schrauber</Link></li>
+              <li><Link id="tour-halle" href="/schrauberhalle" className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
+              <li><Link id="tour-forum" href="/forum"          className={pathname.startsWith('/forum')          ? 'active' : ''}>Forum</Link></li>
               <li><Link id="tour-profil"  href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
               <li>
                 <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`} title="Nachrichten">
@@ -73,6 +75,7 @@ export default function Nav() {
               <li><Link href="/vehicles"       className={pathname.startsWith('/vehicles')       ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"       className={pathname.startsWith('/profiles')       ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href="/schrauberhalle" className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
+              <li><Link href="/forum"          className={pathname.startsWith('/forum')          ? 'active' : ''}>Forum</Link></li>
               <li><Link href="/auth/login"     className={pathname === '/auth/login'             ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
@@ -81,7 +84,7 @@ export default function Nav() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
           <ThemeToggle />
 
-{!loading && (
+          {!loading && (
             user ? (
               <button className="zh-nav-cta" onClick={handleLogout}>
                 Abmelden <span className="zh-nav-cta-dot" />
@@ -106,6 +109,7 @@ export default function Nav() {
             </span>
             <span className="burger-label" aria-hidden="true">{open ? 'schließen' : 'menu'}</span>
           </button>
+        </div>
         </div>
       </nav>
 
@@ -134,6 +138,12 @@ export default function Nav() {
               <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FontAwesomeIcon icon={faWrench} style={{ fontSize: 14, width: 16 }} />
                 Schrauberhalle
+              </span>
+            </Link>
+            <Link href="/forum" onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faComment} style={{ fontSize: 14, width: 16 }} />
+                Forum
               </span>
             </Link>
             <Link href={`/profile/${user.id}`} onClick={close}>
@@ -175,6 +185,12 @@ export default function Nav() {
             <Link href="/vehicles"       onClick={close}>Bikes</Link>
             <Link href="/profiles"       onClick={close}>Schrauber</Link>
             <Link href="/schrauberhalle" onClick={close}>Schrauberhalle</Link>
+            <Link href="/forum"          onClick={close}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FontAwesomeIcon icon={faComment} style={{ fontSize: 14, width: 16 }} />
+                Forum
+              </span>
+            </Link>
             <Link href="/auth/login"     onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
           </>

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from './CropModal'
 import { validateImageFile } from '@/lib/validateImage'
 import { resolvePostalCode } from '@/lib/geocoding'
+import NewsletterToggle from './NewsletterToggle'
 
 // ─── Passwort-Regeln ─────────────────────────────────────────
 
@@ -298,7 +299,90 @@ function TabProfile({ user }) {
   )
 }
 
-// ─── Tab 2: Passwort & Sicherheit ────────────────────────────
+// ─── Tab 2: Benachrichtigungen ───────────────────────────────
+
+function TabNotifications({ user }) {
+  const [notify, setNotify] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [success, setSuccess] = useState(null)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    supabase.from('profiles').select('notify_forum_replies').eq('id', user.id).single()
+      .then(({ data }) => { if (data) setNotify(data.notify_forum_replies ?? true) })
+  }, [user])
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setSaving(true)
+    setError(null)
+    setSuccess(null)
+    const { error } = await supabase
+      .from('profiles')
+      .update({ notify_forum_replies: notify })
+      .eq('id', user.id)
+    setSaving(false)
+    if (error) setError('Speichern fehlgeschlagen.')
+    else { setSuccess('Gespeichert.'); setTimeout(() => setSuccess(null), 3000) }
+  }
+
+  return (
+    <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div>
+        <SectionLabel>Newsletter</SectionLabel>
+        <div style={{ padding: '14px 0', borderBottom: '1px solid var(--hairline)' }}>
+          <NewsletterToggle />
+        </div>
+      </div>
+      <div>
+        <SectionLabel>Forum</SectionLabel>
+        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '14px 0', borderBottom: '1px solid var(--hairline)', cursor: 'pointer' }}>
+          <div>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink)', fontWeight: 500 }}>
+              Antworten auf meine Beiträge
+            </div>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-muted)', marginTop: 2 }}>
+              E-Mail wenn jemand auf deinen Forum-Thread antwortet
+            </div>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notify}
+            onClick={() => setNotify(v => !v)}
+            style={{
+              flexShrink: 0,
+              width: 44,
+              height: 26,
+              borderRadius: 100,
+              border: 'none',
+              background: notify ? 'var(--ink)' : 'var(--hairline)',
+              position: 'relative',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+            }}
+          >
+            <span style={{
+              position: 'absolute',
+              top: 3,
+              left: notify ? 21 : 3,
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              background: '#fff',
+              transition: 'left 0.2s',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+            }} />
+          </button>
+        </label>
+      </div>
+      {error && <div className="zh-error">{error}</div>}
+      <SaveRow saving={saving} success={success} />
+    </form>
+  )
+}
+
+// ─── Tab 3: Passwort & Sicherheit ────────────────────────────
 
 function TabSecurity({ user }) {
   const router = useRouter()
@@ -433,8 +517,9 @@ function TabSecurity({ user }) {
 // ─── Haupt-Export ─────────────────────────────────────────────
 
 const TABS = [
-  { id: 'profile',  label: 'Profildaten' },
-  { id: 'security', label: 'Sicherheit' },
+  { id: 'profile',       label: 'Profildaten' },
+  { id: 'notifications', label: 'Benachrichtigungen' },
+  { id: 'security',      label: 'Sicherheit' },
 ]
 
 export default function ProfileSettings({ profileId }) {
@@ -444,9 +529,13 @@ export default function ProfileSettings({ profileId }) {
 
   const isOpen = searchParams.get('settings') === '1'
 
-  const scrollRef = useCallback((node) => {
-    if (node) node.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [])
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen || !scrollRef.current) return
+    const t = setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80)
+    return () => clearTimeout(t)
+  }, [isOpen])
 
   if (loading || !user || user.id !== profileId || !isOpen) return null
 
@@ -471,8 +560,9 @@ export default function ProfileSettings({ profileId }) {
         </div>
 
         <div className="zh-card">
-          {activeTab === 'profile'  && <TabProfile  user={user} />}
-          {activeTab === 'security' && <TabSecurity user={user} />}
+          {activeTab === 'profile'        && <TabProfile       user={user} />}
+          {activeTab === 'notifications'  && <TabNotifications user={user} />}
+          {activeTab === 'security'       && <TabSecurity      user={user} />}
         </div>
       </div>
     </div>

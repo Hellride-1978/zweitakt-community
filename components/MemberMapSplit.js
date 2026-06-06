@@ -11,13 +11,13 @@ function buildIcon(active) {
   const dot = active ? '#fff' : '#e8523a'
   return L.divIcon({
     className: '',
-    html: `<svg width="20" height="26" viewBox="0 0 20 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 0C4.477 0 0 4.477 0 10c0 6.627 10 16 10 16s10-9.373 10-16C20 4.477 15.523 0 10 0z" fill="${fill}" stroke="#fff" stroke-width="1.5"/>
-      <circle cx="10" cy="10" r="3.5" fill="${dot}"/>
+    html: `<svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 0C4.925 0 0 4.925 0 11c0 7.29 11 17.5 11 17.5S22 18.29 22 11C22 4.925 17.075 0 11 0z" fill="${fill}" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="11" cy="11" r="4" fill="${dot}"/>
     </svg>`,
-    iconSize: [20, 26],
-    iconAnchor: [10, 26],
-    popupAnchor: [0, -28],
+    iconSize: [22, 28],
+    iconAnchor: [11, 28],
+    popupAnchor: [0, -30],
   })
 }
 
@@ -30,17 +30,78 @@ function MapCapture({ mapRef, tab }) {
   return null
 }
 
+function isOnline(lastSeen) {
+  if (!lastSeen) return false
+  return Date.now() - new Date(lastSeen).getTime() < 10 * 60 * 1000
+}
+
+function MemberRow({ m, active, onSelect }) {
+  const online = isOnline(m.last_seen)
+  const bikes = m.vehicles ?? []
+  const latestBike = bikes[0]
+  const bikeLabel = latestBike
+    ? `${latestBike.make} ${latestBike.model}${latestBike.year ? ` (${latestBike.year})` : ''}`
+    : null
+
+  return (
+    <div
+      className={`mms-row${active ? ' active' : ''}`}
+      onClick={() => onSelect(m)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => e.key === 'Enter' && onSelect(m)}
+    >
+      <div className="mms-avatar-wrap">
+        <div className="mms-avatar">
+          {m.avatar_url
+            ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            : (m.name || '?').charAt(0).toUpperCase()
+          }
+        </div>
+        {online && <span className="mms-online-dot" title="Gerade online" />}
+      </div>
+
+      <div className="mms-info">
+        <div className="mms-name">{m.name || 'Unbekannt'}</div>
+        {m.location && <div className="mms-loc">{m.location}</div>}
+        {bikeLabel && <div className="mms-bike">{bikeLabel}</div>}
+      </div>
+
+      <div className="mms-row-right">
+        {bikes.length > 1 && (
+          <span className="mms-bike-count" title={`${bikes.length} Bikes`}>{bikes.length}</span>
+        )}
+        <Link
+          href={`/profile/${m.id}`}
+          className="mms-profile-link"
+          onClick={e => e.stopPropagation()}
+          title="Profil ansehen"
+        >
+          →
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 export default function MemberMapSplit({ members }) {
   const [mounted, setMounted] = useState(false)
   const [activeId, setActiveId] = useState(null)
   const [tab, setTab] = useState('liste')
+  const [search, setSearch] = useState('')
   const mapRef = useRef(null)
 
   useEffect(() => { setMounted(true) }, [])
 
-  const sortedMembers = [...members].sort((a, b) =>
-    (a.name || '').localeCompare(b.name || '', 'de')
-  )
+  const filtered = members.filter(m => {
+    if (!search) return true
+    const q = search.toLowerCase()
+    return (
+      (m.name || '').toLowerCase().includes(q) ||
+      (m.location || '').toLowerCase().includes(q) ||
+      (m.vehicles || []).some(v => `${v.make} ${v.model}`.toLowerCase().includes(q))
+    )
+  })
 
   const validMembers = members.filter(m => {
     const lat = parseFloat(m.lat)
@@ -52,66 +113,67 @@ export default function MemberMapSplit({ members }) {
     const lat = parseFloat(m.lat)
     const lng = parseFloat(m.lng)
     setActiveId(m.id)
-    setTab('karte')
     if (isFinite(lat) && isFinite(lng)) {
+      setTab('karte')
       setTimeout(() => {
         mapRef.current?.flyTo([lat, lng], 13, { duration: 0.9 })
       }, 80)
     }
   }
 
+  const onlineCount = members.filter(m => isOnline(m.last_seen)).length
+
   return (
     <div className="mms-root">
+
       <div className="mms-tabs">
-        <button
-          className={`mms-tab${tab === 'liste' ? ' active' : ''}`}
-          onClick={() => setTab('liste')}
-        >
-          Liste
+        <button className={`mms-tab${tab === 'liste' ? ' active' : ''}`} onClick={() => setTab('liste')}>
+          Liste ({members.length})
         </button>
-        <button
-          className={`mms-tab${tab === 'karte' ? ' active' : ''}`}
-          onClick={() => setTab('karte')}
-        >
+        <button className={`mms-tab${tab === 'karte' ? ' active' : ''}`} onClick={() => setTab('karte')}>
           Karte
         </button>
       </div>
 
       <div className={`mms-split mms-active-${tab}`}>
 
-        {/* List — zeigt alle members, klick fliegt nur wenn Koordinaten vorhanden */}
         <div className="mms-list">
-          {sortedMembers.map((m) => (
-            <div
-              key={m.id}
-              className={`mms-row${activeId === m.id ? ' active' : ''}`}
-              onClick={() => handleSelect(m)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={e => e.key === 'Enter' && handleSelect(m)}
-            >
-              <div className="mms-avatar">
-                {m.avatar_url
-                  ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                  : (m.name || '?').charAt(0).toUpperCase()
-                }
-              </div>
-              <div className="mms-info">
-                <div className="mms-name">{m.name || 'Unbekannt'}</div>
-                {m.location && <div className="mms-loc">{m.location}</div>}
-              </div>
-              <Link
-                href={`/profile/${m.id}`}
-                className={`mms-profile-link${activeId === m.id ? ' visible' : ''}`}
-                onClick={e => e.stopPropagation()}
-              >
-                →
-              </Link>
+          <div className="mms-list-head">
+            <div className="mms-list-stats">
+              <span className="mms-stat">
+                <span className="mms-stat-n">{members.length}</span>
+                <span className="mms-stat-k">auf der Karte</span>
+              </span>
+              {onlineCount > 0 && (
+                <span className="mms-stat mms-stat--online">
+                  <span className="mms-online-dot mms-online-dot--sm" />
+                  <span className="mms-stat-k">{onlineCount} online</span>
+                </span>
+              )}
             </div>
-          ))}
+            <input
+              className="mms-search"
+              type="search"
+              placeholder="Name, Ort oder Bike…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="mms-empty">Keine Treffer für „{search}"</div>
+          ) : (
+            filtered.map(m => (
+              <MemberRow
+                key={m.id}
+                m={m}
+                active={activeId === m.id}
+                onSelect={handleSelect}
+              />
+            ))
+          )}
         </div>
 
-        {/* Map */}
         <div className="mms-map">
           {!mounted ? (
             <div className="mms-loading">Karte lädt…</div>
@@ -128,7 +190,7 @@ export default function MemberMapSplit({ members }) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
               />
               <MapCapture mapRef={mapRef} tab={tab} />
-              {validMembers.map((m) => (
+              {validMembers.map(m => (
                 <Marker
                   key={m.id}
                   position={[parseFloat(m.lat), parseFloat(m.lng)]}
@@ -143,8 +205,14 @@ export default function MemberMapSplit({ members }) {
                       {m.name || 'Unbekannt'}
                     </Link>
                     {m.location && (
-                      <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-muted)', marginTop: 2 }}>
+                      <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-muted)', marginTop: 2 }}>
                         {m.location}
+                      </div>
+                    )}
+                    {m.vehicles?.[0] && (
+                      <div style={{ fontFamily: 'var(--sans)', fontSize: 12, color: 'var(--ink-soft)', marginTop: 4 }}>
+                        {m.vehicles[0].make} {m.vehicles[0].model}
+                        {m.vehicles[0].year ? ` (${m.vehicles[0].year})` : ''}
                       </div>
                     )}
                   </Popup>

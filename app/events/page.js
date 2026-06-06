@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import DesktopLayout from '@/components/DesktopLayout'
 import EventsList from './EventsList'
-import EventsCreateCard from './EventsCreateCard'
+import EventsCreateButton from './EventsCreateButton'
 
 export default async function EventsPage({ searchParams }) {
   const params = await searchParams
@@ -31,31 +31,21 @@ export default async function EventsPage({ searchParams }) {
 
   return (
     <DesktopLayout>
-      <div className="feed-grid">
-        {/* Main column */}
-        <div className="feed-col">
-          <div className="feed-head">
-            <div>
-              <div className="zd-mono accent">Ausfahrten</div>
-              <h1 className="zd-h1" style={{ marginTop: 6 }}>alle <em>termine.</em></h1>
-            </div>
+      <div className="feed-col">
+        <div className="feed-head">
+          <div>
+            <div className="zd-mono accent">Ausfahrten</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>alle <em>termine.</em></h1>
           </div>
-
-          {error ? (
-            <div className="zh-error">{error.message}</div>
-          ) : (
-            <EventsList events={events ?? []} filter={filter} likeCounts={likeCounts} />
-          )}
+          <EventsCreateButton />
         </div>
 
-        {/* Right rail */}
-        <aside className="feed-rail">
-          <EventsCreateCard />
-        </aside>
+        {error ? (
+          <div className="zh-error">{error.message}</div>
+        ) : (
+          <EventsList events={events ?? []} filter={filter} likeCounts={likeCounts} />
+        )}
       </div>
-
-      {/* ── Mobile layout (hidden on desktop) ── */}
-      <style>{`@media(min-width:1024px){.events-mobile{display:none}}`}</style>
     </DesktopLayout>
   )
 }

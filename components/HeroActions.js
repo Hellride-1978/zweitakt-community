@@ -16,7 +16,7 @@ export default function HeroActions() {
             Mein Profil
             <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '14px' }} />
           </Link>
-          <Link href="/events" className="zh-btn zh-btn-outline">Termine & Ausfahrten</Link>
+          <Link href="/vehicles" className="zh-btn zh-btn-outline">Eure Bikes</Link>
         </>
       ) : (
         <>

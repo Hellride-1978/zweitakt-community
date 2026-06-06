@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import DesktopLayout from '@/components/DesktopLayout'
 
 export const metadata = {
   title: 'Impressum — Zweitakthoden',
@@ -6,12 +7,15 @@ export const metadata = {
 
 export default function ImpressumPage() {
   return (
-    <div className="zh-page">
-      <div className="zh-page-inner-sm">
-        <div style={{ marginBottom: '32px' }}>
-          <div className="zh-section-mark">Rechtliches</div>
-          <h1 className="zh-page-title" style={{ marginTop: '16px' }}>Impressum.</h1>
+    <DesktopLayout>
+      <div className="feed-col">
+        <div className="feed-head" style={{ marginBottom: 32 }}>
+          <div>
+            <div className="zd-mono accent">Rechtliches</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>Impressum.</h1>
+          </div>
         </div>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
 
         <div className="zh-card" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
@@ -64,7 +68,8 @@ export default function ImpressumPage() {
             ← Zurück zur Startseite
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </DesktopLayout>
   )
 }

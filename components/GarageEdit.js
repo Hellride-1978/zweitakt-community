@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
-import { SKILLS, skillBadgeStyle } from '@/lib/garage'
+import { SKILLS } from '@/lib/garage'
+import '@/app/schrauberhalle/schrauberhalle.css'
 import { validateImageFile } from '@/lib/validateImage'
 
 const PHOTO_SLOTS = [1, 2, 3, 4, 5]
@@ -158,7 +159,7 @@ export default function GarageEdit({ user, onSaved }) {
               key={skill}
               type="button"
               onClick={() => toggleSkill(skill)}
-              style={skillBadgeStyle(selectedSkills.includes(skill))}
+              className={`skill-badge${selectedSkills.includes(skill) ? ' active' : ''}`}
             >
               {skill}
             </button>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import DesktopLayout from '@/components/DesktopLayout'
 
 export const metadata = {
   title: 'Datenschutzerklärung — Zweitakthoden',
@@ -6,12 +7,15 @@ export const metadata = {
 
 export default function DatenschutzPage() {
   return (
-    <div className="zh-page">
-      <div className="zh-page-inner-sm">
-        <div style={{ marginBottom: '32px' }}>
-          <div className="zh-section-mark">Rechtliches</div>
-          <h1 className="zh-page-title" style={{ marginTop: '16px' }}>Datenschutz.</h1>
+    <DesktopLayout>
+      <div className="feed-col">
+        <div className="feed-head" style={{ marginBottom: 32 }}>
+          <div>
+            <div className="zd-mono accent">Rechtliches</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>Datenschutz.</h1>
+          </div>
         </div>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
 
         <div className="zh-card" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
@@ -34,9 +38,18 @@ export default function DatenschutzPage() {
               <li>Anzeigename und optionales Profilbild</li>
               <li>Freiwillig angegebene Informationen wie Wohnort, Fahrzeuge und Profiltext</li>
               <li>Teilnahme an Ausfahrten</li>
+              <li>Forum-Beiträge und Antworten («Die Anlaufstelle»)</li>
+              <li>Postleitzahl (PLZ) und geografische Koordinaten (Breitengrad/Längengrad) – freiwillig, für die Anzeige auf der Schrauber-Karte</li>
+              <li>Kommentare auf Terminen und Fahrzeugen (Text, Zeitstempel, Zuordnung zum Profil)</li>
+              <li>Privat-Nachrichten (Inhalt, Zeitstempel, Sender/Empfänger – nur für die beteiligten Nutzer sichtbar)</li>
+              <li>Likes auf Terminen, Profilen und Fahrzeugen (Zuordnung zum Profil und zum Zielobjekt)</li>
+              <li>Letzter Aktivitätszeitpunkt (<code>last_seen</code>) – wird alle 5 Minuten automatisch aktualisiert solange du eingeloggt bist, für den Online-Status auf Profilkacheln</li>
             </ul>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
-              Daten, die du in deinem Profil oder bei Terminen einträgst, sind für andere eingeloggte Mitglieder sichtbar.
+              Daten, die du in deinem Profil, bei Terminen oder im Forum einträgst, sind öffentlich sichtbar — auch ohne Anmeldung. Forum-Beiträge können von dir als Autor jederzeit bearbeitet oder gelöscht werden.
+            </p>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
+              Wenn du das Kontaktformular verwendest, werden Name, E-Mail-Adresse und Nachricht dauerhaft in unserer Datenbank gespeichert. Wenn du eine Schrauberhalle anlegst, werden Beschreibung, bis zu fünf Fotos und deine Schrauber-Skills gespeichert und sind für alle Mitglieder öffentlich sichtbar.
             </p>
           </section>
 
@@ -44,6 +57,9 @@ export default function DatenschutzPage() {
             <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>3. Zweck der Verarbeitung</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Deine Daten werden ausschließlich für den Betrieb dieser Community-Plattform verwendet: Anmeldung, Profilverwaltung und Koordination von Ausfahrten. Eine Weitergabe an Dritte zu Werbezwecken findet nicht statt.
+            </p>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
+              Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, sowie neue Teilnehmer an deinen Terminen.
             </p>
           </section>
 
@@ -67,12 +83,17 @@ export default function DatenschutzPage() {
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Resend</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Für den Versand von Benachrichtigungs-E-Mails bei neuen Registrierungen nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei werden Name und E-Mail-Adresse des neuen Mitglieds einmalig zum Versand der Benachrichtigung übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>resend.com/legal/privacy-policy</a>
+              Für den Versand von Benachrichtigungs-E-Mails nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Resend wird eingesetzt für: (1) Registrierungsbestätigung bei neuen Mitgliedern und (2) Benachrichtigung an Autoren von Forum-Beiträgen, wenn jemand darauf antwortet. Dabei wird die E-Mail-Adresse des Empfängers einmalig zum Versand übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>resend.com/legal/privacy-policy</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>OpenStreetMap / Nominatim</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Zur Anzeige von Kartenausschnitten und Ortsbezeichnungen bei Terminen nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Koordinaten von Treffpunkten übermittelt, jedoch keine personenbezogenen Daten. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
+              Zur Anzeige von Kartenausschnitten bei Terminen und zur Umwandlung von Ort- und PLZ-Eingaben in geografische Koordinaten (für Profilseiten und die Schrauber-Karte) nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Ortsnamen oder Postleitzahlen an Nominatim übermittelt; es werden keine personenbezogenen Daten wie Name oder E-Mail-Adresse weitergegeben. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
+            </p>
+
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Supabase Storage</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>) und Termin-Titelbilder (Bucket: <code>event-images</code>) nutzen wir Supabase Storage. Alle Fotos sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
             </p>
           </section>
 
@@ -80,6 +101,9 @@ export default function DatenschutzPage() {
             <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>5. Cookies und lokale Speicherung</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Wir setzen ausschließlich technisch notwendige Cookies und lokale Speicherung ein, um deine Anmeldung zu ermöglichen. Es werden keine Tracking- oder Werbe-Cookies verwendet.
+            </p>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
+              Im lokalen Speicher (localStorage) werden außerdem deine Farbpaletten- und Theme-Einstellung, der Status des Cookie-Banners, der Fortschritt der Onboarding-Tour sowie Snooze-Einstellungen für Hinweis-Banner gespeichert. Diese Daten verlassen deinen Browser nicht.
             </p>
           </section>
 
@@ -107,7 +131,8 @@ export default function DatenschutzPage() {
             ← Zurück zur Startseite
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </DesktopLayout>
   )
 }

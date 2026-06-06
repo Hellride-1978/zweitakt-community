@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useSearchParams, useRouter } from 'next/navigation'
 import DesktopLayout from '@/components/DesktopLayout'
+import FormError from '@/components/FormError'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
@@ -107,7 +108,7 @@ function NewMessagePageInner() {
             <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 8 }}>
               Nachrichten
             </div>
-            <h1 className="zh-page-title">Neue Nachricht.</h1>
+            <h1 className="zd-h1">Neue Nachricht.</h1>
           </div>
 
           {recipient && (
@@ -131,7 +132,7 @@ function NewMessagePageInner() {
             </div>
           )}
 
-          {error && <div className="zh-error" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
+          <FormError message={error} />
 
           <form onSubmit={handleSubmit} className="zh-card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>

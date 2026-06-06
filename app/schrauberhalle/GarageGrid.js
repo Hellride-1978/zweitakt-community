@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { SKILLS, skillBadgeStyle } from '@/lib/garage'
+import './schrauberhalle.css'
 import { haversineKm } from '@/lib/geo-search'
 import { useAuth } from '@/lib/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -210,12 +211,17 @@ export default function GarageGrid({ garages }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginRight: 4 }}>Skills</span>
           {SKILLS.map(skill => (
-            <button key={skill} type="button" onClick={() => toggleSkill(skill)} style={skillBadgeStyle(activeSkills.includes(skill))}>
+            <button
+              key={skill}
+              type="button"
+              onClick={() => toggleSkill(skill)}
+              className={`skill-badge${activeSkills.includes(skill) ? ' active' : ''}`}
+            >
               {skill}
             </button>
           ))}
           {activeSkills.length > 0 && (
-            <button onClick={() => setActiveSkills([])} style={{ ...skillBadgeStyle(false), color: '#c00', borderColor: '#c00' }}>
+            <button onClick={() => setActiveSkills([])} className="skill-badge reset">
               Alle zurücksetzen
             </button>
           )}

@@ -14,7 +14,7 @@ export default function Error({ error, reset }) {
         <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
           Fehler
         </div>
-        <h1 className="zh-page-title">Etwas ist schiefgelaufen.</h1>
+        <h1 className="zd-h1">Etwas ist schiefgelaufen.</h1>
         <p style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'var(--ink-soft)', marginTop: 12, lineHeight: 1.6 }}>
           Die Seite konnte nicht geladen werden.
         </p>

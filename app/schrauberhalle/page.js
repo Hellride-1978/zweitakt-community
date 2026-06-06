@@ -38,21 +38,22 @@ export default async function SchrauberhallenPage() {
 
   return (
     <DesktopLayout crumb="Schrauberhalle">
-      <div className="zh-page">
-        <div className="zh-page-inner">
-          <div style={{ marginBottom: 40 }}>
-            <div className="zh-section-mark">Schrauberhalle</div>
-            <h1 className="zh-page-title" style={{ marginTop: 12 }}>Die Schrauberhalle:<br /><em>Teilen, Helfen, Weiterkommen.</em></h1>
-            <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', lineHeight: 1.65, maxWidth: 680, marginTop: 20 }}>
-              Werkzeug, Platz und Know-how sind da, um geteilt zu werden! In der Schrauberhalle vernetzen wir private Werkstätten und Garagen im Umkreis. Stell deinen Schraubplatz vor, biete Spezialwerkzeuge oder Maschinen an, die du für Gleichgesinnte zur Verfügung stellst, oder finde Hilfe bei kniffligen Projekten.
-            </p>
-            <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', lineHeight: 1.65, maxWidth: 680, marginTop: 12 }}>
-              Kein Kommerz – einfach eine Community, die sich gegenseitig den Weg zurück auf die Straße ebnet.
-            </p>
+      <div className="feed-col">
+        <div className="feed-head">
+          <div>
+            <div className="zd-mono accent">Schrauberhalle</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>Teilen, Helfen,<br /><em>Weiterkommen.</em></h1>
           </div>
-
-          <GarageGrid garages={garagesWithSkills} />
         </div>
+
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', lineHeight: 1.65, maxWidth: 680 }}>
+          Werkzeug, Platz und Know-how sind da, um geteilt zu werden! In der Schrauberhalle vernetzen wir private Werkstätten und Garagen im Umkreis. Stell deinen Schraubplatz vor, biete Spezialwerkzeuge oder Maschinen an, die du für Gleichgesinnte zur Verfügung stellst, oder finde Hilfe bei kniffligen Projekten.
+        </p>
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', lineHeight: 1.65, maxWidth: 680 }}>
+          Kein Kommerz – einfach eine Community, die sich gegenseitig den Weg zurück auf die Straße ebnet.
+        </p>
+
+        <GarageGrid garages={garagesWithSkills} />
       </div>
     </DesktopLayout>
   )

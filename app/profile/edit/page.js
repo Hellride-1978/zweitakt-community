@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import CropModal from '@/components/CropModal'
 import DesktopLayout from '@/components/DesktopLayout'
 import { validateImageFile } from '@/lib/validateImage'
+import FormError from '@/components/FormError'
 import { resolvePostalCode } from '@/lib/geocoding'
 
 export default function EditProfilePage() {
@@ -211,7 +212,7 @@ function EditProfilePageInner() {
             <span style={{ fontFamily: 'var(--display)', fontSize: '18px', paddingRight: '12px', borderRight: '1px solid var(--hairline)', color: 'var(--ink)' }}>PROFIL</span>
             Deine Daten
           </div>
-          <h1 className="zh-page-title">Profil bearbeiten.</h1>
+          <h1 className="zd-h1">Profil bearbeiten.</h1>
         </div>
 
         {isWelcome && (
@@ -222,7 +223,7 @@ function EditProfilePageInner() {
             </p>
           </div>
         )}
-        {error && <div className="zh-error" role="alert" style={{ marginBottom: '24px' }}>{error}</div>}
+        <FormError message={error} />
 
         <div className="zh-card">
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

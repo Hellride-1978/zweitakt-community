@@ -1,7 +1,7 @@
 import { createServerClient } from '@/lib/supabase'
 import DesktopLayout from '@/components/DesktopLayout'
 import VehiclesGrid from './VehiclesGrid'
-import VehiclesCreateCard from './VehiclesCreateCard'
+import VehiclesCreateButton from './VehiclesCreateButton'
 
 export const metadata = {
   title: 'Bikes',
@@ -28,21 +28,16 @@ export default async function VehiclesPage() {
 
   return (
     <DesktopLayout>
-      <div className="feed-grid">
-        <div className="feed-col">
-          <div className="feed-head">
-            <div>
-              <div className="zd-mono accent">Schrauberhalle</div>
-              <h1 className="zd-h1" style={{ marginTop: 6 }}>alle <em>bikes.</em></h1>
-            </div>
+      <div className="feed-col">
+        <div className="feed-head">
+          <div>
+            <div className="zd-mono accent">Bikes</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>alle <em>bikes.</em></h1>
           </div>
-
-          <VehiclesGrid vehicles={vehicles ?? []} likeCounts={likeCounts} />
+          <VehiclesCreateButton />
         </div>
 
-        <aside className="feed-rail">
-          <VehiclesCreateCard />
-        </aside>
+        <VehiclesGrid vehicles={vehicles ?? []} likeCounts={likeCounts} />
       </div>
     </DesktopLayout>
   )

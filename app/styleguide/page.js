@@ -32,19 +32,20 @@ const TECH = [
     items: [
       { name: 'Next.js 16', desc: 'App Router, Server Components, dynamische Routen, generateMetadata', url: 'https://nextjs.org' },
       { name: 'Vercel', desc: 'Hosting, automatisches Deployment via GitHub Push, Edge Network', url: 'https://vercel.com' },
+      { name: 'Tailwind CSS v4', desc: 'Utility-First-CSS als devDependency – wird via @import in globals.css eingebunden. Im Projekt hauptsächlich für Hilfsklassen wie flex, min-h-full etc. verwendet.', url: 'https://tailwindcss.com' },
     ],
   },
   {
     cat: 'Backend & Datenbank',
     items: [
       { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos)', url: 'https://supabase.com' },
-      { name: 'Supabase Storage', desc: 'Buckets: avatars, vehicles — öffentliche Bild-URLs mit Cache-Busting', url: null },
+      { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder) – öffentliche Bild-URLs mit Cache-Busting', url: null },
     ],
   },
   {
     cat: 'E-Mail',
     items: [
-      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) — versendet von info@zweitakthoden.de', url: 'https://resend.com' },
+      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen — versendet von noreply@zweitakthoden.de', url: 'https://resend.com' },
       { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de', url: null },
     ],
   },
@@ -52,6 +53,7 @@ const TECH = [
     cat: 'Karten & Geocoding',
     items: [
       { name: 'OpenStreetMap / Nominatim', desc: 'Reverse-Geocoding: Koordinaten → Adresse. Karten-Tiles für Termindetailseite', url: 'https://openstreetmap.org' },
+      { name: 'Leaflet / react-leaflet', desc: 'Interaktive Karten – MemberMapSplit auf der Startseite (Schrauber-Karte mit Umkreissuche) und EventMap auf Termindetailseiten. Tiles via OpenStreetMap.', url: 'https://leafletjs.com' },
     ],
   },
   {
@@ -90,14 +92,20 @@ const TECH = [
       { name: 'Like-System', desc: 'Likes auf Terminen, Profilen und Fahrzeugen — Supabase likes-Tabelle (target_type + target_id), optimistisches UI, Login-Prompt für Gäste', url: null },
       { name: 'Privat-Nachrichten', desc: 'Inbox mit thread-basierter Ansicht, Ungelesen-Badge in Desktop-Nav und Mobile-Burger-Menü, E-Mail-Benachrichtigung bei neuer Nachricht via SMTP', url: null },
       { name: 'Kontaktformular', desc: 'DSGVO-Checkbox, serverseitige Validierung, Speicherung in contact_messages-Tabelle (Supabase, RLS), nur auf Startseite', url: null },
-      { name: 'Admin-Benachrichtigungen', desc: 'Automatische E-Mail bei: neuem Mitglied, neuem Termin, neuem Bike, neuer Nachricht — jeweils per SMTP-Route', url: null },
+      { name: 'Schrauberhalle', desc: 'Öffentliches Werkstattprofil: Beschreibung, bis zu 5 Fotos (Supabase Storage, Bucket: garage), Schrauber-Skills als Tags – erreichbar unter /schrauberhalle. Admin-Benachrichtigung bei neuer Halle per SMTP.', url: null },
+      { name: 'Kommentar-System', desc: 'Kommentare auf Terminen und Fahrzeugen – Supabase comments-Tabelle (target_type + target_id), nur für eingeloggte Mitglieder. E-Mail-Benachrichtigung an Ersteller und Teilnehmer via SMTP.', url: null },
+      { name: 'Präsenz / Online-Status', desc: 'PresenceUpdater aktualisiert last_seen alle 5 Minuten in profiles – zeigt Online-Indikator (grüner Punkt) auf Profilkacheln. Kein Echtzeit-Kanal, nur Timestamp-basiert.', url: null },
+      { name: 'Admin-Benachrichtigungen', desc: 'Automatische E-Mail an info@zweitakthoden.de bei: neuem Mitglied, neuem Termin, neuem Bike, neuer Nachricht, neuer Schrauberhalle – jeweils per SMTP-Route. User-Benachrichtigungen: Kommentar auf eigenem Termin/Bike, Termin-Beitritt, Termin-Aktualisierung für Teilnehmer.', url: null },
       { name: 'Feedback-Widget', desc: 'Floating-Button (unten rechts), speichert Feedback in feedbacks-Tabelle, Admin-Übersicht unter /admin/feedback', url: null },
       { name: 'Onboarding-Tour', desc: 'Schritt-für-Schritt Tour für neue User nach erster Anmeldung — localStorage-Trigger', url: null },
       { name: 'Cookie Consent', desc: 'Minimaler Banner (nur technisch notwendige Cookies + localStorage), einmalig per localStorage dismissed', url: null },
       { name: 'WCAG 2.1 AA', desc: 'Barrierefreiheit: Kontrastprüfung (4.5:1 normal, 3:1 groß), aria-Labels, Skip-Link, semantische Heading-Reihenfolge, aria-hidden für dekorative Elemente', url: null },
+      { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via Resend', url: null },
     ],
   },
 ]
+
+const LAST_UPDATED = '06.06.2026'
 
 const BASE_COLORS = [
   { name: '--ink',       desc: 'Text (dunkel)' },
@@ -124,6 +132,9 @@ export default function StyleguidePage() {
           <p style={{ fontFamily: 'var(--sans)', fontSize: 16, color: 'var(--ink-soft)', maxWidth: 560, lineHeight: 1.6 }}>
             Farben, Typografie, Komponenten und der vollständige Tech-Stack von Zweitakthoden.
           </p>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 16 }}>
+            Zuletzt aktualisiert: {LAST_UPDATED}
+          </div>
         </div>
 
         {/* ── TECH STACK ── */}
@@ -391,6 +402,13 @@ export default function StyleguidePage() {
               ['zd-bike',           'Fahrzeug-Kachel in Garage-Grid'],
               ['msg-badge',         'Ungelesen-Zahl-Badge (rot, rund)'],
               ['zh-contact-form',   'Kontaktformular-Wrapper (max 680px, zentriert)'],
+              ['forum-page',        'Forum-Seiten-Wrapper (cream BG, Padding)'],
+              ['forum-card',        'Forum-Beitragskarte (Border, Hover-Shadow)'],
+              ['forum-submit-btn',  'Forum-CTA-Button (Boogaloo, accent BG, Shadow-Lift)'],
+              ['forum-tag-btn',     'Forum-Themen-Pill (Border, Shadow-Lift, active = accent)'],
+              ['forum-vote-btn',    'Forum-Vote-Button (👍/👎, Lift-Hover, active states)'],
+              ['forum-action-btn',  'Forum-Aktion-Button (Bearbeiten / Löschen)'],
+              ['skill-badge',       'Schrauberhalle Skill-Pill (Border, Shadow-Lift, active = accent)'],
               ['zh-hero',           'Hero-Sektion auf der Startseite'],
               ['zh-hero-tagline',   'Hero-Fließtext mit max-width und line-height'],
               ['zh-preview',        'Abschnitts-Wrapper für Bikes/Events/Members-Previews'],
@@ -405,6 +423,26 @@ export default function StyleguidePage() {
               ['msg-bubble',        'Nachrichten-Blase im Thread (+ Modifier .own)'],
               ['zh-mobile-menu',    'Mobile Navigationsoverlay'],
               ['zh-burger',         'Burger-Button mit Icon-Wrap und Label'],
+              ['zh-card-sm',        'Kleinere Karten-Variante (border-radius 14px, kompakteres Padding)'],
+              ['zh-badge',          'Mono-Badge (unterscheidet sich von zh-pill: kein border-radius 999px)'],
+              ['zh-filter-btn',     'Filter-Toggle-Button (Pill-Form, aktiver Zustand via .active)'],
+              ['zh-radio-group',    'Wrapper für Radio-Button-Gruppe (horizontal flex)'],
+              ['zh-radio-label',    'Styled Radio-Option (checked-State via :has())'],
+              ['zh-page-title',     'Großer Seitentitel mit display-Font und text-stroke'],
+              ['zh-page-lead',      'Beschreibungstext unter Seitentitel (max 48ch)'],
+              ['zh-profile-avatar', 'Profilbild-Container rund, 120px – mit -lg Variante für 180px'],
+              ['zh-profile-card',   'Profilkachel in der Mitglieder-Liste'],
+              ['zh-vehicle-card',   'Fahrzeug-Kachel mit Hover-Effekt'],
+              ['zh-vehicle-photo',  'Foto-Container 4:3 mit Hatch-Placeholder'],
+              ['zh-btn-accent',     'Dritter Button-Typ: Accent-Farbe mit hellem Box-Shadow'],
+              ['zh-hero-split',     'Hero-Variante mit Text links, Karte rechts (ab 1024px zweispaltig)'],
+              ['zh-ticker',         'Scrollender Marquee-Streifen (dark bg, pausiert on hover)'],
+              ['zh-teaser',         'Dreispaltiges Feature-Teaser-Grid'],
+              ['zh-teaser-item',    'Einzelne Teaser-Zeile mit Icon, Text und Pfeil'],
+              ['zh-clubs-grid',     'Vierspaltiges Grid für Club-Kacheln'],
+              ['zh-club-card',      'Einzelne Club-Kachel mit Bild, Stamp und Body'],
+              ['zh-roller-btn',     'Farbwechsel-Button (animiert durch alle 5 Paletten)'],
+              ['skip-link',         'WCAG-Skiplink „Zum Hauptinhalt springen" (nur sichtbar bei Fokus)'],
             ].map(([cls, desc]) => (
               <div key={cls} style={{ display: 'flex', gap: 20, borderBottom: '1px solid var(--hairline)', padding: '10px 0', flexWrap: 'wrap' }}>
                 <code style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.5px', minWidth: 180 }}>.{cls}</code>

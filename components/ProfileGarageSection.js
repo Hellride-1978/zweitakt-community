@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useAuth } from '@/lib/useAuth'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,8 +41,8 @@ export default function ProfileGarageSection({ profileId, vehicles, vehicleLikeC
             {vehicles.map((v, idx) => {
               const vLikes = vehicleLikeCounts?.[v.id] ?? 0
               return (
-                <>
-                  <Link key={v.id} href={`/vehicles/${v.id}`} className="zd-bike" style={{ textDecoration: 'none' }}>
+                <React.Fragment key={v.id}>
+                  <Link href={`/vehicles/${v.id}`} className="zd-bike" style={{ textDecoration: 'none' }}>
                     <div className="img" style={{ position: 'relative' }}>
                       {v.image_url
                         ? <img src={v.image_url} alt={`${v.make} ${v.model}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
@@ -77,7 +78,7 @@ export default function ProfileGarageSection({ profileId, vehicles, vehicleLikeC
                       <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>+ Bike</span>
                     </Link>
                   )}
-                </>
+                </React.Fragment>
               )
             })}
           </div>

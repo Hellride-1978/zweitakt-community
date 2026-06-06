@@ -14,6 +14,8 @@ import PresenceUpdater from "@/components/PresenceUpdater";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
+import Script from "next/script";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
 const dmSans   = DM_Sans({ subsets: ["latin"], weight: ["300","400","500","600"], variable: "--font-sans" });
@@ -53,16 +55,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function(){
-            var palettes={blue:{a:'rgb(155,195,214)',b:'rgb(175,210,225)',c:'rgb(210,230,238)',d:'rgb(100,155,180)'},pink:{a:'#FF5C8F',b:'#ff85aa',c:'#ffb3cb',d:'#e0366a'},sage:{a:'#7DC4A0',b:'#9DD4B8',c:'#C5E8D6',d:'#4FA87A'},amber:{a:'#E8A045',b:'#F0BB78',c:'#F8DCBA',d:'#C07820'},lilac:{a:'#A99BD4',b:'#C2B8E0',c:'#DDD8EF',d:'#7A68B8'}};
-            var key=localStorage.getItem('zh-palette')||'blue';
-            var p=palettes[key]||palettes.blue;
-            var r=document.documentElement.style;
-            r.setProperty('--accent',p.a);r.setProperty('--accent-2',p.b);r.setProperty('--accent-3',p.c);r.setProperty('--accent-ink',p.d);
-            r.setProperty('--accent-hot',p.a);r.setProperty('--accent-hot-2',p.b);r.setProperty('--accent-hot-3',p.c);
-          })();
-        `}} />
+        <Script src="/palette-init.js" strategy="beforeInteractive" />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
@@ -79,15 +72,23 @@ export default function RootLayout({ children }) {
         <Analytics />
         <SpeedInsights />
         <footer className="zh-footer">
+          <div className="zh-footer-inner">
           <div className="zh-footer-top">
-            <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
+            <div className="zh-footer-brand">
+              <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
+              <div style={{ marginTop: 24 }}>
+                <NewsletterForm showLabel />
+              </div>
+            </div>
             <div className="zh-footer-cols">
               <div className="zh-footer-col">
                 <div className="zh-footer-col-label">Community</div>
                 <ul className="zh-footer-links">
                   <li><Link href="/events">Termine</Link></li>
                   <li><Link href="/profiles">Schrauber</Link></li>
+                  <li><Link href="/vehicles">Bikes</Link></li>
                   <li><Link href="/schrauberhalle">Schrauberhalle</Link></li>
+                  <li><Link href="/forum">Forum</Link></li>
                   <li><Link href="/auth/register">Registrieren</Link></li>
                 </ul>
               </div>
@@ -111,6 +112,7 @@ export default function RootLayout({ children }) {
             <span className="zh-footer-copy">© 2026 Zweitakthoden</span>
             <span className="zh-footer-copy" style={{ color: 'var(--ink-faint)' }}>·</span>
             <span className="zh-footer-copy">Design & Entwicklung: <a href="https://delavega-design.de/" target="_blank" rel="noopener noreferrer" className="zh-footer-credit">delavega-design.de</a></span>
+          </div>
           </div>
         </footer>
         </ThemeProvider>

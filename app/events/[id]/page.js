@@ -97,7 +97,7 @@ export default async function EventDetailPage({ params }) {
       <DesktopLayout crumb="Nicht gefunden">
         <div className="zh-page-inner-sm" style={{ padding: '40px 0' }}>
           <div className="zd-card">
-            <h1 className="zh-page-title" style={{ fontSize: 36 }}>Termin nicht gefunden.</h1>
+            <h1 className="zd-h1" style={{ fontSize: 36 }}>Termin nicht gefunden.</h1>
             <Link href="/events" className="zd-btn outline" style={{ display: 'inline-flex', marginTop: 20 }}>← Alle Termine</Link>
           </div>
         </div>

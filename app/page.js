@@ -4,6 +4,7 @@ import Image from 'next/image'
 import HeroActions from '@/components/HeroActions'
 import ContactForm from '@/components/ContactForm'
 import MemberMapWrapper from '@/components/MemberMapWrapper'
+import CredoStrip from '@/components/CredoStrip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
@@ -96,9 +97,10 @@ export default async function Home() {
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
     supabase
       .from('profiles')
-      .select('id, name, location, avatar_url, lat, lng')
+      .select('id, name, location, avatar_url, lat, lng, last_seen, vehicles(id, make, model, year)')
       .not('lat', 'is', null)
-      .not('lng', 'is', null),
+      .not('lng', 'is', null)
+      .order('name', { ascending: true }),
   ])
 
   const eventAddresses = {}
@@ -139,8 +141,8 @@ export default async function Home() {
         </h1>
 
         <p className="zh-hero-tagline">
-          Das Moped-Forum für leidenschaftliche Zweitakt-Schrauber. Community für Simson, Puch, Zündapp, Vespa, Tomos, Piaggio und alles, was qualmt.<br /><br />
-          Unsere Plattform bringt Moped-Fans und Zweitakt-Schrauber zusammen: Bikes vorstellen, Ausfahrten planen, Treffen organisieren und gegenseitig in der Schrauberhalle helfen. Komplett locker, offen und kostenlos.
+          Offen für alle, die den Zweitakt lieben.<br /><br />
+          Die Community für Zweitakt-Fans: Bikes vorstellen, im Forum diskutieren, Ausfahrten planen, Treffen organisieren – kostenlos.
         </p>
 
         <HeroActions />
@@ -211,99 +213,25 @@ export default async function Home() {
       )}
 
       {/* ── CREDO ── */}
-      <section className="zh-credo">
-        <article className="zh-credo-card">
-          <span className="num">Worum geht&rsquo;s hier?</span>
-          <h3>Schrauben.<br />Fahren.<br />Bock haben.</h3>
-          <p className="lede">Kurz gesagt: Zweitakt, Schrauben und gemeinsam Spaß haben. Bei Zweitakt Hoden treffen sich Zweitakt-Fans, die —</p>
-          <ul>
-            <li>gerne an Zweitakt-Motorrädern schrauben (oder es lernen wollen)</li>
-            <li>lieber selbst anpacken als endlos diskutieren</li>
-            <li>keine Angst vor Fehlern haben</li>
-          </ul>
-          <p className="kicker">Marke, Hubraum, Erfahrung? Zweitrangig. Hauptsache Zweitakt.</p>
-        </article>
-        <article className="zh-credo-card">
-          <span className="num">Keine Szene. Keine Show.</span>
-          <h3>Garage statt Gallery.</h3>
-          <p className="lede">Bei Zweitakt Hoden geht&rsquo;s <strong>nicht</strong> um —</p>
-          <ul>
-            <li>perfekte Builds &amp; Showbikes</li>
-            <li>PS-Vergleiche &amp; Spec-Wars</li>
-            <li>Instagram-Tuning &amp; Social-Media-Auftritte</li>
-          </ul>
-          <p className="kicker">Sondern um echte Zweitakt-Community, Wissen rund ums Schrauben und ehrlichen Austausch unter Gleichgesinnten.</p>
-        </article>
-        <article className="zh-credo-card">
-          <span className="num">Mitmachen ist einfach.</span>
-          <h3>Dein Platz in<br />der Garage.</h3>
-          <p className="lede">Du musst kein Experte sein. Kein teures Bike haben. Kein perfektes Setup vorweisen.</p>
-          <p className="lede">Du brauchst nur Bock auf Zweitakt — und Lust, dich mit Leuten auszutauschen, die genauso ticken wie du.</p>
-          <p className="kicker">Kostenlos anmelden. Einfach loslegen.</p>
-        </article>
-      </section>
+      <CredoStrip />
 
 
-      {/* ── EVENTS PREVIEW ── */}
-      {events && events.length > 0 && (
+      {/* ── MEMBER MAP ── */}
+      {mapMembers && mapMembers.length > 0 && (
         <section className="zh-preview">
           <div className="zh-preview-head">
             <div>
-              <div className="mark">Nächste Termine</div>
-              <h2>bald <em>unterwegs.</em></h2>
+              <div className="mark zh-members-mark">Wo seid ihr?</div>
+              <h2>die <em>crew.</em> auf der Karte.</h2>
             </div>
-            <Link href="/events" className="all">Alle Termine →</Link>
+            <Link href="/profiles" className="all">Alle Schrauber →</Link>
           </div>
-          <div className="zh-preview-row">
-          <div className="events-card-grid">
-            {events.map((ev) => {
-              const participantCount = ev.ride_participants?.[0]?.count ?? 0
-              const d = new Date(ev.start_date)
-              const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' }).toUpperCase()
-              const month = d.toLocaleDateString('de-DE', { month: 'short' })
-              const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
-              const time = hasTime ? d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : null
-              return (
-                <Link key={ev.id} href={`/events/${ev.id}`} className="ec">
-                  <div className="ec-head">
-                    <span className="ec-day">{weekday}</span>
-                    <span className="ec-num">{d.getDate()}</span>
-                    <span className="ec-mon">{month}</span>
-                    {time && <span className="ec-time">{time}</span>}
-                  </div>
-                  <div className="ec-body">
-                    <div className="ec-title">{ev.title}</div>
-                    <div className="ec-meta">
-                      <FontAwesomeIcon icon={faUsers} style={{ fontSize: 10 }} />
-                      <span>{participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}</span>
-                    </div>
-                    {(ev.location || eventAddresses[ev.id]) && (
-                      <div className="ec-loc">
-                        <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 12, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                          {ev.location && <span>{ev.location}</span>}
-                          {eventAddresses[ev.id] && (
-                            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.2, color: 'var(--ink-muted)' }}>
-                              {eventAddresses[ev.id]}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    {ev.description && (
-                      <div className="ec-desc">{ev.description}</div>
-                    )}
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-          </div>
+          <MemberMapWrapper members={mapMembers} />
         </section>
       )}
 
       {/* ── MEMBERS PREVIEW ── */}
-      <section className="zh-preview zh-members">
+      {false && <section className="zh-preview zh-members">
         <div className="zh-preview-head">
           <div>
             <div className="mark zh-members-mark">Frisch aus der Garage</div>
@@ -365,19 +293,63 @@ export default async function Home() {
             <Link href="/auth/register" className="zh-btn" style={{ display: 'inline-flex', marginTop: '20px' }}>Dabei sein →</Link>
           </div>
         )}
-      </section>
+      </section>}
 
-      {/* ── MEMBER MAP ── */}
-      {mapMembers && mapMembers.length > 0 && (
+      {/* ── EVENTS PREVIEW ── */}
+      {events && events.length > 0 && (
         <section className="zh-preview">
           <div className="zh-preview-head">
             <div>
-              <div className="mark zh-members-mark">Wo seid ihr?</div>
-              <h2>die <em>crew.</em> auf der Karte.</h2>
+              <div className="mark">Nächste Termine</div>
+              <h2>bald <em>unterwegs.</em></h2>
             </div>
-            <Link href="/profiles" className="all">Alle Schrauber →</Link>
+            <Link href="/events" className="all">Alle Termine →</Link>
           </div>
-          <MemberMapWrapper members={mapMembers} />
+          <div className="zh-preview-row">
+          <div className="events-card-grid">
+            {events.map((ev) => {
+              const participantCount = ev.ride_participants?.[0]?.count ?? 0
+              const d = new Date(ev.start_date)
+              const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' }).toUpperCase()
+              const month = d.toLocaleDateString('de-DE', { month: 'short' })
+              const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0
+              const time = hasTime ? d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : null
+              return (
+                <Link key={ev.id} href={`/events/${ev.id}`} className="ec">
+                  <div className="ec-head">
+                    <span className="ec-day">{weekday}</span>
+                    <span className="ec-num">{d.getDate()}</span>
+                    <span className="ec-mon">{month}</span>
+                    {time && <span className="ec-time">{time}</span>}
+                  </div>
+                  <div className="ec-body">
+                    <div className="ec-title">{ev.title}</div>
+                    <div className="ec-meta">
+                      <FontAwesomeIcon icon={faUsers} style={{ fontSize: 10 }} />
+                      <span>{participantCount}{ev.max_participants ? ` / ${ev.max_participants}` : ''}</span>
+                    </div>
+                    {(ev.location || eventAddresses[ev.id]) && (
+                      <div className="ec-loc">
+                        <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 12, color: 'var(--ink-muted)', flexShrink: 0, marginTop: 1 }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {ev.location && <span>{ev.location}</span>}
+                          {eventAddresses[ev.id] && (
+                            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 1.2, color: 'var(--ink-muted)' }}>
+                              {eventAddresses[ev.id]}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {ev.description && (
+                      <div className="ec-desc">{ev.description}</div>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+          </div>
         </section>
       )}
 

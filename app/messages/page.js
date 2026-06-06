@@ -96,7 +96,7 @@ export default function MessagesPage() {
   if (loading || fetching) {
     return (
       <DesktopLayout>
-        <div className="zh-page">
+        <div className="feed-col">
           <div style={{ fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
             Lade…
           </div>
@@ -107,9 +107,11 @@ export default function MessagesPage() {
 
   if (!user) {
     return (
-      <div className="zh-page">
-        <div className="zh-card zh-page-inner-sm">Bitte zuerst anmelden.</div>
-      </div>
+      <DesktopLayout>
+        <div className="feed-col">
+          <div className="zh-card">Bitte zuerst anmelden.</div>
+        </div>
+      </DesktopLayout>
     )
   }
 
@@ -117,17 +119,15 @@ export default function MessagesPage() {
 
   return (
     <DesktopLayout>
-      <div className="zh-page">
-        <div className="zh-page-inner" style={{ maxWidth: 760, width: '100%' }}>
-
-          <div style={{ marginBottom: 28 }}>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 14, letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 8 }}>
-              Nachrichten
-            </div>
-            <h1 className="zh-page-title">
+      <div className="feed-col">
+        <div className="feed-head">
+          <div>
+            <div className="zd-mono accent">Nachrichten</div>
+            <h1 className="zd-h1" style={{ marginTop: 6 }}>
               {tab === 'inbox' ? 'Eingang.' : 'Ausgang.'}
             </h1>
           </div>
+        </div>
 
           {/* Tabs */}
           <div className="tab-pills" style={{ marginBottom: 28 }}>
@@ -245,7 +245,6 @@ export default function MessagesPage() {
             )
           )}
 
-        </div>
       </div>
     </DesktopLayout>
   )

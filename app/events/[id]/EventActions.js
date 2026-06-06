@@ -60,11 +60,11 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
           </p>
         </>
       ) : isCreator ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          <Link href={`/events/${eventId}/edit`} className="zh-btn zh-btn-outline" style={{ justifyContent: 'center', fontSize: 15, padding: '10px 12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Link href={`/events/${eventId}/edit`} className="zh-btn zh-btn-outline" style={{ justifyContent: 'center' }}>
             Bearbeiten <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 13 }} />
           </Link>
-          <button onClick={handleDelete} disabled={working} className="zh-btn" style={{ background: '#ef4444', borderColor: '#ef4444', color: '#fff', fontSize: 15, padding: '10px 12px', justifyContent: 'center', opacity: working ? 0.6 : 1 }}>
+          <button onClick={handleDelete} disabled={working} className="zh-btn" style={{ justifyContent: 'center', opacity: working ? 0.6 : 1 }}>
             {working ? 'Löscht…' : 'Löschen'}
           </button>
         </div>
@@ -87,7 +87,7 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
             <span style={{ fontSize: 16, lineHeight: 1 }}>✓</span>
             Du bist dabei!
           </div>
-          <button onClick={handleLeave} disabled={working} className="zh-btn zh-btn-outline" style={{ opacity: working ? 0.6 : 1, fontSize: 13 }}>
+          <button onClick={handleLeave} disabled={working} className="zh-btn zh-btn-outline" style={{ opacity: working ? 0.6 : 1 }}>
             {working ? 'Lädt…' : 'Abmelden'}
           </button>
         </>

@@ -5,24 +5,34 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 
-const TOUR_KEY = 'zh-tour-v1'
+const TOUR_KEY = 'zh-tour-v2'
 const NEW_USER_WINDOW_MS = 15 * 60 * 1000 // 15 Minuten
 
 const STEPS = [
   {
     id: 'tour-profil',
     title: 'Dein Profil',
-    text: 'Leg kurz fest, wer du bist. Marke und Hubraum sind zweitrangig.',
+    text: 'Leg fest, wer du bist. PLZ eintragen — dann erscheinst du auf der Schrauber-Karte.',
   },
   {
     id: 'tour-bikes',
     title: 'Deine Kisten',
-    text: 'Trag deine Kisten ein – damit andere sehen, was du fährst.',
+    text: 'Trag deine Bikes ein — mit Fotos, Baujahr und Hubraum. Andere sehen sofort was du fährst.',
+  },
+  {
+    id: 'tour-halle',
+    title: 'Schrauberhalle',
+    text: 'Zeig deinen Schrauberplatz: Fotos, Skills und Beschreibung — für alle Mitglieder sichtbar.',
+  },
+  {
+    id: 'tour-forum',
+    title: 'Forum',
+    text: 'Stell Fragen, gib Tipps, diskutier über Zweitakter. Bilder hochladen geht auch.',
   },
   {
     id: 'tour-termine',
     title: 'Termine & Ausfahrten',
-    text: 'Schau welche Runden geplant sind und mach einfach mit.',
+    text: 'Schau welche Runden geplant sind — oder stell selbst eine auf die Beine.',
   },
 ]
 
@@ -120,7 +130,7 @@ export default function OnboardingTour() {
         <span className="zh-tour-modal-mark">Neu dabei</span>
         <h2 className="zh-tour-modal-title">Willkommen<br />in der Crew.</h2>
         <p className="zh-tour-modal-text">
-          Kurze Tour? Zeigt dir in drei Schritten wo Profil, Bikes und Termine zu finden sind.
+          Kurze Tour? Zeigt dir in fünf Schritten wo Profil, Bikes, Schrauberhalle, Forum und Termine zu finden sind.
         </p>
         <div className="zh-tour-modal-actions">
           <button onClick={startTour} className="zh-btn">Tour starten →</button>
@@ -170,18 +180,18 @@ export default function OnboardingTour() {
         <h2 className="zh-tour-modal-title">Bereit<br />loszulegen.</h2>
         {hasPLZ ? (
           <>
-            <p className="zh-tour-modal-text">Alles eingerichtet — viel Spaß in der Crew.</p>
+            <p className="zh-tour-modal-text">Alles eingerichtet — viel Spaß in der Crew. Schau ins Forum, stell deine Bikes vor oder plan eine Ausfahrt.</p>
             <div className="zh-tour-modal-actions">
-              <Link href="/events" className="zh-btn" onClick={finish}>Termine ansehen →</Link>
-              <Link href="/profiles" className="zh-btn zh-btn-outline" onClick={finish}>Crew entdecken →</Link>
+              <Link href="/forum" className="zh-btn" onClick={finish}>Forum entdecken →</Link>
+              <Link href="/events" className="zh-btn zh-btn-outline" onClick={finish}>Termine ansehen →</Link>
             </div>
           </>
         ) : (
           <>
-            <p className="zh-tour-modal-text">Trag deine PLZ im Profil ein — dann erscheinst du auf der Karte und andere Schrauber in deiner Nähe können dich finden.</p>
+            <p className="zh-tour-modal-text">Fast fertig — trag noch deine PLZ im Profil ein. Dann erscheinst du auf der Schrauber-Karte und andere können dich in der Nähe finden.</p>
             <div className="zh-tour-modal-actions">
               <Link href={`/profile/${user.id}?settings=1`} className="zh-btn" onClick={finish}>PLZ eintragen →</Link>
-              <Link href="/events" className="zh-btn zh-btn-outline" onClick={finish}>Termine ansehen →</Link>
+              <Link href="/forum" className="zh-btn zh-btn-outline" onClick={finish}>Forum ansehen →</Link>
             </div>
           </>
         )}

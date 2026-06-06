@@ -31,7 +31,7 @@ function SchrauberhalleNewInner() {
         </Link>
         <div>
           <div className="zd-mono accent">Schrauberhalle</div>
-          <h1 className="zh-page-title" style={{ marginTop: 6 }}>Schrauberhalle <em>einrichten.</em></h1>
+          <h1 className="zd-h1" style={{ marginTop: 6 }}>Schrauberhalle <em>einrichten.</em></h1>
         </div>
         <div className="zh-card" style={{ marginTop: 28 }}>
           <GarageEdit user={user} onSaved={() => { router.refresh(); router.push(`/profile/${user.id}`) }} />

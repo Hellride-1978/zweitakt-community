@@ -6,11 +6,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 
 const SECTION_MAP = {
-  events:   { label: 'Termine',     href: '/events' },
-  vehicles: { label: 'Bikes',       href: '/vehicles' },
-  profiles: { label: 'Schrauber',   href: '/profiles' },
-  profile:  { label: 'Schrauber',   href: '/profiles' },
-  messages: { label: 'Nachrichten', href: '/messages' },
+  events:         { label: 'Termine',       href: '/events' },
+  vehicles:       { label: 'Bikes',         href: '/vehicles' },
+  profiles:       { label: 'Schrauber',     href: '/profiles' },
+  profile:        { label: 'Schrauber',     href: '/profiles' },
+  messages:       { label: 'Nachrichten',   href: '/messages' },
+  schrauberhalle: { label: 'Schrauberhalle',href: '/schrauberhalle' },
+  forum:          { label: 'Forum',         href: '/forum' },
 }
 
 const chipBase = {
@@ -39,6 +41,9 @@ export default function Breadcrumb({ crumb }) {
       display: 'flex',
       alignItems: 'center',
       gap: 6,
+      maxWidth: 1280,
+      marginLeft: 'auto',
+      marginRight: 'auto',
       padding: '20px var(--gutter) 10px',
     }}>
       {/* Haus-Chip — immer sichtbar */}

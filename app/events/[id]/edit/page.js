@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import DesktopLayout from '@/components/DesktopLayout'
+import FormError from '@/components/FormError'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -147,10 +148,10 @@ export default function EditEventPage({ params }) {
             <span style={{ fontFamily: 'var(--display)', fontSize: '18px', paddingRight: '12px', borderRight: '1px solid var(--hairline)', color: 'var(--ink)' }}>EVENT</span>
             Ausfahrten &amp; Treffen
           </div>
-          <h1 className="zh-page-title">Termin <em>bearbeiten.</em></h1>
+          <h1 className="zd-h1">Termin <em>bearbeiten.</em></h1>
         </div>
 
-        {error && <div className="zh-error" role="alert" style={{ marginBottom: '24px' }}>{error}</div>}
+        <FormError message={error} />
 
         <div className="zh-card">
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
