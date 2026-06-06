@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -17,6 +17,7 @@ export default function Nav() {
   const pathname = usePathname()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [adminOpen, setAdminOpen] = useState(false)
 
   const handleLogout = async () => {
     setOpen(false)
@@ -50,23 +51,30 @@ export default function Nav() {
                 </Link>
               </li>
               {user?.email === 'martin@delavega.de' && (
-                <>
-                  <li>
-                    <Link href="/admin/feedback" className={`zh-nav-icon${pathname === '/admin/feedback' ? ' active' : ''}`} title="Admin: Feedback">
-                      <FontAwesomeIcon icon={faBug} style={{ fontSize: 15 }} />
+                <li className="zh-nav-dropdown-wrap">
+                  <button
+                    className={`zh-nav-dropdown-trigger${adminOpen ? ' open' : ''}${pathname.startsWith('/admin') || pathname.startsWith('/styleguide') ? ' active' : ''}`}
+                    onClick={() => setAdminOpen(v => !v)}
+                    onBlur={e => { if (!e.currentTarget.closest('.zh-nav-dropdown-wrap').contains(e.relatedTarget)) setAdminOpen(false) }}
+                  >
+                    Admin
+                    <span className="zh-nav-chevron">▾</span>
+                  </button>
+                  <div className={`zh-nav-dropdown${adminOpen ? ' open' : ''}`}>
+                    <Link href="/admin/newsletter" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faPaperPlane} /> Newsletter
                     </Link>
-                  </li>
-                  <li>
-                    <Link href="/admin/changelog" className={`zh-nav-icon${pathname === '/admin/changelog' ? ' active' : ''}`} title="Admin: Changelog">
-                      <FontAwesomeIcon icon={faListCheck} style={{ fontSize: 15 }} />
+                    <Link href="/admin/feedback" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faBug} /> Feedback
                     </Link>
-                  </li>
-                  <li>
-                    <Link href="/styleguide" className={`zh-nav-icon${pathname.startsWith('/styleguide') ? ' active' : ''}`} title="Style Guide">
-                      <FontAwesomeIcon icon={faPalette} style={{ fontSize: 15 }} />
+                    <Link href="/admin/changelog" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faListCheck} /> Changelog
                     </Link>
-                  </li>
-                </>
+                    <Link href="/styleguide" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faPalette} /> Style Guide
+                    </Link>
+                  </div>
+                </li>
               )}
             </>
           ) : !loading ? (
@@ -161,15 +169,30 @@ export default function Nav() {
             </Link>
             {user?.email === 'martin@delavega.de' && (
               <>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', padding: '16px 0 4px', borderTop: '1px solid var(--hairline)', marginTop: 4 }}>
+                  Admin
+                </div>
+                <Link href="/admin/newsletter" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faPaperPlane} style={{ fontSize: 14, width: 16 }} />
+                    Newsletter
+                  </span>
+                </Link>
                 <Link href="/admin/feedback" onClick={close}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <FontAwesomeIcon icon={faBug} style={{ fontSize: 14 }} />
-                    Feedback Admin
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faBug} style={{ fontSize: 14, width: 16 }} />
+                    Feedback
+                  </span>
+                </Link>
+                <Link href="/admin/changelog" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faListCheck} style={{ fontSize: 14, width: 16 }} />
+                    Changelog
                   </span>
                 </Link>
                 <Link href="/styleguide" onClick={close}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <FontAwesomeIcon icon={faPalette} style={{ fontSize: 14 }} />
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faPalette} style={{ fontSize: 14, width: 16 }} />
                     Style Guide
                   </span>
                 </Link>
