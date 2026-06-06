@@ -121,7 +121,7 @@ export default function AdminNewsletterPage() {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }}>
+      <div className="newsletter-layout">
 
         {/* ── Editor ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -160,7 +160,7 @@ Jeder Absatz wird automatisch als eigener Textblock dargestellt."
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="newsletter-cta-row">
             <div>
               <label className="zh-label">Button-Text (optional)</label>
               <input
@@ -222,7 +222,7 @@ Jeder Absatz wird automatisch als eigener Textblock dargestellt."
         </div>
 
         {/* ── Vorschau ── */}
-        <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 24px)' }}>
+        <div className="newsletter-preview-col">
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 12 }}>
             Live-Vorschau
           </div>

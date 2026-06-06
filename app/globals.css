@@ -3354,6 +3354,28 @@ body::before {
 
 /* Forum-Styles sind in app/forum/forum.css – direkt im Forum-Layout importiert */
 
+/* ─── Admin Newsletter ───────────────────────────────────────────────────── */
+.newsletter-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.newsletter-preview-col {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+}
+.newsletter-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .newsletter-layout { grid-template-columns: 1fr; }
+  .newsletter-preview-col { position: static; }
+  .newsletter-cta-row { grid-template-columns: 1fr; }
+}
+
 /* ─── Highlight on the active nav element ─────────────────────────────────── */
 .zh-tour-highlight {
   outline: 2.5px solid var(--accent-hot) !important;
