@@ -121,16 +121,18 @@ export default function GarageEdit({ user, onSaved }) {
       if (isNew) {
         const { data: newGarage } = await supabase.from('garage').select('id').eq('user_id', user.id).single()
         if (newGarage?.id) setGarageId(newGarage.id)
-        fetch('/api/notify-new-garage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ownerName:  user.user_metadata?.name || user.email,
-            ownerEmail: user.email,
-            skills:     selectedSkills,
-            garageId:   newGarage?.id,
-          }),
-        }).catch(() => {})
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          fetch('/api/notify-new-garage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+            body: JSON.stringify({
+              ownerName:  user.user_metadata?.name || user.email,
+              ownerEmail: user.email,
+              skills:     selectedSkills,
+              garageId:   newGarage?.id,
+            }),
+          }).catch(() => {})
+        })
         setIsNew(false)
       }
 

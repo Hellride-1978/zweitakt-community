@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
+import { requireBearerAuth } from '@/lib/internalApiAuth'
 
 const transporter = nodemailer.createTransport({
   host: process.env.NOTIFY_SMTP_HOST,
@@ -51,6 +52,9 @@ function buildHtml({ joinerName, eventTitle, eventUrl }) {
 
 export async function POST(request) {
   try {
+    const authError = await requireBearerAuth(request)
+    if (authError.error) return authError.error
+
     const { eventId, joinerName, joinerId } = await request.json()
     if (!eventId || !joinerName) {
       return Response.json({ ok: false, error: 'Fehlende Felder' }, { status: 400 })
@@ -82,6 +86,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Event join notification failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Benachrichtigung fehlgeschlagen' }, { status: 500 })
   }
 }

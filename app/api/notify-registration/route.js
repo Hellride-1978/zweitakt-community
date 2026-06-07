@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
 
 const transporter = nodemailer.createTransport({
   host: process.env.NOTIFY_SMTP_HOST,
@@ -12,6 +13,10 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request) {
   try {
+    const ip = getClientIp(request)
+    const rateLimitError = rateLimit(`register:${ip}`, 3, 60_000)
+    if (rateLimitError) return rateLimitError
+
     const { name, email } = await request.json()
 
     await transporter.sendMail({
@@ -60,6 +65,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Notification email failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Benachrichtigung fehlgeschlagen' }, { status: 500 })
   }
 }

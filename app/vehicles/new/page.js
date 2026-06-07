@@ -141,11 +141,13 @@ export default function NewVehiclePage() {
           const { error: retryError } = await supabase.from('vehicles')
             .insert({ ...basePayload, image_url: urlUpdates.image_url ?? null })
           if (retryError) throw retryError
-          fetch('/api/notify-new-vehicle', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ make: form.make.trim(), model: form.model.trim(), title: form.title.trim() || null, year: form.year || null, creatorEmail: user.email, vehicleId }),
-          }).catch(() => {})
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            fetch('/api/notify-new-vehicle', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+              body: JSON.stringify({ make: form.make.trim(), model: form.model.trim(), title: form.title.trim() || null, year: form.year || null, creatorEmail: user.email, vehicleId }),
+            }).catch(() => {})
+          })
           router.push(`/vehicles/${vehicleId}`)
           return
         }

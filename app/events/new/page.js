@@ -82,17 +82,19 @@ export default function NewEventPage() {
         throw insertError
       }
 
-      fetch('/api/notify-new-event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: form.title.trim(),
-          date: form.start_date + (form.start_time ? ` ${form.start_time}` : ''),
-          location: form.location.trim() || null,
-          creatorEmail: user.email,
-          eventId: insertedEvent?.id ?? null,
-        }),
-      }).catch(() => {})
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        fetch('/api/notify-new-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+          body: JSON.stringify({
+            title: form.title.trim(),
+            date: form.start_date + (form.start_time ? ` ${form.start_time}` : ''),
+            location: form.location.trim() || null,
+            creatorEmail: user.email,
+            eventId: insertedEvent?.id ?? null,
+          }),
+        }).catch(() => {})
+      })
 
       router.push('/events')
     } catch (err) {

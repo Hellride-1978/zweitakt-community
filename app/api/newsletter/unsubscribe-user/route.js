@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireBearerAuth } from '@/lib/internalApiAuth'
 
 function adminClient() {
   return createClient(
@@ -9,8 +10,16 @@ function adminClient() {
 
 export async function POST(request) {
   try {
+    const auth = await requireBearerAuth(request)
+    if (auth.error) return auth.error
+
     const { userId } = await request.json()
     if (!userId) return Response.json({ error: 'Fehlende User-ID.' }, { status: 400 })
+
+    // Darf nur die eigene Abmeldung auslösen
+    if (auth.user.id !== userId) {
+      return Response.json({ error: 'Keine Berechtigung.' }, { status: 403 })
+    }
 
     const admin = adminClient()
 

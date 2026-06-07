@@ -24,11 +24,13 @@ export default function EventActions({ eventId, creatorId, participants, maxPart
     await supabase.from('ride_participants').insert({ ride_id: eventId, user_id: user.id })
     const { data: profile } = await supabase.from('profiles').select('name').eq('id', user.id).single()
     const joinerName = profile?.name || user.email?.split('@')[0] || 'Jemand'
-    fetch('/api/notify-event-join', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ eventId, joinerName, joinerId: user.id }),
-    }).catch(() => {})
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      fetch('/api/notify-event-join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ eventId, joinerName, joinerId: user.id }),
+      }).catch(() => {})
+    })
     router.refresh()
     setWorking(false)
   }

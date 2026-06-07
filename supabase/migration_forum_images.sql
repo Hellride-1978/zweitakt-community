@@ -18,10 +18,14 @@ CREATE POLICY "Forum images public read"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'forum-images');
 
--- RLS: Eingeloggte User dürfen hochladen
+-- RLS: Eingeloggte User dürfen nur in eigenen Ordner hochladen
+-- Pfadstruktur: {user_id}/{filename}
 CREATE POLICY "Forum images authenticated upload"
-  ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'forum-images' AND auth.role() = 'authenticated');
+  ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id = 'forum-images'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+  );
 
 -- RLS: Eigene Bilder löschen
 CREATE POLICY "Forum images owner delete"

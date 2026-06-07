@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { requireInternalSecret } from '@/lib/internalApiAuth'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -59,6 +60,9 @@ function buildHtml({ postTitle, postUrl, replierName, replyPreview, isParticipan
 
 export async function POST(request) {
   try {
+    const secretError = requireInternalSecret(request)
+    if (secretError) return secretError
+
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { postId, replierId, replyBody } = await request.json()
     if (!UUID_RE.test(postId) || !UUID_RE.test(replierId)) {

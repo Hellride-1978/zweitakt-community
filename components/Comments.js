@@ -54,11 +54,13 @@ export default function Comments({ targetType, targetId, ownerId }) {
       setComments(c => [...c, data])
       setBody('')
       const commenterName = data.profiles?.name || user.email?.split('@')[0] || 'Jemand'
-      fetch('/api/notify-comment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ targetType, targetId, commenterName, commenterId: user.id }),
-      }).catch(() => {})
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        fetch('/api/notify-comment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+          body: JSON.stringify({ targetType, targetId, commenterName, commenterId: user.id }),
+        }).catch(() => {})
+      })
     }
   }
 

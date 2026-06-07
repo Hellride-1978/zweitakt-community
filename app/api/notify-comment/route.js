@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
+import { requireBearerAuth } from '@/lib/internalApiAuth'
 
 const transporter = nodemailer.createTransport({
   host: process.env.NOTIFY_SMTP_HOST,
@@ -57,6 +58,9 @@ async function getEmail(supabaseAdmin, userId) {
 
 export async function POST(request) {
   try {
+    const authError = await requireBearerAuth(request)
+    if (authError.error) return authError.error
+
     const { targetType, targetId, commenterName, commenterId } = await request.json()
     if (!targetType || !targetId || !commenterName) {
       return Response.json({ ok: false, error: 'Fehlende Felder' }, { status: 400 })
@@ -114,6 +118,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Comment notification failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Benachrichtigung fehlgeschlagen' }, { status: 500 })
   }
 }

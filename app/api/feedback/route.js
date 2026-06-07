@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
+import { requireBearerAuth } from '@/lib/internalApiAuth'
 
 const TYPE_LABELS = { lob: '👍 Lob', bug: '🐛 Bug melden', idee: '💡 Idee / Wunsch' }
 
@@ -54,7 +55,21 @@ function buildHtml({ typeLabel, message, url, senderLabel }) {
 
 export async function POST(request) {
   try {
-    const { type, message, url, email, userId } = await request.json()
+    // Token optional – eingeloggte User werden identifiziert, anonymes Feedback bleibt erlaubt
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
+    let verifiedUserId = null
+
+    if (token) {
+      const adminCheck = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+      )
+      const { data: { user } } = await adminCheck.auth.getUser(token)
+      if (user) verifiedUserId = user.id
+    }
+
+    const { type, message, url, email } = await request.json()
 
     if (!type || !message || message.length < 10 || message.length > 1000) {
       return Response.json({ ok: false, error: 'Ungültige Eingabe' }, { status: 400 })
@@ -70,11 +85,11 @@ export async function POST(request) {
 
     let senderLabel = email || null
 
-    if (userId) {
+    if (verifiedUserId) {
       const { data: profile } = await supabaseAdmin
         .from('profiles')
         .select('name')
-        .eq('id', userId)
+        .eq('id', verifiedUserId)
         .single()
       if (profile?.name) senderLabel = profile.name
     }
@@ -84,7 +99,7 @@ export async function POST(request) {
       message,
       url: url || null,
       email: email || null,
-      user_id: userId || null,
+      user_id: verifiedUserId || null,
     })
 
     const typeLabel = TYPE_LABELS[type] || type
@@ -98,6 +113,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Feedback submission failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Feedback konnte nicht gespeichert werden.' }, { status: 500 })
   }
 }

@@ -1,13 +1,22 @@
 import { createClient } from '@supabase/supabase-js'
 import nodemailer from 'nodemailer'
 
-const ADMIN_EMAIL = 'martin@delavega.de'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'martin@delavega.de'
 
 function adminClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
+}
+
+async function requireAdmin(request) {
+  const token = request.headers.get('Authorization')?.replace('Bearer ', '')
+  if (!token) return { error: Response.json({ error: 'Unauthorized' }, { status: 401 }) }
+  const { data: { user }, error } = await adminClient().auth.getUser(token)
+  if (error || !user) return { error: Response.json({ error: 'Unauthorized' }, { status: 401 }) }
+  if (user.email !== ADMIN_EMAIL) return { error: Response.json({ error: 'Forbidden' }, { status: 403 }) }
+  return { user }
 }
 
 function mailer() {
@@ -19,18 +28,29 @@ function mailer() {
   })
 }
 
+function escHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl }) {
-  const cta = ctaLabel && ctaUrl ? `
+  const safeCtaUrl = ctaUrl?.startsWith('https://') ? ctaUrl : null
+
+  const cta = ctaLabel && safeCtaUrl ? `
     <table cellpadding="0" cellspacing="0" style="margin-top: 24px;"><tr>
       <td style="background:#1a1108;border-radius:100px;">
-        <a href="${ctaUrl}" style="display:inline-block;padding:13px 28px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#ffffff;text-decoration:none;">${ctaLabel} →</a>
+        <a href="${safeCtaUrl}" style="display:inline-block;padding:13px 28px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#ffffff;text-decoration:none;">${escHtml(ctaLabel)} →</a>
       </td>
     </tr></table>` : ''
 
   const bodyHtml = body
     .split('\n\n')
     .filter(Boolean)
-    .map(p => `<p style="margin:0 0 16px;font-family:Arial,system-ui,sans-serif;font-size:16px;color:#1a1108;line-height:1.7;">${p.replace(/\n/g, '<br>')}</p>`)
+    .map(p => `<p style="margin:0 0 16px;font-family:Arial,system-ui,sans-serif;font-size:16px;color:#1a1108;line-height:1.7;">${escHtml(p).replace(/\n/g, '<br>')}</p>`)
     .join('')
 
   return `<!DOCTYPE html>
@@ -42,7 +62,7 @@ function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl }) {
         <tr>
           <td style="background:#1a1108;padding:24px 32px;">
             <p style="margin:0;font-family:ui-monospace,'Courier New',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#9bc3d6;">Zweitakthoden</p>
-            <p style="margin:8px 0 0;font-family:Arial,system-ui,sans-serif;font-size:30px;color:#ffffff;line-height:1.15;font-weight:800;">${headline}</p>
+            <p style="margin:8px 0 0;font-family:Arial,system-ui,sans-serif;font-size:30px;color:#ffffff;line-height:1.15;font-weight:800;">${escHtml(headline)}</p>
           </td>
         </tr>
         <tr>
@@ -68,11 +88,11 @@ function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl }) {
 
 export async function POST(request) {
   try {
-    const { subject, headline, body, ctaLabel, ctaUrl, adminEmail, preview } = await request.json()
+    const auth = await requireAdmin(request)
+    if (auth.error) return auth.error
 
-    if (adminEmail !== ADMIN_EMAIL) {
-      return Response.json({ error: 'Keine Berechtigung.' }, { status: 403 })
-    }
+    const { subject, headline, body, ctaLabel, ctaUrl, preview } = await request.json()
+
     if (!subject?.trim() || !headline?.trim() || !body?.trim()) {
       return Response.json({ error: 'Betreff, Headline und Text sind erforderlich.' }, { status: 400 })
     }

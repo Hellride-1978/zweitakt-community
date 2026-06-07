@@ -23,10 +23,14 @@ export async function DELETE(request) {
     } catch {}
 
     const { error } = await admin.auth.admin.deleteUser(user.id)
-    if (error) return Response.json({ error: error.message }, { status: 500 })
+    if (error) {
+      console.error('delete-account: deleteUser failed', error)
+      return Response.json({ error: 'Account konnte nicht gelöscht werden.' }, { status: 500 })
+    }
 
     return Response.json({ ok: true })
   } catch (err) {
-    return Response.json({ error: err.message }, { status: 500 })
+    console.error('delete-account error:', err)
+    return Response.json({ error: 'Interner Fehler.' }, { status: 500 })
   }
 }

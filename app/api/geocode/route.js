@@ -1,7 +1,13 @@
+import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
+
 export async function GET(request) {
+  const ip = getClientIp(request)
+  const rateLimitError = rateLimit(`geocode:${ip}`, 30, 60_000)
+  if (rateLimitError) return Response.json([], { status: 200 })
+
   const { searchParams } = new URL(request.url)
   const q = searchParams.get('q')
-  if (!q?.trim()) return Response.json([], { status: 200 })
+  if (!q?.trim() || q.length > 200) return Response.json([], { status: 200 })
 
   const res = await fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&countrycodes=de,at,ch&limit=5&accept-language=de&addressdetails=1`,

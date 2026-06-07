@@ -110,9 +110,10 @@ export default function ThreadClient({ id }) {
       // E-Mail-Benachrichtigung
       const { data: senderProfile } = await supabase
         .from('profiles').select('name').eq('id', user.id).single()
+      const { data: { session } } = await supabase.auth.getSession()
       await fetch('/api/messages/send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
         body: JSON.stringify({ recipientId: otherId, senderName: senderProfile?.name || 'Jemand' }),
       })
     } catch (err) {

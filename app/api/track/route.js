@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
 
 const IGNORED_PREFIXES = ['/api', '/admin', '/_next', '/styleguide', '/auth']
 
@@ -12,8 +13,11 @@ function detectDevice(ua) {
 
 export async function POST(request) {
   try {
+    const ip = getClientIp(request)
+    if (rateLimit(`track:${ip}`, 60, 60_000)) return new Response(null, { status: 204 })
+
     const { path } = await request.json()
-    if (!path || typeof path !== 'string') return new Response(null, { status: 204 })
+    if (!path || typeof path !== 'string' || path.length > 500) return new Response(null, { status: 204 })
     if (IGNORED_PREFIXES.some(p => path.startsWith(p))) return new Response(null, { status: 204 })
 
     const ua = request.headers.get('user-agent') ?? ''

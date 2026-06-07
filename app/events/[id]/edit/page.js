@@ -112,11 +112,13 @@ export default function EditEventPage({ params }) {
         }
         throw updateError
       }
-      fetch('/api/notify-event-update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId, eventTitle: form.title.trim(), updaterId: user.id }),
-      }).catch(() => {})
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        fetch('/api/notify-event-update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+          body: JSON.stringify({ eventId, eventTitle: form.title.trim(), updaterId: user.id }),
+        }).catch(() => {})
+      })
       router.push(`/events/${eventId}`)
     } catch (err) {
       setError(err?.message || 'Fehler beim Speichern')

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import nodemailer from 'nodemailer'
 import { buildConfirmationEmail } from '@/lib/newsletter-emails'
+import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
 
 function adminClient() {
   return createClient(
@@ -28,6 +29,10 @@ function getIp(request) {
 
 export async function POST(request) {
   try {
+    const ip = getClientIp(request)
+    const rateLimitError = rateLimit(`subscribe:${ip}`, 3, 300_000) // 3 Versuche pro 5 Min
+    if (rateLimitError) return rateLimitError
+
     const { email, userId } = await request.json()
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

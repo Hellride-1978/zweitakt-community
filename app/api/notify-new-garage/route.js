@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { requireBearerAuth } from '@/lib/internalApiAuth'
 
 const transporter = nodemailer.createTransport({
   host: process.env.NOTIFY_SMTP_HOST,
@@ -12,6 +13,9 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request) {
   try {
+    const authError = await requireBearerAuth(request)
+    if (authError.error) return authError.error
+
     const { ownerName, ownerEmail, skills, garageId } = await request.json()
 
     const garageUrl = garageId
@@ -69,6 +73,6 @@ export async function POST(request) {
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Garage notification failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Benachrichtigung fehlgeschlagen' }, { status: 500 })
   }
 }

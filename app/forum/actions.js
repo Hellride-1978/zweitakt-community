@@ -54,7 +54,7 @@ export async function createPost(accessToken, prevState, formData) {
     .select('id')
     .single()
 
-  if (error) return { error: 'Speichern fehlgeschlagen: ' + error.message }
+  if (error) { console.error('forum action error:', error); return { error: 'Speichern fehlgeschlagen.' } }
 
   if (tags.length > 0) {
     await admin.from('forum_post_tags').insert(
@@ -88,12 +88,12 @@ export async function createReply(accessToken, prevState, formData) {
     .select('id')
     .single()
 
-  if (error) return { error: 'Speichern fehlgeschlagen: ' + error.message }
+  if (error) { console.error('forum action error:', error); return { error: 'Speichern fehlgeschlagen.' } }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zweitakthoden.de'
   fetch(`${baseUrl}/api/forum/notify`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-internal-secret': process.env.INTERNAL_API_SECRET ?? '' },
     body: JSON.stringify({ postId, replierId: user.id, replyBody: body }),
   }).catch(() => {})
 
