@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
@@ -34,43 +34,166 @@ function KpiCard({ label, value, sub, accent }) {
 function BarChart({ data, label, valueKey = 'subs' }) {
   if (!data?.length) return null
   const maxVal = Math.max(...data.map(d => d[valueKey] ?? 0), 1)
-
-  const formatDay = iso => {
-    const [, m, d] = iso.split('-')
-    return `${d}.${m}`
-  }
-
+  const formatDay = iso => { const [, m, d] = iso.split('-'); return `${d}.${m}` }
   const shown = data.filter((_, i) => i % 5 === 0 || i === data.length - 1)
-
   return (
     <div style={{ marginTop: 32 }}>
-      <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
-        {label}
-      </div>
+      <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>{label}</div>
       <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '20px 20px 12px', background: 'var(--surface)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 80 }}>
-          {data.map((d) => (
-            <div key={d.day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, height: '100%', justifyContent: 'flex-end' }}>
-              <div
-                title={`${formatDay(d.day)}: ${d[valueKey] ?? 0}`}
-                style={{
-                  width: '100%',
-                  height: `${Math.max(((d[valueKey] ?? 0) / maxVal) * 100, (d[valueKey] ?? 0) > 0 ? 8 : 2)}%`,
-                  background: (d[valueKey] ?? 0) > 0 ? 'var(--accent-ink, #1a1108)' : 'var(--hairline)',
-                  borderRadius: 3,
-                  transition: 'height 0.3s ease',
-                }}
-              />
+          {data.map(d => (
+            <div key={d.day} style={{ flex: 1, height: '100%', display: 'flex', alignItems: 'flex-end' }}>
+              <div title={`${formatDay(d.day)}: ${d[valueKey] ?? 0}`} style={{ width: '100%', height: `${Math.max(((d[valueKey] ?? 0) / maxVal) * 100, (d[valueKey] ?? 0) > 0 ? 8 : 2)}%`, background: (d[valueKey] ?? 0) > 0 ? 'var(--ink)' : 'var(--hairline)', borderRadius: 3 }} />
             </div>
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-          {shown.map(d => (
-            <div key={d.day} style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-muted)', letterSpacing: '0.5px' }}>
-              {formatDay(d.day)}
-            </div>
+          {shown.map(d => <div key={d.day} style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-muted)' }}>{formatDay(d.day)}</div>)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function smoothPath(pts) {
+  if (pts.length < 2) return ''
+  const parts = [`M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`]
+  for (let i = 1; i < pts.length; i++) {
+    const p = pts[i - 1], c = pts[i]
+    const cpx = ((p.x + c.x) / 2).toFixed(1)
+    parts.push(`C ${cpx} ${p.y.toFixed(1)} ${cpx} ${c.y.toFixed(1)} ${c.x.toFixed(1)} ${c.y.toFixed(1)}`)
+  }
+  return parts.join(' ')
+}
+
+function LineChart({ monthData, weekData, hourlyData }) {
+  const [period, setPeriod] = useState('month')
+  const [tooltip, setTooltip] = useState(null)
+  const svgRef = useRef(null)
+
+  const W = 800, H = 140, PAD = { top: 16, right: 12, bottom: 28, left: 32 }
+  const innerW = W - PAD.left - PAD.right
+  const innerH = H - PAD.top - PAD.bottom
+
+  const raw = period === 'day' ? hourlyData : period === 'week' ? weekData : monthData
+  if (!raw?.length) return null
+
+  const values = raw.map(d => d.views ?? 0)
+  const maxVal = Math.max(...values, 1)
+
+  const pts = raw.map((d, i) => ({
+    x: PAD.left + (i / (raw.length - 1)) * innerW,
+    y: PAD.top + innerH - (d.views / maxVal) * innerH,
+    d,
+  }))
+
+  const linePath = smoothPath(pts)
+  const areaPath = `${linePath} L ${pts[pts.length - 1].x.toFixed(1)} ${(PAD.top + innerH).toFixed(1)} L ${pts[0].x.toFixed(1)} ${(PAD.top + innerH).toFixed(1)} Z`
+
+  const formatLabel = d => {
+    if (period === 'day') return `${d.hour}:00`
+    const [, m, day] = d.day.split('-')
+    return `${day}.${m}`
+  }
+
+  const labelStep = period === 'day' ? 4 : period === 'week' ? 1 : 5
+  const labelPts = pts.filter((_, i) => i % labelStep === 0 || i === pts.length - 1)
+
+  const PERIODS = [
+    { key: 'month', label: 'Monat' },
+    { key: 'week',  label: 'Woche' },
+    { key: 'day',   label: 'Tag' },
+  ]
+
+  return (
+    <div style={{ marginTop: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+          Seitenaufrufe
+        </div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {PERIODS.map(p => (
+            <button key={p.key} onClick={() => setPeriod(p.key)} style={{
+              fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
+              padding: '5px 14px', borderRadius: 100, cursor: 'pointer', transition: 'background 0.15s, color 0.15s',
+              border: '1.5px solid var(--ink)',
+              background: period === p.key ? 'var(--ink)' : 'transparent',
+              color: period === p.key ? 'var(--cream)' : 'var(--ink)',
+            }}>
+              {p.label}
+            </button>
           ))}
         </div>
+      </div>
+      <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '16px 16px 8px', background: 'var(--surface)', position: 'relative' }}>
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${W} ${H}`}
+          style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}
+          onMouseMove={e => {
+            const rect = svgRef.current?.getBoundingClientRect()
+            if (!rect) return
+            const svgX = ((e.clientX - rect.left) / rect.width) * W
+            const idx = Math.round(((svgX - PAD.left) / innerW) * (raw.length - 1))
+            const clamped = Math.max(0, Math.min(raw.length - 1, idx))
+            setTooltip({ idx: clamped, pt: pts[clamped] })
+          }}
+          onMouseLeave={() => setTooltip(null)}
+        >
+          <defs>
+            <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent-color, #c2701f)" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="var(--accent-color, #c2701f)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Y-Achse Hilfslinien */}
+          {[0, 0.5, 1].map(t => {
+            const y = PAD.top + innerH - t * innerH
+            return (
+              <g key={t}>
+                <line x1={PAD.left} y1={y} x2={PAD.left + innerW} y2={y} stroke="var(--hairline)" strokeWidth="1" />
+                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="9" fill="var(--ink-muted)" fontFamily="monospace">
+                  {Math.round(maxVal * t)}
+                </text>
+              </g>
+            )
+          })}
+
+          {/* Fläche */}
+          <path d={areaPath} fill="url(#pvGrad)" />
+
+          {/* Linie */}
+          <path d={linePath} fill="none" stroke="var(--accent-color, #c2701f)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+          {/* Datenpunkte */}
+          {pts.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r={tooltip?.idx === i ? 5 : 0} fill="var(--accent-color, #c2701f)" />
+          ))}
+
+          {/* Tooltip-Linie */}
+          {tooltip && (
+            <line x1={tooltip.pt.x} y1={PAD.top} x2={tooltip.pt.x} y2={PAD.top + innerH} stroke="var(--ink-muted)" strokeWidth="1" strokeDasharray="3,3" />
+          )}
+
+          {/* X-Achse Labels */}
+          {labelPts.map(p => (
+            <text key={p.d.day ?? p.d.hour} x={p.x} y={H - 4} textAnchor="middle" fontSize="9" fill="var(--ink-muted)" fontFamily="monospace">
+              {formatLabel(p.d)}
+            </text>
+          ))}
+        </svg>
+
+        {/* Tooltip Box */}
+        {tooltip && (
+          <div style={{
+            position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)',
+            background: 'var(--ink)', color: 'var(--cream)', borderRadius: 8,
+            padding: '5px 12px', fontFamily: 'var(--mono)', fontSize: 12, pointerEvents: 'none', whiteSpace: 'nowrap',
+          }}>
+            {formatLabel(raw[tooltip.idx])} — {raw[tooltip.idx].views} Aufrufe
+          </div>
+        )}
       </div>
     </div>
   )
@@ -182,7 +305,11 @@ export default function AdminStatistikPage() {
       </div>
 
       {pv?.chart && (
-        <BarChart data={pv.chart} valueKey="views" label="Seitenaufrufe – letzte 30 Tage" />
+        <LineChart
+          monthData={pv.chart}
+          weekData={pv.chart?.slice(-7)}
+          hourlyData={pv.chartHourly}
+        />
       )}
 
       {pv?.devices && (

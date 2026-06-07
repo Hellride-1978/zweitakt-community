@@ -57,6 +57,7 @@ export async function GET(request) {
       { data: pvDetails,       error: e11 },
       { count: pvToday,        error: e12 },
       { count: pvWeek,         error: e13 },
+      { data: pvTodayRows,     error: e14 },
     ] = await Promise.all([
       admin.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('status', 'confirmed'),
       admin.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('status', 'unsubscribed'),
@@ -71,9 +72,10 @@ export async function GET(request) {
       admin.from('page_views').select('path, device, country').gte('viewed_at', cutoffIso),
       admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', new Date().toISOString().slice(0, 10)),
       admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d.toISOString().slice(0, 10) })()),
+      admin.from('page_views').select('viewed_at').gte('viewed_at', new Date().toISOString().slice(0, 10)),
     ])
 
-    const dbError = e1 || e2 || e3 || e4 || e5 || e6 || e7 || e8 || e9 || e10 || e11 || e12 || e13
+    const dbError = e1 || e2 || e3 || e4 || e5 || e6 || e7 || e8 || e9 || e10 || e11 || e12 || e13 || e14
     if (dbError) throw dbError
 
     const days = last30Days()
@@ -111,6 +113,16 @@ export async function GET(request) {
       views: pvMap[day] ?? 0,
     }))
 
+    const hourMap = {}
+    for (const row of pvTodayRows ?? []) {
+      const hour = row.viewed_at?.slice(11, 13)
+      if (hour) hourMap[hour] = (hourMap[hour] ?? 0) + 1
+    }
+    const pvChartHourly = Array.from({ length: 24 }, (_, i) => {
+      const hour = String(i).padStart(2, '0')
+      return { hour, views: hourMap[hour] ?? 0 }
+    })
+
     return Response.json({
       newsletter: {
         confirmed: nlConfirmed ?? 0,
@@ -129,6 +141,7 @@ export async function GET(request) {
         week: pvWeek ?? 0,
         total: pvRecent?.length ?? 0,
         chart: pvChart,
+        chartHourly: pvChartHourly,
         topPages,
         devices: deviceCounts,
         topCountries,
