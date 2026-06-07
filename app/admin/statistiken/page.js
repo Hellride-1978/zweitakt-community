@@ -150,7 +150,14 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
   }
 
   const labelStep = period === 'day' ? 6 : period === 'week' ? 1 : 7
-  const labelPts = pts.filter((_, i) => i % labelStep === 0 || i === pts.length - 1)
+  const labelPts = pts.filter((_, i) => {
+    if (i % labelStep === 0) return true
+    if (i === pts.length - 1) {
+      const lastStepIdx = Math.floor((pts.length - 1) / labelStep) * labelStep
+      return (pts.length - 1 - lastStepIdx) >= Math.ceil(labelStep / 2)
+    }
+    return false
+  })
 
   return (
     <div style={{ marginTop: 32 }}>
