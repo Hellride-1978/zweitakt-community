@@ -84,8 +84,22 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
   const [selectedMonth, setSelectedMonth] = useState('')
   const [monthChart, setMonthChart] = useState(null)
   const [loadingMonth, setLoadingMonth] = useState(false)
+  const [dims, setDims] = useState({ w: 600, h: 220 })
   const svgRef = useRef(null)
+  const containerRef = useRef(null)
   const months = last12Months()
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const obs = new ResizeObserver(([entry]) => {
+      const w = Math.round(entry.contentRect.width)
+      const h = Math.min(280, Math.max(200, Math.round(w * 0.42)))
+      setDims({ w, h })
+    })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
 
   async function handleMonthChange(month) {
     setSelectedMonth(month)
@@ -103,7 +117,8 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
     }
   }
 
-  const W = 800, H = 260, PAD = { top: 24, right: 12, bottom: 32, left: 36 }
+  const W = dims.w, H = dims.h
+  const PAD = { top: 24, right: 12, bottom: 32, left: 36 }
   const innerW = W - PAD.left - PAD.right
   const innerH = H - PAD.top - PAD.bottom
 
@@ -177,26 +192,24 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
           ))}
         </div>
       </div>
-      <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '16px 16px 8px', background: 'var(--surface)', position: 'relative' }}>
-        <div style={{ width: '100%', height: 'clamp(180px, 40vw, 280px)' }}>
+      <div ref={containerRef} style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '16px 16px 8px', background: 'var(--surface)', position: 'relative' }}>
         <svg
           ref={svgRef}
-          viewBox={`0 0 ${W} ${H}`}
-          style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', touchAction: 'none' }}
+          width={W}
+          height={H}
+          style={{ display: 'block', overflow: 'visible', touchAction: 'none', maxWidth: '100%' }}
           onMouseMove={e => {
             const rect = svgRef.current?.getBoundingClientRect()
             if (!rect) return
-            const svgX = ((e.clientX - rect.left) / rect.width) * W
-            const idx = Math.round(((svgX - PAD.left) / innerW) * (raw.length - 1))
-            setTooltip({ idx: Math.max(0, Math.min(raw.length - 1, idx)), pt: pts[Math.max(0, Math.min(raw.length - 1, idx))] })
+            const idx = Math.max(0, Math.min(raw.length - 1, Math.round(((e.clientX - rect.left - PAD.left) / innerW) * (raw.length - 1))))
+            setTooltip({ idx, pt: pts[idx] })
           }}
           onMouseLeave={() => setTooltip(null)}
           onTouchMove={e => {
             e.preventDefault()
             const rect = svgRef.current?.getBoundingClientRect()
             if (!rect) return
-            const svgX = ((e.touches[0].clientX - rect.left) / rect.width) * W
-            const idx = Math.max(0, Math.min(raw.length - 1, Math.round(((svgX - PAD.left) / innerW) * (raw.length - 1))))
+            const idx = Math.max(0, Math.min(raw.length - 1, Math.round(((e.touches[0].clientX - rect.left - PAD.left) / innerW) * (raw.length - 1))))
             setTooltip({ idx, pt: pts[idx] })
           }}
           onTouchEnd={() => setTooltip(null)}
@@ -244,7 +257,6 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
             </text>
           ))}
         </svg>
-        </div>
 
         {/* Tooltip Box */}
         {tooltip && (
