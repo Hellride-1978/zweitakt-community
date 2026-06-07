@@ -350,9 +350,9 @@ export default function AdminStatistikPage() {
                   <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-muted)', width: 18, flexShrink: 0 }}>
                     {i + 1}
                   </span>
-                  <span style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <a href={p.path} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textDecoration: 'none', borderBottom: '1px solid var(--hairline)' }}>
                     {p.path}
-                  </span>
+                  </a>
                 </div>
                 <span style={{ fontFamily: 'var(--display)', fontSize: 18, fontWeight: 800, color: 'var(--ink)', flexShrink: 0 }}>
                   {p.views}
