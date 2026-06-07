@@ -1,11 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
-function buildHtml({ postTitle, postUrl, replierName, replyPreview }) {
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+function buildHtml({ postTitle, postUrl, replierName, replyPreview, isParticipant = false, userId }) {
   const preview = replyPreview ? `
             <div style="margin:0 0 24px;padding:16px 20px;background:#f5f5f5;border-left:3px solid #1a1108;border-radius:0 8px 8px 0;">
               <p style="margin:0;font-family:Arial,system-ui,sans-serif;font-size:14px;color:#3a3028;line-height:1.5;font-style:italic;">&ldquo;${replyPreview}&rdquo;</p>
             </div>` : ''
+
+  const bodyText = isParticipant
+    ? `<strong>${replierName}</strong> hat eine neue Antwort in der Diskussion<br><strong><em>&ldquo;${postTitle}&rdquo;</em></strong><br>geschrieben.`
+    : `<strong>${replierName}</strong> hat auf deine Frage<br><strong><em>&ldquo;${postTitle}&rdquo;</em></strong><br>geantwortet.`
 
   return `<!DOCTYPE html>
 <html lang="de"><head><meta charset="UTF-8"></head>
@@ -23,7 +29,7 @@ function buildHtml({ postTitle, postUrl, replierName, replyPreview }) {
           <td style="padding:36px 32px 32px;">
             <p style="margin:0 0 10px;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#5e5248;font-family:ui-monospace,'Courier New',monospace;">Forum</p>
             <p style="margin:0 0 20px;font-family:Arial,system-ui,sans-serif;font-size:20px;color:#1a1108;line-height:1.4;">
-              <strong>${replierName}</strong> hat auf deine Frage<br><strong><em>&ldquo;${postTitle}&rdquo;</em></strong><br>geantwortet.
+              ${bodyText}
             </p>
             ${preview}
             <div style="height:1px;background:rgba(26,17,8,0.15);margin:0 0 24px;"></div>
@@ -41,7 +47,7 @@ function buildHtml({ postTitle, postUrl, replierName, replyPreview }) {
           <td style="padding:18px 32px 24px;">
             <p style="margin:0 0 6px;font-size:11px;color:#5e5248;letter-spacing:1.5px;text-transform:uppercase;font-family:ui-monospace,'Courier New',monospace;">zweitakthoden.de — Die Community für Zweitakt-Schrauber</p>
             <p style="margin:0;font-size:11px;color:#8a7a6e;font-family:ui-monospace,'Courier New',monospace;">
-              <a href="https://zweitakthoden.de/profile/${'{userId}'}/edit?settings=1" style="color:#1a6080;text-decoration:underline;">Benachrichtigungen verwalten</a>
+              <a href="https://zweitakthoden.de/profile/${userId}/edit?settings=1" style="color:#1a6080;text-decoration:underline;">Benachrichtigungen verwalten</a>
             </p>
           </td>
         </tr>
@@ -55,8 +61,8 @@ export async function POST(request) {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { postId, replierId, replyBody } = await request.json()
-    if (!postId || !replierId) {
-      return Response.json({ ok: false, error: 'Fehlende Felder' }, { status: 400 })
+    if (!UUID_RE.test(postId) || !UUID_RE.test(replierId)) {
+      return Response.json({ ok: false, error: 'Ungültige Parameter' }, { status: 400 })
     }
 
     const admin = createClient(
@@ -73,13 +79,7 @@ export async function POST(request) {
 
     if (!post) return Response.json({ ok: true, skipped: true })
 
-    // Kein Mail wenn Autor selbst antwortet
-    if (post.user_id === replierId) return Response.json({ ok: true, skipped: true })
-
-    // Kein Mail wenn Benachrichtigungen deaktiviert
-    if (post.profiles?.notify_forum_replies === false) return Response.json({ ok: true, skipped: true })
-
-    // Replier-Name laden
+    // Replier-Name laden (wird für alle Mails gebraucht)
     const { data: replierProfile } = await admin
       .from('profiles')
       .select('name')
@@ -87,28 +87,66 @@ export async function POST(request) {
       .single()
     const replierName = replierProfile?.name || 'Jemand'
 
-    const { data: authorData } = await admin.auth.admin.getUserById(post.user_id)
-    const email = authorData?.user?.email
-    if (!email) return Response.json({ ok: true, skipped: true })
-
     const postUrl = `https://zweitakthoden.de/forum/${post.id}`
     const replyPreview = replyBody
       ? replyBody.slice(0, 200) + (replyBody.length > 200 ? '…' : '')
       : null
 
-    const html = buildHtml({ postTitle: post.title, postUrl, replierName, replyPreview })
-      .replace('{userId}', post.user_id)
+    const sends = []
 
-    await resend.emails.send({
-      from: 'Zweitakthoden <noreply@send.zweitakthoden.de>',
-      to: email,
-      subject: `${replierName} hat geantwortet: „${post.title}"`,
-      html,
-    })
+    // --- Post-Autor benachrichtigen (außer er antwortet selbst) ---
+    if (post.user_id !== replierId && post.profiles?.notify_forum_replies !== false) {
+      const { data: authorData } = await admin.auth.admin.getUserById(post.user_id)
+      const email = authorData?.user?.email
+      if (email) {
+        sends.push(resend.emails.send({
+          from: 'Zweitakthoden <noreply@send.zweitakthoden.de>',
+          to: email,
+          subject: `${replierName} hat geantwortet: „${post.title}"`,
+          html: buildHtml({ postTitle: post.title, postUrl, replierName, replyPreview, userId: post.user_id }),
+        }))
+      }
+    }
+
+    // --- Bisherige Antwortende benachrichtigen ---
+    const { data: previousReplies } = await admin
+      .from('forum_replies')
+      .select('user_id, profiles!forum_replies_user_id_fkey(notify_forum_replies)')
+      .eq('post_id', postId)
+      .neq('user_id', replierId)
+      .neq('user_id', post.user_id)
+
+    if (previousReplies?.length) {
+      // Duplikate entfernen (ein User kann mehrfach geantwortet haben)
+      const seen = new Set()
+      const uniqueParticipants = previousReplies.filter(r => {
+        if (seen.has(r.user_id)) return false
+        seen.add(r.user_id)
+        return true
+      })
+
+      const participantSends = await Promise.all(uniqueParticipants.map(async (r) => {
+        if (r.profiles?.notify_forum_replies === false) return null
+        const { data: participantData, error: authErr } = await admin.auth.admin.getUserById(r.user_id)
+        if (authErr) { console.error('Forum notify: getUserById failed', r.user_id, authErr.message); return null }
+        const email = participantData?.user?.email
+        if (!email) return null
+        return resend.emails.send({
+          from: 'Zweitakthoden <noreply@send.zweitakthoden.de>',
+          to: email,
+          subject: `Neue Antwort in: „${post.title}"`,
+          html: buildHtml({ postTitle: post.title, postUrl, replierName, replyPreview, isParticipant: true, userId: r.user_id }),
+        })
+      }))
+
+      sends.push(...participantSends.filter(Boolean))
+    }
+
+    await Promise.all(sends)
 
     return Response.json({ ok: true })
   } catch (err) {
     console.error('Forum notification failed:', err)
-    return Response.json({ ok: false, error: err.message }, { status: 500 })
+    return Response.json({ ok: false, error: 'Benachrichtigung fehlgeschlagen' }, { status: 500 })
   }
 }
