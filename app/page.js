@@ -97,10 +97,9 @@ export default async function Home() {
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
     supabase
       .from('profiles')
-      .select('id, name, location, avatar_url, lat, lng, last_seen, vehicles(id, make, model, year)')
+      .select('id, name, location, avatar_url, lat, lng, last_seen, created_at, vehicles(id, make, model, year)')
       .not('lat', 'is', null)
-      .not('lng', 'is', null)
-      .order('name', { ascending: true }),
+      .not('lng', 'is', null),
   ])
 
   const eventAddresses = {}
