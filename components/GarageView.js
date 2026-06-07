@@ -1,5 +1,6 @@
 import { skillBadgeStyle } from '@/lib/garage'
 import Link from 'next/link'
+import Image from 'next/image'
 
 // Server-renderable Darstellung einer Schrauberhalle im Profil
 export default function GarageView({ garage, skills, profileId }) {
@@ -38,7 +39,7 @@ export default function GarageView({ garage, skills, profileId }) {
         }}>
           {photos.map((url, i) => (
             <a key={i} href={url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', aspectRatio: '4/3', borderRadius: 10, overflow: 'hidden', border: '1.5px solid var(--hairline)' }}>
-              <img src={url} alt={`Schrauberhallen-Foto ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.2s' }} />
+              <Image src={url} alt={`Schrauberhallen-Foto ${i + 1}`} fill sizes="(max-width: 640px) 100vw, 33vw" style={{ objectFit: 'cover', transition: 'transform 0.2s' }} />
             </a>
           ))}
         </div>

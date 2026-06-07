@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatDate(str) {
   const d = new Date(str)
@@ -88,7 +89,7 @@ export default function Comments({ targetType, targetId, ownerId }) {
                 <Link href={`/profile/${c.profiles?.id}`} style={{ flexShrink: 0, textDecoration: 'none' }}>
                   <div className="zh-avatar offline" style={{ width: 36, height: 36, fontSize: 14 }}>
                     {c.profiles?.avatar_url
-                      ? <img src={c.profiles.avatar_url} alt={c.profiles.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                      ? <Image src={c.profiles.avatar_url} alt={c.profiles.name} width={32} height={32} style={{ borderRadius: '50%', objectFit: 'cover', width: '100%', height: '100%' }} />
                       : initial
                     }
                   </div>
@@ -138,7 +139,7 @@ export default function Comments({ targetType, targetId, ownerId }) {
         <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
           <div className="zh-avatar offline" style={{ width: 36, height: 36, fontSize: 14, flexShrink: 0 }}>
             {myProfile?.avatar_url
-              ? <img src={myProfile.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              ? <Image src={myProfile.avatar_url} alt="" width={32} height={32} style={{ borderRadius: '50%', objectFit: 'cover', width: '100%', height: '100%' }} />
               : (myProfile?.name || user.email || '?').charAt(0).toUpperCase()
             }
           </div>

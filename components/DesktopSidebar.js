@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
@@ -94,7 +95,7 @@ export default function DesktopSidebar() {
         <div className="meprofile">
           <div className="zh-avatar offline" style={{ width: 36, height: 36, fontSize: 13, flexShrink: 0 }}>
             {profile?.avatar_url
-              ? <img src={profile.avatar_url} alt={displayName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              ? <Image src={profile.avatar_url} alt={displayName} width={36} height={36} style={{ borderRadius: '50%', objectFit: 'cover', width: '100%', height: '100%' }} />
               : initials
             }
           </div>

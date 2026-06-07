@@ -15,7 +15,6 @@ import PageTracker from "@/components/PageTracker";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
-import Script from "next/script";
 import NewsletterForm from "@/components/NewsletterForm";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
@@ -56,7 +55,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <head>
-        <Script src="/palette-init.js" strategy="beforeInteractive" />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var p={blue:{a:'rgb(155,195,214)',b:'rgb(175,210,225)',c:'rgb(210,230,238)',d:'rgb(100,155,180)'},pink:{a:'#FF5C8F',b:'#ff85aa',c:'#ffb3cb',d:'#e0366a'},sage:{a:'#7DC4A0',b:'#9DD4B8',c:'#C5E8D6',d:'#4FA87A'},amber:{a:'#E8A045',b:'#F0BB78',c:'#F8DCBA',d:'#C07820'},lilac:{a:'#A99BD4',b:'#C2B8E0',c:'#DDD8EF',d:'#7A68B8'}};var k=localStorage.getItem('zh-palette')||'blue';var t=p[k]||p.blue;var r=document.documentElement.style;r.setProperty('--accent',t.a);r.setProperty('--accent-2',t.b);r.setProperty('--accent-3',t.c);r.setProperty('--accent-ink',t.d);r.setProperty('--accent-hot',t.a);r.setProperty('--accent-hot-2',t.b);r.setProperty('--accent-hot-3',t.c);})();` }} />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>

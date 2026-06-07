@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function buildIcon(active) {
   const fill = active ? '#e8523a' : '#1a1108'
@@ -54,7 +55,7 @@ function MemberRow({ m, active, onSelect }) {
       <div className="mms-avatar-wrap">
         <div className="mms-avatar">
           {m.avatar_url
-            ? <img src={m.avatar_url} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            ? <Image src={m.avatar_url} alt={m.name} width={48} height={48} style={{ objectFit: 'cover', borderRadius: '50%', width: '100%', height: '100%' }} />
             : (m.name || '?').charAt(0).toUpperCase()
           }
         </div>

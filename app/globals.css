@@ -1443,6 +1443,7 @@ body::before {
   border: 2px solid var(--cream);
   animation: zh-pulse 2s ease-in-out infinite;
   z-index: 2;
+  will-change: transform, opacity;
 }
 .zh-avatar.offline::after { background: var(--ink-muted); animation: none; }
 .zh-avatar img {
@@ -1894,7 +1895,7 @@ body::before {
 @keyframes zh-rise   { to { opacity: 1; transform: translateY(0); } }
 @keyframes zh-ticker { to { transform: translateX(-50%); } }
 @keyframes zh-blink  { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-@keyframes zh-pulse  { 0%,100% { box-shadow: 0 0 0 0 rgba(69,163,106,0.4); } 50% { box-shadow: 0 0 0 4px rgba(69,163,106,0); } }
+@keyframes zh-pulse  { 0%,100% { transform: scale(1);   opacity: 1; } 50% { transform: scale(1.55); opacity: 0; } }
 
 @keyframes zh-hero-l1 {
   0%   { opacity: 0; transform: translateX(-60px) translateY(8px) scale(0.78) rotate(-3deg); }
