@@ -134,12 +134,14 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
     return `${day}.${m}`
   }
 
-  const labelStep = period === 'day' ? 4 : period === 'week' ? 1 : 5
+  const labelStep = period === 'day' ? 6 : period === 'week' ? 1 : 7
   const labelPts = pts.filter((_, i) => i % labelStep === 0 || i === pts.length - 1)
 
   return (
     <div style={{ marginTop: 32 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+      {/* Header: stapelt auf Mobile */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+        {/* Zeile 1: Label + Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
             Seitenaufrufe
@@ -149,9 +151,9 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
               value={selectedMonth}
               onChange={e => handleMonthChange(e.target.value)}
               style={{
-                fontFamily: 'var(--mono)', fontSize: 11, padding: '4px 10px', borderRadius: 8,
+                fontFamily: 'var(--mono)', fontSize: 11, padding: '5px 10px', borderRadius: 8,
                 border: '1.5px solid var(--hairline)', background: 'var(--cream)',
-                color: 'var(--ink)', cursor: 'pointer',
+                color: 'var(--ink)', cursor: 'pointer', flex: '1 1 auto', maxWidth: 220,
               }}
             >
               <option value="">Letzte 30 Tage</option>
@@ -160,12 +162,13 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
           )}
           {loadingMonth && <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-muted)' }}>Lädt…</span>}
         </div>
-        <div style={{ display: 'flex', gap: 4 }}>
+        {/* Zeile 2: Tabs */}
+        <div style={{ display: 'flex', gap: 6 }}>
           {PERIODS.map(p => (
             <button key={p.key} onClick={() => setPeriod(p.key)} style={{
-              fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1.5px', textTransform: 'uppercase',
-              padding: '5px 14px', borderRadius: 100, cursor: 'pointer', transition: 'background 0.15s, color 0.15s',
-              border: '1.5px solid var(--ink)',
+              fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '1px', textTransform: 'uppercase',
+              padding: '6px 16px', borderRadius: 100, cursor: 'pointer', transition: 'background 0.15s, color 0.15s',
+              border: '1.5px solid var(--ink)', flex: '1 1 0',
               background: period === p.key ? 'var(--ink)' : 'transparent',
               color: period === p.key ? 'var(--cream)' : 'var(--ink)',
             }}>
@@ -178,16 +181,24 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
         <svg
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
-          style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}
+          style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible', touchAction: 'none' }}
           onMouseMove={e => {
             const rect = svgRef.current?.getBoundingClientRect()
             if (!rect) return
             const svgX = ((e.clientX - rect.left) / rect.width) * W
             const idx = Math.round(((svgX - PAD.left) / innerW) * (raw.length - 1))
-            const clamped = Math.max(0, Math.min(raw.length - 1, idx))
-            setTooltip({ idx: clamped, pt: pts[clamped] })
+            setTooltip({ idx: Math.max(0, Math.min(raw.length - 1, idx)), pt: pts[Math.max(0, Math.min(raw.length - 1, idx))] })
           }}
           onMouseLeave={() => setTooltip(null)}
+          onTouchMove={e => {
+            e.preventDefault()
+            const rect = svgRef.current?.getBoundingClientRect()
+            if (!rect) return
+            const svgX = ((e.touches[0].clientX - rect.left) / rect.width) * W
+            const idx = Math.max(0, Math.min(raw.length - 1, Math.round(((svgX - PAD.left) / innerW) * (raw.length - 1))))
+            setTooltip({ idx, pt: pts[idx] })
+          }}
+          onTouchEnd={() => setTooltip(null)}
         >
           <defs>
             <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
