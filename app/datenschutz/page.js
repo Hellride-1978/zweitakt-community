@@ -59,7 +59,7 @@ export default function DatenschutzPage() {
               Deine Daten werden ausschließlich für den Betrieb dieser Community-Plattform verwendet: Anmeldung, Profilverwaltung und Koordination von Ausfahrten. Eine Weitergabe an Dritte zu Werbezwecken findet nicht statt.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
-              Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, sowie neue Teilnehmer an deinen Terminen.
+              Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, sowie neue Teilnehmer an deinen Terminen. Wenn du den Newsletter abonnierst, erhältst du gelegentlich Community-Updates und Neuigkeiten von Zweitakthoden — nur mit deiner ausdrücklichen Einwilligung (Double-Opt-in).
             </p>
           </section>
 
@@ -81,9 +81,19 @@ export default function DatenschutzPage() {
               Wir nutzen Vercel Analytics und Vercel Speed Insights (Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA) zur Analyse des Nutzungsverhaltens und der Seitenperformance. Beide Dienste arbeiten <strong>cookielos</strong> und erheben keine personenbezogenen Daten — es werden keine IP-Adressen gespeichert und keine Nutzerprofile erstellt. Die Auswertung erfolgt vollständig anonymisiert. Weitere Informationen: <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>vercel.com/docs/analytics/privacy-policy</a>
             </p>
 
-            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Resend</h3>
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Eigenes Seitenaufruf-Tracking</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Für den Versand von Benachrichtigungs-E-Mails nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Resend wird eingesetzt für: (1) Registrierungsbestätigung bei neuen Mitgliedern und (2) Benachrichtigung an Autoren von Forum-Beiträgen, wenn jemand darauf antwortet. Dabei wird die E-Mail-Adresse des Empfängers einmalig zum Versand übermittelt und nicht dauerhaft bei Resend gespeichert. Resend ist nach dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>resend.com/legal/privacy-policy</a>
+              Wir betreiben ein eigenes, datenschutzfreundliches Tracking zur Analyse der Seitennutzung. Dabei werden ausschließlich der aufgerufene Pfad (z.&nbsp;B. <code>/forum</code>), der ungefähre Gerätetyp (Desktop, Mobile oder Tablet, ermittelt aus dem User-Agent-String) sowie das Herkunftsland (ermittelt aus dem IP-basierten Geolokalisierungs-Header von Vercel — ohne Speicherung der IP-Adresse selbst) in unserer Supabase-Datenbank gespeichert. Es werden keine Nutzerprofile erstellt, keine persönlichen Daten wie Name oder E-Mail-Adresse erhoben und keine Cookies verwendet. Die Auswertung dient ausschließlich dem Betrieb und der Verbesserung dieser Plattform.
+            </p>
+
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Newsletter</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Wenn du dich für unseren Newsletter anmeldest, speichern wir deine E-Mail-Adresse, den Zeitpunkt der Anmeldung sowie die IP-Adresse des Anmeldezeitpunkts (Double-Opt-in-Nachweis gemäß § 7 Abs. 2 Nr. 3 UWG). Die Anmeldung erfolgt über ein Double-Opt-in-Verfahren: du erhältst zunächst eine Bestätigungs-E-Mail und wirst erst nach Klick auf den Bestätigungs-Link in den Verteiler aufgenommen. Du kannst dich jederzeit über den Abmelde-Link in jeder Newsletter-Mail oder über deinen Account-Bereich (Einstellungen → Benachrichtigungen) abmelden. Nach der Abmeldung wird dein Status auf „abgemeldet" gesetzt; der Eintrag verbleibt zu Nachweiszwecken in der Datenbank.
+            </p>
+
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>E-Mail-Versand (SMTP)</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Für den Versand von Benachrichtigungs- und Newsletter-E-Mails nutzen wir einen eigenen SMTP-Server (Strato AG, Pascalstraße 10, 10587 Berlin). Der Versand erfolgt über eine dedizierte Absender-Adresse (<code>send.zweitakthoden.de</code>). Die E-Mail-Adresse des Empfängers wird ausschließlich für den jeweiligen Versand verwendet und nicht an Dritte weitergegeben. Weitere Informationen: <a href="https://www.strato.de/datenschutz/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)' }}>strato.de/datenschutz</a>
             </p>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>OpenStreetMap / Nominatim</h3>

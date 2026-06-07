@@ -66,7 +66,7 @@ const TECH = [
   {
     cat: 'Analytics',
     items: [
-      { name: 'Vercel Analytics', desc: 'Cookieloser Pageview-Tracker — keine IP-Speicherung, keine Nutzerprofile, DSGVO-konform', url: 'https://vercel.com/docs/analytics' },
+      { name: 'Vercel Analytics', desc: 'Cookieloser Pageview-Tracker von Vercel — keine IP-Speicherung, keine Nutzerprofile, DSGVO-konform. Ergänzt durch eigenes Tracking (page_views-Tabelle in Supabase) für Admin-Statistiken.', url: 'https://vercel.com/docs/analytics' },
       { name: 'Vercel Speed Insights', desc: 'Core Web Vitals Monitoring (LCP, FID, CLS) — cookielos, vollständig anonymisiert', url: 'https://vercel.com/docs/speed-insights' },
     ],
   },
@@ -95,17 +95,19 @@ const TECH = [
       { name: 'Schrauberhalle', desc: 'Öffentliches Werkstattprofil: Beschreibung, bis zu 5 Fotos (Supabase Storage, Bucket: garage), Schrauber-Skills als Tags – erreichbar unter /schrauberhalle. Admin-Benachrichtigung bei neuer Halle per SMTP.', url: null },
       { name: 'Kommentar-System', desc: 'Kommentare auf Terminen und Fahrzeugen – Supabase comments-Tabelle (target_type + target_id), nur für eingeloggte Mitglieder. E-Mail-Benachrichtigung an Ersteller und Teilnehmer via SMTP.', url: null },
       { name: 'Präsenz / Online-Status', desc: 'PresenceUpdater aktualisiert last_seen alle 5 Minuten in profiles – zeigt Online-Indikator (grüner Punkt) auf Profilkacheln. Kein Echtzeit-Kanal, nur Timestamp-basiert.', url: null },
+      { name: 'Newsletter', desc: 'Double-Opt-in Newsletter: Anmeldung via NewsletterForm (Footer) und NewsletterToggle (Profil-Settings), Bestätigungs-Mail + Willkommens-Mail via SMTP. Admin-Versand unter /admin/newsletter mit Live-Vorschau, Vorschau-Mail-Funktion und personalisiertem Abmelde-Link pro Empfänger. Abmeldung per Token-Link in jeder Mail oder über Account-Bereich.', url: null },
+      { name: 'Admin-Statistiken', desc: 'Dashboard unter /admin/statistiken: Seitenaufrufe (heute, 7 Tage, 30 Tage), Balkendiagramm, Top-Seiten, Geräte-Aufschlüsselung, Herkunftsländer. Newsletter-KPIs (aktiv, abgemeldet, ausstehend). Community-Zahlen (Mitglieder, Forum, Feedbacks). Eigenes Tracking via page_views-Tabelle (Supabase) + PageTracker-Komponente (sendBeacon).', url: null },
       { name: 'Admin-Benachrichtigungen', desc: 'Automatische E-Mail an info@zweitakthoden.de bei: neuem Mitglied, neuem Termin, neuem Bike, neuer Nachricht, neuer Schrauberhalle – jeweils per SMTP-Route. User-Benachrichtigungen: Kommentar auf eigenem Termin/Bike, Termin-Beitritt, Termin-Aktualisierung für Teilnehmer.', url: null },
       { name: 'Feedback-Widget', desc: 'Floating-Button (unten rechts), speichert Feedback in feedbacks-Tabelle, Admin-Übersicht unter /admin/feedback', url: null },
       { name: 'Onboarding-Tour', desc: 'Schritt-für-Schritt Tour für neue User nach erster Anmeldung — localStorage-Trigger', url: null },
       { name: 'Cookie Consent', desc: 'Minimaler Banner (nur technisch notwendige Cookies + localStorage), einmalig per localStorage dismissed', url: null },
       { name: 'WCAG 2.1 AA', desc: 'Barrierefreiheit: Kontrastprüfung (4.5:1 normal, 3:1 groß), aria-Labels, Skip-Link, semantische Heading-Reihenfolge, aria-hidden für dekorative Elemente', url: null },
-      { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via Resend', url: null },
+      { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via SMTP', url: null },
     ],
   },
 ]
 
-const LAST_UPDATED = '06.06.2026'
+const LAST_UPDATED = '07.06.2026'
 
 const BASE_COLORS = [
   { name: '--ink',       desc: 'Text (dunkel)' },

@@ -8,6 +8,34 @@ const ADMIN_EMAIL = 'martin@delavega.de'
 
 const FEATURES = [
   {
+    date: '2026-06-07',
+    category: 'Admin-Statistiken',
+    items: [
+      'Neue Seite /admin/statistiken mit KPI-Karten, Balkendiagrammen, Top-Seiten, Geräte- und Länder-Aufschlüsselung',
+      'Eigenes Page-Tracking: page_views-Tabelle in Supabase (path, device, country, viewed_at)',
+      'PageTracker-Komponente im Layout: feuert bei jedem Seitenwechsel per navigator.sendBeacon',
+      'Device-Erkennung aus User-Agent (mobile / tablet / desktop)',
+      'Herkunftsland aus x-vercel-ip-country Header (kein IP-Speichern)',
+      'KPIs: Aufrufe heute, diese Woche, letzte 30 Tage',
+      'Newsletter-KPIs: Abonnenten, Abmeldungen, Abmelderate, Ausstehend',
+      'Community-KPIs: Mitglieder, Forum-Threads, Forum-Antworten, Feedbacks',
+      'API-Route /api/admin/stats mit Bearer-Token-Auth (admin.auth.getUser)',
+      'API-Route /api/track (fire-and-forget, ignoriert /api /admin /_next)',
+    ],
+    sql: 'migration_page_views.sql + migration_page_views_device.sql',
+  },
+  {
+    date: '2026-06-07',
+    category: 'Newsletter – Admin-Versand',
+    items: [
+      'Admin-Seite /admin/newsletter: Betreff, Headline, Fließtext, optionaler CTA-Button',
+      'Live-Vorschau der E-Mail direkt neben dem Editor',
+      'Vorschau-Mail-Funktion: sendet an Admin-Adresse vor echtem Versand',
+      'Personalisierter Abmelde-Token pro Empfänger im Mail-Footer',
+      'Abonnenten-Zähler live während Erstellung',
+    ],
+  },
+  {
     date: '2026-06-06',
     category: 'Forum – Bild-Upload',
     items: [
@@ -223,7 +251,7 @@ const FEATURES = [
   },
 ]
 
-const LAST_UPDATED = '2026-06-06'
+const LAST_UPDATED = '2026-06-07'
 
 const TODO = [
   { text: 'migration_forum_images.sql im Supabase SQL Editor ausführen', done: true },
@@ -232,6 +260,8 @@ const TODO = [
   { text: 'migration_garage_skills_add.sql im Supabase SQL Editor ausführen', done: true },
   { text: 'migration_garage_rls_fix.sql im Supabase SQL Editor ausführen', done: true },
   { text: 'migration_garage_storage.sql im Supabase SQL Editor ausführen', done: true },
+  { text: 'migration_page_views.sql im Supabase SQL Editor ausführen', done: true },
+  { text: 'migration_page_views_device.sql im Supabase SQL Editor ausführen', done: true },
 ]
 
 const LEGEND = [
@@ -247,6 +277,8 @@ const LEGEND = [
 ]
 
 const CAT_COLORS = {
+  'Admin-Statistiken':               { bg: '#dbeafe', ink: '#1d4ed8' },
+  'Newsletter – Admin-Versand':      { bg: '#dcfce7', ink: '#15803d' },
   'Forum – Bild-Upload':             { bg: '#dbeafe', ink: '#1d4ed8' },
   'Newsletter – Double Opt-in':      { bg: '#dcfce7', ink: '#15803d' },
   'Forum – Benachrichtigungen':      { bg: '#fef9c3', ink: '#a16207' },
