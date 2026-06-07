@@ -45,7 +45,7 @@ const TECH = [
   {
     cat: 'E-Mail',
     items: [
-      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen — versendet von noreply@zweitakthoden.de', url: 'https://resend.com' },
+      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen — versendet von noreply@send.zweitakthoden.de', url: 'https://resend.com' },
       { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de', url: null },
     ],
   },

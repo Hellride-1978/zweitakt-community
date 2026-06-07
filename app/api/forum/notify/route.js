@@ -100,7 +100,7 @@ export async function POST(request) {
       .replace('{userId}', post.user_id)
 
     await resend.emails.send({
-      from: 'Zweitakthoden <noreply@zweitakthoden.de>',
+      from: 'Zweitakthoden <noreply@send.zweitakthoden.de>',
       to: email,
       subject: `${replierName} hat geantwortet: „${post.title}"`,
       html,
