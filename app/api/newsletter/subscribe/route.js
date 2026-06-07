@@ -19,14 +19,6 @@ function mailer() {
   })
 }
 
-function getIp(request) {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    request.headers.get('x-real-ip') ||
-    'unknown'
-  )
-}
-
 export async function POST(request) {
   try {
     const ip = getClientIp(request)
@@ -42,7 +34,6 @@ export async function POST(request) {
     const admin = adminClient()
     const transport = mailer()
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zweitakthoden.de'
-    const ip = getIp(request)
 
     const { data: existing } = await admin
       .from('newsletter_subscribers')
