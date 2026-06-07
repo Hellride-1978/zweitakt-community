@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane, faChartBar } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -61,6 +61,9 @@ export default function Nav() {
                     <span className="zh-nav-chevron">▾</span>
                   </button>
                   <div className={`zh-nav-dropdown${adminOpen ? ' open' : ''}`}>
+                    <Link href="/admin/statistiken" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faChartBar} /> Statistiken
+                    </Link>
                     <Link href="/admin/newsletter" onClick={() => setAdminOpen(false)}>
                       <FontAwesomeIcon icon={faPaperPlane} /> Newsletter
                     </Link>
@@ -172,6 +175,12 @@ export default function Nav() {
                 <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', padding: '16px 0 4px', borderTop: '1px solid var(--hairline)', marginTop: 4 }}>
                   Admin
                 </div>
+                <Link href="/admin/statistiken" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faChartBar} style={{ fontSize: 14, width: 16 }} />
+                    Statistiken
+                  </span>
+                </Link>
                 <Link href="/admin/newsletter" onClick={close}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <FontAwesomeIcon icon={faPaperPlane} style={{ fontSize: 14, width: 16 }} />

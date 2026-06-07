@@ -11,6 +11,7 @@ import OnboardingTour from "@/components/OnboardingTour";
 import CookieConsent from "@/components/CookieConsent"
 import PlzNudgeBanner from "@/components/PlzNudgeBanner"
 import PresenceUpdater from "@/components/PresenceUpdater";
+import PageTracker from "@/components/PageTracker";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }) {
         <CookieConsent />
         <PlzNudgeBanner />
         <PresenceUpdater />
+        <PageTracker />
         <Analytics />
         <SpeedInsights />
         <footer className="zh-footer">
