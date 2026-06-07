@@ -66,7 +66,7 @@ function smoothPath(pts) {
   return parts.join(' ')
 }
 
-function LineChart({ monthData, weekData, hourlyData }) {
+function LineChart({ monthData, weekData, hourlyData, valueKey = 'views' }) {
   const [period, setPeriod] = useState('month')
   const [tooltip, setTooltip] = useState(null)
   const svgRef = useRef(null)
@@ -75,15 +75,21 @@ function LineChart({ monthData, weekData, hourlyData }) {
   const innerW = W - PAD.left - PAD.right
   const innerH = H - PAD.top - PAD.bottom
 
-  const raw = period === 'day' ? hourlyData : period === 'week' ? weekData : monthData
+  const PERIODS = [
+    { key: 'month', label: 'Monat' },
+    { key: 'week',  label: 'Woche' },
+    ...(hourlyData ? [{ key: 'day', label: 'Tag' }] : []),
+  ]
+
+  const raw = period === 'day' ? (hourlyData ?? monthData) : period === 'week' ? weekData : monthData
   if (!raw?.length) return null
 
-  const values = raw.map(d => d.views ?? 0)
+  const values = raw.map(d => d[valueKey] ?? 0)
   const maxVal = Math.max(...values, 1)
 
   const pts = raw.map((d, i) => ({
     x: PAD.left + (i / (raw.length - 1)) * innerW,
-    y: PAD.top + innerH - (d.views / maxVal) * innerH,
+    y: PAD.top + innerH - ((d[valueKey] ?? 0) / maxVal) * innerH,
     d,
   }))
 
@@ -98,12 +104,6 @@ function LineChart({ monthData, weekData, hourlyData }) {
 
   const labelStep = period === 'day' ? 4 : period === 'week' ? 1 : 5
   const labelPts = pts.filter((_, i) => i % labelStep === 0 || i === pts.length - 1)
-
-  const PERIODS = [
-    { key: 'month', label: 'Monat' },
-    { key: 'week',  label: 'Woche' },
-    { key: 'day',   label: 'Tag' },
-  ]
 
   return (
     <div style={{ marginTop: 32 }}>
@@ -191,7 +191,7 @@ function LineChart({ monthData, weekData, hourlyData }) {
             background: 'var(--ink)', color: 'var(--cream)', borderRadius: 8,
             padding: '5px 12px', fontFamily: 'var(--mono)', fontSize: 12, pointerEvents: 'none', whiteSpace: 'nowrap',
           }}>
-            {formatLabel(raw[tooltip.idx])} — {raw[tooltip.idx].views} Aufrufe
+            {formatLabel(raw[tooltip.idx])} — {raw[tooltip.idx][valueKey] ?? 0}
           </div>
         )}
       </div>
@@ -373,7 +373,11 @@ export default function AdminStatistikPage() {
       </div>
 
       {nl?.chart && (
-        <BarChart data={nl.chart} label="Neue Abonnenten – letzte 30 Tage" />
+        <LineChart
+          monthData={nl.chart}
+          weekData={nl.chart?.slice(-7)}
+          valueKey="subs"
+        />
       )}
 
       {/* ── Community ── */}
