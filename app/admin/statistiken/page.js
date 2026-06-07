@@ -103,7 +103,7 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
     }
   }
 
-  const W = 800, H = 140, PAD = { top: 16, right: 12, bottom: 28, left: 32 }
+  const W = 800, H = 260, PAD = { top: 24, right: 12, bottom: 32, left: 36 }
   const innerW = W - PAD.left - PAD.right
   const innerH = H - PAD.top - PAD.bottom
 
@@ -178,10 +178,11 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
         </div>
       </div>
       <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, padding: '16px 16px 8px', background: 'var(--surface)', position: 'relative' }}>
+        <div style={{ width: '100%', height: 'clamp(180px, 40vw, 280px)' }}>
         <svg
           ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
-          style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible', touchAction: 'none' }}
+          style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', touchAction: 'none' }}
           onMouseMove={e => {
             const rect = svgRef.current?.getBoundingClientRect()
             if (!rect) return
@@ -213,7 +214,7 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
             return (
               <g key={t}>
                 <line x1={PAD.left} y1={y} x2={PAD.left + innerW} y2={y} stroke="var(--hairline)" strokeWidth="1" />
-                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="9" fill="var(--ink-muted)" fontFamily="monospace">
+                <text x={PAD.left - 6} y={y + 4} textAnchor="end" fontSize="11" fill="var(--ink-muted)" fontFamily="monospace">
                   {Math.round(maxVal * t)}
                 </text>
               </g>
@@ -238,11 +239,12 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
 
           {/* X-Achse Labels */}
           {labelPts.map(p => (
-            <text key={p.d.day ?? p.d.hour} x={p.x} y={H - 4} textAnchor="middle" fontSize="9" fill="var(--ink-muted)" fontFamily="monospace">
+            <text key={p.d.day ?? p.d.hour} x={p.x} y={H - 4} textAnchor="middle" fontSize="11" fill="var(--ink-muted)" fontFamily="monospace">
               {formatLabel(p.d)}
             </text>
           ))}
         </svg>
+        </div>
 
         {/* Tooltip Box */}
         {tooltip && (
