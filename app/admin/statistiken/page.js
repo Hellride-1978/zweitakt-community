@@ -78,7 +78,7 @@ function last12Months() {
   return months
 }
 
-function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchToken }) {
+function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchToken, title = 'Seitenaufrufe' }) {
   const [period, setPeriod] = useState('month')
   const [tooltip, setTooltip] = useState(null)
   const [selectedMonth, setSelectedMonth] = useState('')
@@ -166,7 +166,7 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchT
         {/* Zeile 1: Label + Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
-            Seitenaufrufe
+            {title}
           </div>
           {period === 'month' && fetchToken && (
             <select
@@ -461,6 +461,7 @@ export default function AdminStatistikPage() {
           monthData={nl.chart}
           weekData={nl.chart?.slice(-7)}
           valueKey="subs"
+          title="Neue Abonnenten"
         />
       )}
 
