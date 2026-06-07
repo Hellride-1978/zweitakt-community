@@ -176,7 +176,9 @@ export default function AdminStatistikPage() {
       {/* ── Seitenaufrufe ── */}
       <Section title="Seitenaufrufe" />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
-        <KpiCard label="Aufrufe (30 Tage)" value={pv?.total} sub="eigenes Tracking" accent />
+        <KpiCard label="Heute" value={pv?.today} sub="laufender Tag" accent />
+        <KpiCard label="Diese Woche" value={pv?.week} sub="letzte 7 Tage" />
+        <KpiCard label="Letzte 30 Tage" value={pv?.total} sub="eigenes Tracking" />
       </div>
 
       {pv?.chart && (

@@ -55,6 +55,8 @@ export async function GET(request) {
       { count: memberCount,    error: e9 },
       { data: pvRecent,        error: e10 },
       { data: pvDetails,       error: e11 },
+      { count: pvToday,        error: e12 },
+      { count: pvWeek,         error: e13 },
     ] = await Promise.all([
       admin.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('status', 'confirmed'),
       admin.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('status', 'unsubscribed'),
@@ -67,9 +69,11 @@ export async function GET(request) {
       admin.from('profiles').select('id', { count: 'exact', head: true }),
       admin.from('page_views').select('viewed_at').gte('viewed_at', cutoffIso),
       admin.from('page_views').select('path, device, country').gte('viewed_at', cutoffIso),
+      admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', new Date().toISOString().slice(0, 10)),
+      admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d.toISOString().slice(0, 10) })()),
     ])
 
-    const dbError = e1 || e2 || e3 || e4 || e5 || e6 || e7 || e8 || e9 || e10 || e11
+    const dbError = e1 || e2 || e3 || e4 || e5 || e6 || e7 || e8 || e9 || e10 || e11 || e12 || e13
     if (dbError) throw dbError
 
     const days = last30Days()
@@ -121,6 +125,8 @@ export async function GET(request) {
         feedbacks: feedbackCount ?? 0,
       },
       pageViews: {
+        today: pvToday ?? 0,
+        week: pvWeek ?? 0,
         total: pvRecent?.length ?? 0,
         chart: pvChart,
         topPages,
