@@ -89,19 +89,25 @@ export default function MemberMapSplit({ members }) {
   const [activeId, setActiveId] = useState(null)
   const [tab, setTab] = useState('liste')
   const [search, setSearch] = useState('')
+  const [sort, setSort] = useState('newest')
   const mapRef = useRef(null)
 
   useEffect(() => { setMounted(true) }, [])
 
-  const filtered = members.filter(m => {
-    if (!search) return true
-    const q = search.toLowerCase()
-    return (
-      (m.name || '').toLowerCase().includes(q) ||
-      (m.location || '').toLowerCase().includes(q) ||
-      (m.vehicles || []).some(v => `${v.make} ${v.model}`.toLowerCase().includes(q))
-    )
-  })
+  const filtered = members
+    .filter(m => {
+      if (!search) return true
+      const q = search.toLowerCase()
+      return (
+        (m.name || '').toLowerCase().includes(q) ||
+        (m.location || '').toLowerCase().includes(q) ||
+        (m.vehicles || []).some(v => `${v.make} ${v.model}`.toLowerCase().includes(q))
+      )
+    })
+    .sort((a, b) => {
+      if (sort === 'alpha') return (a.name || '').localeCompare(b.name || '', 'de')
+      return new Date(b.created_at) - new Date(a.created_at)
+    })
 
   const validMembers = members.filter(m => {
     const lat = parseFloat(m.lat)
@@ -151,13 +157,28 @@ export default function MemberMapSplit({ members }) {
                 </span>
               )}
             </div>
-            <input
-              className="mms-search"
-              type="search"
-              placeholder="Name, Ort oder Bike…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+              <input
+                className="mms-search"
+                type="search"
+                placeholder="Name, Ort oder Bike…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <button
+                onClick={() => setSort(s => s === 'alpha' ? 'newest' : 'alpha')}
+                title={sort === 'alpha' ? 'Sortierung: Alphabetisch' : 'Sortierung: Neueste zuerst'}
+                style={{
+                  flexShrink: 0, padding: '0 10px', height: 36, borderRadius: 8,
+                  border: '1.5px solid var(--hairline)', background: 'var(--cream)',
+                  cursor: 'pointer', fontFamily: 'var(--mono)', fontSize: 10,
+                  letterSpacing: '1px', color: 'var(--ink-muted)', whiteSpace: 'nowrap',
+                }}
+              >
+                {sort === 'alpha' ? 'A–Z' : 'Neu'}
+              </button>
+            </div>
           </div>
 
           {filtered.length === 0 ? (
