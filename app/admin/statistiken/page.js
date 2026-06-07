@@ -66,10 +66,42 @@ function smoothPath(pts) {
   return parts.join(' ')
 }
 
-function LineChart({ monthData, weekData, hourlyData, valueKey = 'views' }) {
+function last12Months() {
+  const months = []
+  const now = new Date()
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const label = d.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })
+    months.push({ key, label })
+  }
+  return months
+}
+
+function LineChart({ monthData, weekData, hourlyData, valueKey = 'views', fetchToken }) {
   const [period, setPeriod] = useState('month')
   const [tooltip, setTooltip] = useState(null)
+  const [selectedMonth, setSelectedMonth] = useState('')
+  const [monthChart, setMonthChart] = useState(null)
+  const [loadingMonth, setLoadingMonth] = useState(false)
   const svgRef = useRef(null)
+  const months = last12Months()
+
+  async function handleMonthChange(month) {
+    setSelectedMonth(month)
+    setMonthChart(null)
+    if (!month) return
+    setLoadingMonth(true)
+    try {
+      const res = await fetch(`/api/admin/stats?pvMonth=${month}`, {
+        headers: { Authorization: `Bearer ${fetchToken}` },
+      })
+      const data = await res.json()
+      if (data.pvMonthChart) setMonthChart(data.pvMonthChart)
+    } finally {
+      setLoadingMonth(false)
+    }
+  }
 
   const W = 800, H = 140, PAD = { top: 16, right: 12, bottom: 28, left: 32 }
   const innerW = W - PAD.left - PAD.right
@@ -81,7 +113,7 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views' }) {
     ...(hourlyData ? [{ key: 'day', label: 'Tag' }] : []),
   ]
 
-  const raw = period === 'day' ? (hourlyData ?? monthData) : period === 'week' ? weekData : monthData
+  const raw = period === 'day' ? (hourlyData ?? monthData) : period === 'week' ? weekData : (selectedMonth && monthChart ? monthChart : monthData)
   if (!raw?.length) return null
 
   const values = raw.map(d => d[valueKey] ?? 0)
@@ -108,8 +140,25 @@ function LineChart({ monthData, weekData, hourlyData, valueKey = 'views' }) {
   return (
     <div style={{ marginTop: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
-          Seitenaufrufe
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+            Seitenaufrufe
+          </div>
+          {period === 'month' && fetchToken && (
+            <select
+              value={selectedMonth}
+              onChange={e => handleMonthChange(e.target.value)}
+              style={{
+                fontFamily: 'var(--mono)', fontSize: 11, padding: '4px 10px', borderRadius: 8,
+                border: '1.5px solid var(--hairline)', background: 'var(--cream)',
+                color: 'var(--ink)', cursor: 'pointer',
+              }}
+            >
+              <option value="">Letzte 30 Tage</option>
+              {months.map(m => <option key={m.key} value={m.key}>{m.label}</option>)}
+            </select>
+          )}
+          {loadingMonth && <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-muted)' }}>Lädt…</span>}
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
           {PERIODS.map(p => (
@@ -242,6 +291,7 @@ export default function AdminStatistikPage() {
   const [stats, setStats] = useState(null)
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
 
   useEffect(() => {
     if (loading) return
@@ -253,6 +303,7 @@ export default function AdminStatistikPage() {
       const { data: sessionData } = await supabase.auth.getSession()
       const token = sessionData?.session?.access_token
       if (!token) { setFetching(false); return }
+      setAccessToken(token)
 
       try {
         const res = await fetch('/api/admin/stats', {
@@ -309,6 +360,7 @@ export default function AdminStatistikPage() {
           monthData={pv.chart}
           weekData={pv.chart?.slice(-7)}
           hourlyData={pv.chartHourly}
+          fetchToken={accessToken}
         />
       )}
 

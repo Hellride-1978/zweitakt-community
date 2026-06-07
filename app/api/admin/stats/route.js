@@ -38,7 +38,31 @@ export async function GET(request) {
     if (authError || !user) return Response.json({ error: 'Unauthorized' }, { status: 401 })
     if (user.email !== ADMIN_EMAIL) return Response.json({ error: 'Forbidden' }, { status: 403 })
 
+    const { searchParams } = new URL(request.url)
+    const pvMonth = searchParams.get('pvMonth') // z.B. '2026-06'
+
     const admin = adminClient()
+
+    // Monats-Detailansicht
+    if (pvMonth) {
+      const start = `${pvMonth}-01`
+      const nextMonth = new Date(`${pvMonth}-01`)
+      nextMonth.setMonth(nextMonth.getMonth() + 1)
+      const end = nextMonth.toISOString().slice(0, 10)
+      const daysInMonth = new Date(nextMonth - 1).getDate()
+      const { data: rows } = await admin.from('page_views').select('viewed_at').gte('viewed_at', start).lt('viewed_at', end)
+      const map = {}
+      for (const r of rows ?? []) {
+        const day = r.viewed_at?.slice(0, 10)
+        if (day) map[day] = (map[day] ?? 0) + 1
+      }
+      const chart = Array.from({ length: daysInMonth }, (_, i) => {
+        const day = `${pvMonth}-${String(i + 1).padStart(2, '0')}`
+        return { day, views: map[day] ?? 0 }
+      })
+      return Response.json({ pvMonthChart: chart, total: rows?.length ?? 0 })
+    }
+
     const cutoff = new Date()
     cutoff.setDate(cutoff.getDate() - 29)
     const cutoffIso = cutoff.toISOString()
