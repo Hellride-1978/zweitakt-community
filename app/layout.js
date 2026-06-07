@@ -77,7 +77,7 @@ export default function RootLayout({ children }) {
           <div className="zh-footer-inner">
           <div className="zh-footer-top">
             <div className="zh-footer-brand">
-              <Link href="/" className="zh-footer-logo">Zweitakt<span>hoden</span></Link>
+              <Link href="/" className="zh-footer-logo">zweitakt<span>hoden</span>.de</Link>
               <div style={{ marginTop: 24 }}>
                 <NewsletterForm showLabel />
               </div>

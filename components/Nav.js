@@ -32,7 +32,7 @@ export default function Nav() {
       <nav className="zh-nav">
         <div className="zh-nav-inner">
         <Link href="/" className="zh-nav-logo" onClick={close}>
-          Zweitakt<span>hoden</span>
+          zweitakt<span>hoden</span>.de
         </Link>
 
         <ul className="zh-nav-links">
