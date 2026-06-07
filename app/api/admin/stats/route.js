@@ -69,7 +69,7 @@ export async function GET(request) {
       admin.from('feedbacks').select('id', { count: 'exact', head: true }),
       admin.from('profiles').select('id', { count: 'exact', head: true }),
       admin.from('page_views').select('viewed_at').gte('viewed_at', cutoffIso),
-      admin.from('page_views').select('path, device, country').gte('viewed_at', cutoffIso),
+      admin.from('page_views').select('path, device, country'),
       admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', new Date().toISOString().slice(0, 10)),
       admin.from('page_views').select('id', { count: 'exact', head: true }).gte('viewed_at', (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d.toISOString().slice(0, 10) })()),
       admin.from('page_views').select('viewed_at').gte('viewed_at', new Date().toISOString().slice(0, 10)),

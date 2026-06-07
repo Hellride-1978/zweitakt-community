@@ -315,7 +315,7 @@ export default function AdminStatistikPage() {
       {pv?.devices && (
         <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
           <RankList
-            title="Geräte – letzte 30 Tage"
+            title="Geräte – gesamt"
             items={[
               { label: 'Desktop', value: pv.devices.desktop ?? 0 },
               { label: 'Mobile', value: pv.devices.mobile ?? 0 },
@@ -324,7 +324,7 @@ export default function AdminStatistikPage() {
           />
           {pv.topCountries?.length > 0 && (
             <RankList
-              title="Herkunft – letzte 30 Tage"
+              title="Herkunft – gesamt"
               items={pv.topCountries.map(c => ({ label: countryName(c.country), value: c.views }))}
             />
           )}
@@ -334,7 +334,7 @@ export default function AdminStatistikPage() {
       {pv?.topPages?.length > 0 && (
         <div style={{ marginTop: 32 }}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 16 }}>
-            Top-Seiten – letzte 30 Tage
+            Top-Seiten – gesamt
           </div>
           <div style={{ border: '1.5px solid var(--ink)', borderRadius: 14, overflow: 'hidden', background: 'var(--surface)' }}>
             {pv.topPages.map((p, i) => (
