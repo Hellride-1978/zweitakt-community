@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
               <p style={{ fontSize: '15px', color: 'var(--ink-soft)', lineHeight: 1.6, marginBottom: '24px' }}>
                 Schau in dein Postfach — der Link zum Zurücksetzen ist unterwegs. Auch Spam-Ordner checken.
               </p>
-              <Link href="/auth/login" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
+              <Link href="/auth/login" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', borderBottom: '1px solid var(--accent-accessible)' }}>
                 Zurück zum Login
               </Link>
             </div>
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
                 </button>
               </form>
               <p style={{ marginTop: '24px', fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textAlign: 'center' }}>
-                <Link href="/auth/login" style={{ color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
+                <Link href="/auth/login" style={{ color: 'var(--accent-accessible)', borderBottom: '1px solid var(--accent-accessible)' }}>
                   Zurück zum Login
                 </Link>
               </p>

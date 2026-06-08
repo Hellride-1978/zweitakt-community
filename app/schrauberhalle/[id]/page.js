@@ -63,7 +63,7 @@ export default async function GarageDetailPage({ params }) {
             />
           ) : (
             <div style={{ width: '100%', aspectRatio: '4/3', background: 'var(--accent-3)', borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid var(--ink)' }}>
-              <FontAwesomeIcon icon={faWrench} style={{ fontSize: 52, color: 'var(--accent-ink)', opacity: 0.35 }} />
+              <FontAwesomeIcon icon={faWrench} style={{ fontSize: 52, color: 'var(--accent-accessible)', opacity: 0.35 }} />
             </div>
           )}
 
@@ -84,7 +84,7 @@ export default async function GarageDetailPage({ params }) {
                   </div>
                 )}
               </div>
-              <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: 'auto', color: 'var(--accent-ink)', fontSize: 16 }} />
+              <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: 'auto', color: 'var(--accent-accessible)', fontSize: 16 }} />
             </Link>
           )}
         </div>
@@ -92,7 +92,7 @@ export default async function GarageDetailPage({ params }) {
         {/* ── Rechts: Infos ── */}
         <div style={{ minWidth: 0, paddingRight: 4, paddingBottom: 4 }}>
           <h1 className="zd-h1" style={{ fontSize: 40, marginBottom: 8 }}>
-            <FontAwesomeIcon icon={faWrench} style={{ fontSize: 28, marginRight: 12, color: 'var(--accent-ink)' }} />
+            <FontAwesomeIcon icon={faWrench} style={{ fontSize: 28, marginRight: 12, color: 'var(--accent-accessible)' }} />
             Schrauberhalle
           </h1>
           {owner?.name && (

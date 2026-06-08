@@ -217,7 +217,7 @@ function EditProfilePageInner() {
 
         {isWelcome && (
           <div style={{ marginBottom: '24px', padding: '16px 20px', background: 'color-mix(in oklab, var(--accent) 12%, var(--cream))', border: '1.5px solid var(--accent)', borderRadius: '14px' }}>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: 6 }}>Willkommen in der Crew</div>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent-accessible)', marginBottom: 6 }}>Willkommen in der Crew</div>
             <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--ink-soft)', margin: 0, lineHeight: 1.5 }}>
               Stell dich kurz vor — ein Name und optional ein Profilbild reichen schon.
             </p>

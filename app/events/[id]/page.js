@@ -61,7 +61,7 @@ function linkify(text) {
   const parts = text.split(/(https?:\/\/[^\s]+)/g)
   return parts.map((part, i) =>
     /^https?:\/\//.test(part)
-      ? <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-ink)', wordBreak: 'break-all', textDecoration: 'underline', textUnderlineOffset: 3 }}>{part}</a>
+      ? <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)', wordBreak: 'break-all', textDecoration: 'underline', textUnderlineOffset: 3 }}>{part}</a>
       : part
   )
 }

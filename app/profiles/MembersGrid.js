@@ -191,13 +191,13 @@ export default function MembersGrid({ members }) {
             <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 10 }} />
             {!user
               ? <span>Anmelden um Umkreissuche zu nutzen</span>
-              : <span>PLZ im <a href={`/profile/${user.id}?settings=1`} style={{ color: 'var(--accent-ink)', textDecoration: 'underline' }}>Profil eintragen</a> um Umkreissuche zu aktivieren</span>
+              : <span>PLZ im <a href={`/profile/${user.id}?settings=1`} style={{ color: 'var(--accent-accessible)', textDecoration: 'underline' }}>Profil eintragen</a> um Umkreissuche zu aktivieren</span>
             }
           </div>
         )}
         {/* Hinweis aktiver Radius */}
         {!radiusDisabled && radius > 0 && (
-          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', color: 'var(--accent-ink)' }}>
+          <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.4px', color: 'var(--accent-accessible)' }}>
             <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 10 }} />
             <span>Umkreis {radius} km ab deiner PLZ ({myProfile?.plz})</span>
           </div>
@@ -208,7 +208,7 @@ export default function MembersGrid({ members }) {
       <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 20 }}>
         {visible.length} {visible.length === 1 ? 'Schrauber' : 'Schrauber'}
         {radius > 0 && hasCoords && (
-          <span style={{ marginLeft: 10, color: 'var(--accent-ink)' }}>· {radius} km Umkreis</span>
+          <span style={{ marginLeft: 10, color: 'var(--accent-accessible)' }}>· {radius} km Umkreis</span>
         )}
       </div>
 

@@ -128,16 +128,16 @@ export default function GarageGrid({ garages }) {
             border: '1.5px solid var(--accent)', textDecoration: 'none',
           }}
         >
-          <FontAwesomeIcon icon={faWrench} style={{ fontSize: 18, color: 'var(--accent-ink)', flexShrink: 0 }} />
+          <FontAwesomeIcon icon={faWrench} style={{ fontSize: 18, color: 'var(--accent-accessible)', flexShrink: 0 }} />
           <div>
-            <div style={{ fontFamily: 'var(--display)', fontSize: 16, fontWeight: 700, color: 'var(--accent-ink)' }}>
+            <div style={{ fontFamily: 'var(--display)', fontSize: 16, fontWeight: 700, color: 'var(--accent-accessible)' }}>
               Schrauberhalle anlegen
             </div>
             <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-muted)', marginTop: 2 }}>
               Zeig der Community was du kannst — trag deine Schrauberhalle ein.
             </div>
           </div>
-          <span style={{ marginLeft: 'auto', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--accent-ink)' }}>→</span>
+          <span style={{ marginLeft: 'auto', fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--accent-accessible)' }}>→</span>
         </Link>
       )}
 
@@ -201,7 +201,7 @@ export default function GarageGrid({ garages }) {
           {geoLoading && <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-muted)' }}>Suche…</span>}
           {geoError  && <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#c00' }}>{geoError}</span>}
           {refCoords && !geoLoading && (
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px', color: 'var(--accent-ink)' }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px', color: 'var(--accent-accessible)' }}>
               ◎ {refCoords.label}
             </span>
           )}
@@ -253,7 +253,7 @@ export default function GarageGrid({ garages }) {
                   </div>
                 ) : (
                   <div style={{ width: '100%', height: 100, background: 'var(--accent-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontFamily: 'var(--display)', fontSize: 40, color: 'var(--accent-ink)', opacity: 0.4 }}>G</span>
+                    <span style={{ fontFamily: 'var(--display)', fontSize: 40, color: 'var(--accent-accessible)', opacity: 0.4 }}>G</span>
                   </div>
                 )}
 
@@ -274,7 +274,7 @@ export default function GarageGrid({ garages }) {
                           </span>
                         )}
                         {g.distance_km !== null && (
-                          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.2px', color: 'var(--accent-ink)' }}>
+                          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.2px', color: 'var(--accent-accessible)' }}>
                             {user && prof?.location ? '· ' : ''}{g.distance_km} km
                           </span>
                         )}

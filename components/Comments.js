@@ -165,7 +165,7 @@ export default function Comments({ targetType, targetId, ownerId }) {
         </form>
       ) : (
         <p style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
-          <Link href="/auth/login" style={{ color: 'var(--accent)', borderBottom: '1px solid var(--accent)' }}>Einloggen</Link> um zu kommentieren.
+          <Link href="/auth/login" style={{ color: 'var(--accent-accessible)', borderBottom: '1px solid var(--accent)' }}>Einloggen</Link> um zu kommentieren.
         </p>
       )}
     </div>

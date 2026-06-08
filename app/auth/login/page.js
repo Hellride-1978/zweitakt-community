@@ -117,7 +117,7 @@ export default function LoginPage() {
 
           <p style={{ marginTop: '24px', fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textAlign: 'center' }}>
             Noch kein Konto?{' '}
-            <Link href="/auth/register" style={{ color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
+            <Link href="/auth/register" style={{ color: 'var(--accent-accessible)', borderBottom: '1px solid var(--accent-accessible)' }}>
               Registrieren
             </Link>
           </p>

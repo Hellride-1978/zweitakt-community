@@ -104,10 +104,10 @@ export default function PlzNudgeBanner() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           marginBottom: 20,
         }}>
-          <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 26, color: 'var(--accent-ink)' }} />
+          <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: 26, color: 'var(--accent-accessible)' }} />
         </div>
 
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: 10 }}>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', marginBottom: 10 }}>
           Noch nicht eingetragen
         </div>
 

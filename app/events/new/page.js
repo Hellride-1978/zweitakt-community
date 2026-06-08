@@ -110,7 +110,7 @@ export default function NewEventPage() {
     </div>
   )
   if (!user) return (
-    <div className="zh-page"><div className="zh-page-inner-sm"><div className="zh-card">Bitte zuerst <a href="/auth/login" style={{ color: 'var(--accent-ink)' }}>anmelden</a>.</div></div></div>
+    <div className="zh-page"><div className="zh-page-inner-sm"><div className="zh-card">Bitte zuerst <a href="/auth/login" style={{ color: 'var(--accent-accessible)' }}>anmelden</a>.</div></div></div>
   )
 
   return (

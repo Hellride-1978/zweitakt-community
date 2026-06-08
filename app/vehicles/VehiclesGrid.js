@@ -126,10 +126,10 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
                 </div>
                 <div className="vog-info">
                   <div style={{ fontFamily: 'var(--display)', fontSize: 22, lineHeight: 1.05, letterSpacing: 0.3 }}>
-                    {v.make} <span style={{ color: 'var(--accent-ink)' }}>{v.model}</span>
+                    {v.make} <span style={{ color: 'var(--accent-accessible)' }}>{v.model}</span>
                   </div>
                   {v.title && (
-                    <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginTop: 4 }}>
+                    <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', marginTop: 4 }}>
                       {v.title}
                     </div>
                   )}

@@ -18,7 +18,7 @@ function SchrauberhalleNewInner() {
   if (!user) return (
     <div className="zh-page"><div className="zh-page-inner">
       <p style={{ marginTop: 40 }}>
-        Du musst <Link href="/auth/login" style={{ color: 'var(--accent-ink)' }}>angemeldet sein</Link>.
+        Du musst <Link href="/auth/login" style={{ color: 'var(--accent-accessible)' }}>angemeldet sein</Link>.
       </p>
     </div></div>
   )

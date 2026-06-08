@@ -76,7 +76,7 @@ export default function MapTileModal({ lat, lng, locationName, address, tiles, f
 
         {/* Info */}
         <div style={{ padding: '12px 16px 16px', borderTop: '1.5px solid var(--ink)' }}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: 5 }}>Treffpunkt</div>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--accent-accessible)', marginBottom: 5 }}>Treffpunkt</div>
           {locationName && (
             <div style={{ fontFamily: 'var(--display)', fontSize: 22, lineHeight: 1.05, color: 'var(--ink)', marginBottom: address ? 6 : 0 }}>
               {locationName}
@@ -117,7 +117,7 @@ export default function MapTileModal({ lat, lng, locationName, address, tiles, f
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1.5px solid var(--ink)', gap: 16 }}>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--accent-ink)', marginBottom: 4 }}>Treffpunkt</div>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--accent-accessible)', marginBottom: 4 }}>Treffpunkt</div>
                 <div id="map-modal-title" style={{ fontFamily: 'var(--display)', fontSize: 24, lineHeight: 1, marginBottom: address ? 5 : 0 }}>{locationName || '—'}</div>
                 {address && (
                   <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-muted)', lineHeight: 1.5 }}>{address}</div>

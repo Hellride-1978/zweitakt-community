@@ -107,7 +107,7 @@ export default function ContactForm() {
                 />
                 <span style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px', textTransform: 'uppercase', color: 'var(--ink-muted)', lineHeight: 1.6 }}>
                   Ich habe die{' '}
-                  <Link href="/datenschutz" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Datenschutzerklärung</Link>
+                  <Link href="/datenschutz" style={{ color: 'var(--accent-accessible)', textDecoration: 'underline' }}>Datenschutzerklärung</Link>
                   {' '}gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu.
                 </span>
               </label>

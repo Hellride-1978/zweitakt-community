@@ -15,14 +15,15 @@
   --ink-muted:    #5e5248;
   --hairline:     rgba(26,17,8,0.32);
   --ink-faint:    rgba(26,17,8,0.14);
-  --accent:       rgb(155, 195, 214);
-  --accent-2:     rgb(175, 210, 225);
-  --accent-3:     rgb(210, 230, 238);
-  --accent-ink:   rgb(100, 155, 180);
-  --accent-text:  #1a6080;
-  --accent-hot:   rgb(155, 195, 214);
-  --accent-hot-2: rgb(175, 210, 225);
-  --accent-hot-3: rgb(210, 230, 238);
+  --accent:            rgb(155, 195, 214);
+  --accent-2:          rgb(175, 210, 225);
+  --accent-3:          rgb(210, 230, 238);
+  --accent-ink:        rgb(100, 155, 180);
+  --accent-text:       #1a6080;
+  --accent-accessible: #1a6080; /* Dunkle Palette-Farbe, kontraststark auf hellem Grund */
+  --accent-hot:        rgb(155, 195, 214);
+  --accent-hot-2:      rgb(175, 210, 225);
+  --accent-hot-3:      rgb(210, 230, 238);
   --shadow:       rgba(26,17,8,0.18);
   --gutter:       clamp(20px, 4vw, 56px);
   --display:      var(--font-display, 'Boogaloo'), cursive;
@@ -103,7 +104,7 @@ body::before {
   display: inline-flex;
   align-items: baseline;
 }
-.zh-nav-logo span { color: var(--accent-ink); -webkit-text-stroke: 1px var(--accent-ink); }
+.zh-nav-logo span { color: var(--accent-accessible); -webkit-text-stroke: 0.5px var(--accent-accessible); }
 .zh-nav-links {
   position: absolute;
   left: 50%;
@@ -456,7 +457,7 @@ body::before {
 .zh-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--accent); background: var(--accent); border-color: var(--ink); }
 .zh-btn-outline { background: transparent; color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 .zh-btn-outline:hover { background: var(--accent-3); color: var(--ink); }
-.zh-btn-accent { background: var(--accent); border-color: var(--accent); box-shadow: 4px 4px 0 color-mix(in oklab, var(--cream) 60%, transparent); color: var(--cream); }
+.zh-btn-accent { background: var(--accent); border-color: var(--accent); box-shadow: 4px 4px 0 color-mix(in oklab, var(--cream) 60%, transparent); color: var(--ink); }
 .zh-btn-accent:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
 
 .zh-hero-stats {
@@ -1645,7 +1646,7 @@ body::before {
   align-items: baseline;
   flex-shrink: 0;
 }
-.zh-footer-logo span { color: var(--accent-ink); -webkit-text-stroke: 0.5px var(--accent-ink); }
+.zh-footer-logo span { color: var(--accent-accessible); -webkit-text-stroke: 0.5px var(--accent-accessible); }
 .zh-footer-cols {
   display: flex;
   gap: 48px;

@@ -56,7 +56,7 @@ export default async function VehiclePage({ params }) {
                 <div style={{ fontFamily: 'var(--display)', fontSize: 20, marginTop: 4, letterSpacing: 0.3 }}>{owner.name || 'Unbekannt'}</div>
                 {owner.location && <div className="zd-mono" style={{ marginTop: 2 }}><FontAwesomeIcon icon={faLocationDot} style={{ marginRight: 5 }} /> {owner.location}</div>}
               </div>
-              <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: 'auto', color: 'var(--accent-ink)', fontSize: 16 }} />
+              <FontAwesomeIcon icon={faArrowRight} style={{ marginLeft: 'auto', color: 'var(--accent-accessible)', fontSize: 16 }} />
             </Link>
           )}
         </div>

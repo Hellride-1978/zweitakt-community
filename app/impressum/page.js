@@ -31,7 +31,7 @@ export default function ImpressumPage() {
           <section>
             <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>Kontakt</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              E-Mail: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-ink)' }}>info@zweitakthoden.de</a>
+              E-Mail: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-accessible)' }}>info@zweitakthoden.de</a>
             </p>
           </section>
 
@@ -64,7 +64,7 @@ export default function ImpressumPage() {
         </div>
 
         <div style={{ marginTop: '32px' }}>
-          <Link href="/" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', borderBottom: '1px solid var(--accent-ink)' }}>
+          <Link href="/" style={{ fontFamily: 'var(--mono)', fontSize: '11px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', borderBottom: '1px solid var(--accent-accessible)' }}>
             ← Zurück zur Startseite
           </Link>
         </div>

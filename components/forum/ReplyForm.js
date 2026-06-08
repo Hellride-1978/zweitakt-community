@@ -56,7 +56,7 @@ export default function ReplyForm({ postId, onSuccess }) {
       </h3>
 
       <FormError message={state?.error} className="forum-error" />
-      {state?.ok && <div style={{ color: 'var(--accent-ink)', marginBottom: 16, fontSize: 14 }}>✓ Antwort gespeichert!</div>}
+      {state?.ok && <div style={{ color: 'var(--accent-accessible)', marginBottom: 16, fontSize: 14 }}>✓ Antwort gespeichert!</div>}
 
       <label className="forum-label">Deine Antwort</label>
       <textarea

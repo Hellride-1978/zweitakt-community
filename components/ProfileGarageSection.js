@@ -61,8 +61,8 @@ export default function ProfileGarageSection({ profileId, vehicles, vehicleLikeC
                       )}
                     </div>
                     <div className="info">
-                      <div className="model">{v.make} <span style={{ color: 'var(--accent-ink)' }}>{v.model}</span></div>
-                      {v.title && <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', marginTop: 4 }}>{v.title}</div>}
+                      <div className="model">{v.make} <span style={{ color: 'var(--accent-accessible)' }}>{v.model}</span></div>
+                      {v.title && <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', marginTop: 4 }}>{v.title}</div>}
                       <div className="yr">{[v.year, v.displacement_cc ? `${v.displacement_cc} ccm` : null].filter(Boolean).join(' · ') || '—'}</div>
                       <div className="specs">
                         {v.year && <div className="s"><div className="lbl">BJ</div><div className="v">{v.year}</div></div>}
@@ -115,7 +115,7 @@ export default function ProfileGarageSection({ profileId, vehicles, vehicleLikeC
                 </p>
               )}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-                <Link href={`/schrauberhalle/${garage.id}`} style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-ink)', textDecoration: 'none' }}>
+                <Link href={`/schrauberhalle/${garage.id}`} style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--accent-accessible)', textDecoration: 'none' }}>
                   Schrauberhalle ansehen →
                 </Link>
                 {isOwner && (

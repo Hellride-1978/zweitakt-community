@@ -26,7 +26,7 @@ export default function ProfileActions({ profileId, hasPlz }) {
               padding: '10px 14px', borderRadius: 12,
               background: 'color-mix(in oklab, var(--accent) 12%, var(--cream))',
               border: '1.5px solid var(--accent)',
-              fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--accent-ink)',
+              fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--accent-accessible)',
               textDecoration: 'none', lineHeight: 1.4,
             }}
           >
