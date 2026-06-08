@@ -184,7 +184,11 @@ export default function EventMap({ lat, lng, onMapClick, markerLabel, readOnly =
       {!readOnly && <ClickHandler onMapClick={onMapClick} />}
       {!readOnly && <MapSearchBox onResult={onMapClick} />}
       {lat && lng && (
-        <Marker position={[lat, lng]}>
+        <Marker
+          position={[lat, lng]}
+          title={markerLabel || 'Veranstaltungsort'}
+          alt={markerLabel || 'Veranstaltungsort'}
+        >
           {markerLabel && <Popup>{markerLabel}</Popup>}
         </Marker>
       )}

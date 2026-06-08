@@ -12,7 +12,7 @@ function buildIcon(active) {
   const dot = active ? '#fff' : '#e8523a'
   return L.divIcon({
     className: '',
-    html: `<svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    html: `<svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
       <path d="M11 0C4.925 0 0 4.925 0 11c0 7.29 11 17.5 11 17.5S22 18.29 22 11C22 4.925 17.075 0 11 0z" fill="${fill}" stroke="#fff" stroke-width="1.5"/>
       <circle cx="11" cy="11" r="4" fill="${dot}"/>
     </svg>`,
@@ -217,6 +217,8 @@ export default function MemberMapSplit({ members }) {
                   key={m.id}
                   position={[parseFloat(m.lat), parseFloat(m.lng)]}
                   icon={buildIcon(activeId === m.id)}
+                  title={m.name ? `Standort von ${m.name}` : 'Schrauber-Standort'}
+                  alt={m.name ? `Standort von ${m.name}` : 'Schrauber-Standort'}
                   eventHandlers={{ click: () => setActiveId(m.id) }}
                 >
                   <Popup>

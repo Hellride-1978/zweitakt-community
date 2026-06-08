@@ -53,6 +53,7 @@ export default function MemberMap({ members }) {
           key={m.id}
           center={[m.lat, m.lng]}
           radius={7}
+          title={m.name ? `Standort von ${m.name}` : 'Schrauber-Standort'}
           pathOptions={{
             color: '#1a1108',
             fillColor: '#e8523a',
