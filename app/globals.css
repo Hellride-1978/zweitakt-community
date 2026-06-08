@@ -1676,9 +1676,17 @@ body::before {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--ink-soft);
-  transition: color 0.18s;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s, transform 0.15s;
+  display: inline-block;
 }
-.zh-footer-links a:hover { color: var(--accent-text); }
+.zh-footer-links a:hover {
+  color: var(--accent-accessible);
+  border-bottom-color: var(--accent-accessible);
+  transform: translateX(3px);
+}
 .zh-footer-brand {
   display: flex;
   flex-direction: column;
