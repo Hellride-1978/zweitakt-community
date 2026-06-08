@@ -104,7 +104,7 @@ body::before {
   display: inline-flex;
   align-items: baseline;
 }
-.zh-nav-logo span { color: var(--accent-accessible); -webkit-text-stroke: 0.5px var(--accent-accessible); }
+.zh-nav-logo span { color: var(--accent-ink); -webkit-text-stroke: 0.5px var(--accent-ink); }
 .zh-nav-links {
   position: absolute;
   left: 50%;
@@ -1646,7 +1646,7 @@ body::before {
   align-items: baseline;
   flex-shrink: 0;
 }
-.zh-footer-logo span { color: var(--accent-accessible); -webkit-text-stroke: 0.5px var(--accent-accessible); }
+.zh-footer-logo span { color: var(--accent-ink); -webkit-text-stroke: 0.5px var(--accent-ink); }
 .zh-footer-cols {
   display: flex;
   gap: 48px;
