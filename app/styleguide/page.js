@@ -39,7 +39,7 @@ const TECH = [
     cat: 'Backend & Datenbank',
     items: [
       { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos)', url: 'https://supabase.com' },
-      { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder) – öffentliche Bild-URLs mit Cache-Busting', url: null },
+      { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder), forum-images (Bild-Anhänge in Forum-Posts und -Antworten) – öffentliche Bild-URLs mit Cache-Busting', url: null },
     ],
   },
   {
@@ -102,20 +102,24 @@ const TECH = [
       { name: 'Onboarding-Tour', desc: 'Schritt-für-Schritt Tour für neue User nach erster Anmeldung — localStorage-Trigger', url: null },
       { name: 'Cookie Consent', desc: 'Minimaler Banner (nur technisch notwendige Cookies + localStorage), einmalig per localStorage dismissed', url: null },
       { name: 'WCAG 2.1 AA', desc: 'Barrierefreiheit: Kontrastprüfung (4.5:1 normal, 3:1 groß), aria-Labels, Skip-Link, semantische Heading-Reihenfolge, aria-hidden für dekorative Elemente', url: null },
-      { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via SMTP', url: null },
+      { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, optionalen Bild-Anhängen (Supabase Storage, Bucket: forum-images), Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via Resend', url: null },
     ],
   },
 ]
 
-const LAST_UPDATED = '07.06.2026'
+const LAST_UPDATED = '08.06.2026'
 
 const BASE_COLORS = [
-  { name: '--ink',       desc: 'Text (dunkel)' },
-  { name: '--ink-soft',  desc: 'Text (weich)' },
-  { name: '--ink-muted', desc: 'Text (gedimmt)' },
-  { name: '--cream',     desc: 'Hintergrund' },
-  { name: '--parchment', desc: 'Karten-BG' },
-  { name: '--hairline',  desc: 'Trennlinien' },
+  { name: '--ink',          desc: 'Text (dunkel)' },
+  { name: '--ink-soft',     desc: 'Text (weich)' },
+  { name: '--ink-muted',    desc: 'Text (gedimmt)' },
+  { name: '--cream',        desc: 'Hintergrund' },
+  { name: '--parchment',    desc: 'Karten-BG' },
+  { name: '--hairline',     desc: 'Trennlinien' },
+  { name: '--cream-2',      desc: 'Leicht gedimmter Hintergrund (Karten, Inputs)' },
+  { name: '--ink-faint',    desc: 'Hauchdünne Trennlinie / Hover-Fläche' },
+  { name: '--accent-text',  desc: 'Akzentfarbe für Fließtext-Links (dunklere Variante)' },
+  { name: '--shadow',       desc: 'Box-Shadow-Farbe' },
 ]
 
 export default function StyleguidePage() {
@@ -199,7 +203,7 @@ export default function StyleguidePage() {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {BASE_COLORS.map((c) => (
               <div key={c.name} style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 120 }}>
-                <div style={{ width: '100%', height: 48, borderRadius: 10, background: `var(${c.name})`, border: '1.5px solid var(--hairline)' }} />
+                <div style={{ width: '100%', height: 48, borderRadius: 10, border: '1.5px solid var(--hairline)', background: `var(${c.name}), linear-gradient(45deg, #ccc 25%, transparent 25%) 0 0 / 10px 10px, linear-gradient(-45deg, #ccc 25%, transparent 25%) 0 5px / 10px 10px, linear-gradient(45deg, transparent 75%, #ccc 75%) 5px -5px / 10px 10px, linear-gradient(-45deg, transparent 75%, #ccc 75%) -5px 0 / 10px 10px, white` }} />
                 <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
                   {c.name}
                 </div>
@@ -445,6 +449,17 @@ export default function StyleguidePage() {
               ['zh-club-card',      'Einzelne Club-Kachel mit Bild, Stamp und Body'],
               ['zh-roller-btn',     'Farbwechsel-Button (animiert durch alle 5 Paletten)'],
               ['skip-link',         'WCAG-Skiplink „Zum Hauptinhalt springen" (nur sichtbar bei Fokus)'],
+              ['feed-col',              'Flex-Spalten-Wrapper für Feed-Seiten (Forum, Datenschutz etc.)'],
+              ['feed-head',             'Kopfzeile einer Feed-Seite mit Titel und optionalen Filtern'],
+              ['zh-manifest',           'Manifest-Sektion auf der Startseite (großes Zitat/Statement)'],
+              ['zh-closing',            'Abschluss-CTA-Sektion (dark, mit Radial-Gradient)'],
+              ['credo-strip',           'Dreispaltige Info-Leiste (dark bg) auf der Startseite'],
+              ['mms-split',             'MemberMapSplit: zweispaltiges Grid (Liste + Karte)'],
+              ['mms-list',              'MemberMapSplit: scrollbare Mitglieder-Liste links'],
+              ['mms-row',               'MemberMapSplit: einzelne Mitglieder-Zeile (klickbar)'],
+              ['mms-search',            'MemberMapSplit: Suchfeld über der Liste'],
+              ['mms-online-dot',        'Grüner Online-Indikator-Punkt auf Mitglieder-Avataren'],
+              ['input-error-highlight', 'Rot-Outline auf Input-Feldern bei Validierungsfehler'],
             ].map(([cls, desc]) => (
               <div key={cls} style={{ display: 'flex', gap: 20, borderBottom: '1px solid var(--hairline)', padding: '10px 0', flexWrap: 'wrap' }}>
                 <code style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.5px', minWidth: 180 }}>.{cls}</code>

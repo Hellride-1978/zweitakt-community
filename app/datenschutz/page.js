@@ -96,6 +96,11 @@ export default function DatenschutzPage() {
               Für den Versand von Benachrichtigungs- und Newsletter-E-Mails nutzen wir einen eigenen SMTP-Server (Strato AG, Pascalstraße 10, 10587 Berlin). Der Versand erfolgt über eine dedizierte Absender-Adresse (<code>send.zweitakthoden.de</code>). Die E-Mail-Adresse des Empfängers wird ausschließlich für den jeweiligen Versand verwendet und nicht an Dritte weitergegeben. Weitere Informationen: <a href="https://www.strato.de/datenschutz/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)' }}>strato.de/datenschutz</a>
             </p>
 
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Resend (Forum-Benachrichtigungen)</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Für den Versand von Benachrichtigungs-E-Mails bei neuen Forum-Antworten nutzen wir Resend (Resend Inc., 2261 Market Street #5039, San Francisco, CA 94114, USA). Dabei wird die E-Mail-Adresse des Empfängers sowie eine kurze Vorschau der neuen Antwort an Resend übermittelt. Die Übertragung in die USA erfolgt auf Grundlage von Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO). Weitere Informationen: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)' }}>resend.com/legal/privacy-policy</a>
+            </p>
+
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>OpenStreetMap / Nominatim</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Zur Anzeige von Kartenausschnitten bei Terminen und zur Umwandlung von Ort- und PLZ-Eingaben in geografische Koordinaten (für Profilseiten und die Schrauber-Karte) nutzen wir OpenStreetMap und den Nominatim-Dienst der OpenStreetMap Foundation. Dabei werden Ortsnamen oder Postleitzahlen an Nominatim übermittelt; es werden keine personenbezogenen Daten wie Name oder E-Mail-Adresse weitergegeben. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)' }}>osmfoundation.org/wiki/Privacy_Policy</a>
@@ -103,7 +108,7 @@ export default function DatenschutzPage() {
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Supabase Storage</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>) und Termin-Titelbilder (Bucket: <code>event-images</code>) nutzen wir Supabase Storage. Alle Fotos sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
+              Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>), Termin-Titelbilder (Bucket: <code>event-images</code>) und Forum-Bilder in Posts und Antworten (Bucket: <code>forum-images</code>) nutzen wir Supabase Storage. Alle Fotos und Bilder sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
             </p>
           </section>
 
