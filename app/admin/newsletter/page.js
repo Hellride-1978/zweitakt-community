@@ -76,6 +76,13 @@ const addBtnStyle = {
   background: 'none', border: '1px solid var(--hairline)', borderRadius: 6,
   padding: '3px 10px', cursor: 'pointer', color: 'var(--ink-muted)', whiteSpace: 'nowrap',
 }
+const arrowBtnStyle = (disabled) => ({
+  fontFamily: 'var(--mono)', fontSize: 12, lineHeight: 1,
+  background: 'none', border: '1px solid var(--hairline)', borderRadius: 5,
+  padding: '2px 7px', cursor: disabled ? 'default' : 'pointer',
+  color: disabled ? 'var(--ink-faint)' : 'var(--ink-muted)',
+  opacity: disabled ? 0.35 : 1,
+})
 
 // ── Haupt-Komponente ─────────────────────────────────────────────────────────
 
@@ -129,6 +136,17 @@ export default function AdminNewsletterPage() {
 
   function removeBlock(id) {
     setBlocks(prev => prev.length > 1 ? prev.filter(b => b.id !== id) : prev)
+  }
+
+  function moveBlock(id, dir) {
+    setBlocks(prev => {
+      const idx = prev.findIndex(b => b.id === id)
+      const next = idx + dir
+      if (next < 0 || next >= prev.length) return prev
+      const arr = [...prev]
+      ;[arr[idx], arr[next]] = [arr[next], arr[idx]]
+      return arr
+    })
   }
 
   function updateBlockContent(id, content) {
@@ -269,24 +287,24 @@ export default function AdminNewsletterPage() {
               {blocks.map((block, idx) => (
                 <div key={block.id}>
                   {/* Block */}
-                  <div style={{ position: 'relative', borderRadius: 10, border: '1.5px solid var(--hairline)', overflow: 'hidden', marginBottom: 0 }}>
+                  <div style={{ borderRadius: 10, border: '1.5px solid var(--hairline)', overflow: 'hidden', marginBottom: 0 }}>
 
-                    {/* Löschen-Button */}
-                    {blocks.length > 1 && (
-                      <button
-                        onClick={() => removeBlock(block.id)}
-                        title="Block löschen"
-                        style={{ position: 'absolute', top: 6, right: 6, zIndex: 1, background: 'var(--parchment)', border: '1px solid var(--hairline)', borderRadius: 6, padding: '2px 7px', cursor: 'pointer', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--ink-muted)', lineHeight: 1.4 }}
-                      >
-                        ×
-                      </button>
-                    )}
+                    {/* Block-Header: Typ + Pfeil-Buttons + Löschen */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 6px 4px 10px', borderBottom: '1px solid var(--hairline)', background: 'var(--cream-2)' }}>
+                      <span style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+                        {block.type === 'text' ? 'Text' : 'Bild'}
+                      </span>
+                      <div style={{ display: 'flex', gap: 3 }}>
+                        <button onClick={() => moveBlock(block.id, -1)} disabled={idx === 0}               title="Nach oben" style={arrowBtnStyle(idx === 0)}>↑</button>
+                        <button onClick={() => moveBlock(block.id,  1)} disabled={idx === blocks.length - 1} title="Nach unten" style={arrowBtnStyle(idx === blocks.length - 1)}>↓</button>
+                        {blocks.length > 1 && (
+                          <button onClick={() => removeBlock(block.id)} title="Block löschen" style={{ ...arrowBtnStyle(false), marginLeft: 4, color: 'var(--ink-soft)' }}>×</button>
+                        )}
+                      </div>
+                    </div>
 
                     {block.type === 'text' ? (
                       <div>
-                        <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', padding: '6px 10px 4px', borderBottom: '1px solid var(--hairline)', background: 'var(--cream-2)' }}>
-                          Text
-                        </div>
                         <textarea
                           className="zh-input"
                           rows={5}
@@ -300,9 +318,6 @@ export default function AdminNewsletterPage() {
                       </div>
                     ) : (
                       <div>
-                        <div style={{ fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', padding: '6px 10px 4px', borderBottom: '1px solid var(--hairline)', background: 'var(--cream-2)' }}>
-                          Bild
-                        </div>
                         {block.preview || block.url ? (
                           <div style={{ position: 'relative' }}>
                             <img src={block.preview || block.url} alt="" style={{ width: '100%', maxHeight: 180, objectFit: 'cover', display: 'block' }} />
