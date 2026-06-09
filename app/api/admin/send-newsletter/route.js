@@ -37,8 +37,28 @@ function escHtml(str) {
     .replace(/'/g, '&#39;')
 }
 
-function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl }) {
-  const safeCtaUrl = ctaUrl?.startsWith('https://') ? ctaUrl : null
+// Ersetzt {{anrede}}, {{name}}, {{vorname}} durch personalisierte Werte
+function resolvePlaceholders(text, profileName) {
+  if (!text.includes('{{')) return text
+  const firstName = profileName?.split(' ')[0] || null
+  const anrede = firstName ? `Hallo ${firstName},` : 'Hallo Schrauber,'
+  return text
+    .replace(/\{\{anrede\}\}/g, anrede)
+    .replace(/\{\{name\}\}/g,    firstName || 'Schrauber')
+    .replace(/\{\{vorname\}\}/g, firstName || 'Schrauber')
+}
+
+function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl, imageUrl }) {
+  const safeCtaUrl   = ctaUrl?.startsWith('https://') ? ctaUrl : null
+  const safeImageUrl = imageUrl?.startsWith('https://') ? imageUrl : null
+
+  const imageBlock = safeImageUrl ? `
+        <tr>
+          <td style="padding:0;">
+            <img src="${safeImageUrl}" alt="" width="560"
+              style="width:100%;max-width:560px;display:block;border:0;border-radius:0;" />
+          </td>
+        </tr>` : ''
 
   const cta = ctaLabel && safeCtaUrl ? `
     <table cellpadding="0" cellspacing="0" style="margin-top: 24px;"><tr>
@@ -65,6 +85,7 @@ function buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl }) {
             <p style="margin:8px 0 0;font-family:Arial,system-ui,sans-serif;font-size:30px;color:#ffffff;line-height:1.15;font-weight:800;">${escHtml(headline)}</p>
           </td>
         </tr>
+        ${imageBlock}
         <tr>
           <td style="padding:36px 32px 32px;">
             ${bodyHtml}
@@ -91,17 +112,21 @@ export async function POST(request) {
     const auth = await requireAdmin(request)
     if (auth.error) return auth.error
 
-    const { subject, headline, body, ctaLabel, ctaUrl, preview } = await request.json()
+    const { subject, headline, body, ctaLabel, ctaUrl, imageUrl, preview } = await request.json()
 
     if (!subject?.trim() || !headline?.trim() || !body?.trim()) {
       return Response.json({ error: 'Betreff, Headline und Text sind erforderlich.' }, { status: 400 })
     }
 
-    // Preview-Modus: nur an Admin senden
+    const admin    = adminClient()
+    const baseUrl  = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zweitakthoden.de'
+    const transport = mailer()
+
+    // Preview-Modus: nur an Admin, mit eigenem Namen
     if (preview) {
-      const transport = mailer()
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zweitakthoden.de'
-      const html = buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl: `${baseUrl}/newsletter/abgemeldet` })
+      const { data: adminProfile } = await admin.from('profiles').select('name').eq('id', auth.user.id).single()
+      const resolvedBody = resolvePlaceholders(body, adminProfile?.name)
+      const html = buildHtml({ headline, body: resolvedBody, ctaLabel, ctaUrl, imageUrl, unsubscribeUrl: `${baseUrl}/newsletter/abgemeldet` })
       await transport.sendMail({
         from: `"Zweitakthoden" <${process.env.NOTIFY_SMTP_USER}>`,
         to: ADMIN_EMAIL,
@@ -112,25 +137,32 @@ export async function POST(request) {
     }
 
     // Alle bestätigten Abonnenten laden
-    const admin = adminClient()
     const { data: subscribers, error } = await admin
       .from('newsletter_subscribers')
-      .select('email, unsubscribe_token')
+      .select('email, unsubscribe_token, user_id')
       .eq('status', 'confirmed')
 
     if (error) return Response.json({ error: 'Fehler beim Laden der Abonnenten.' }, { status: 500 })
     if (!subscribers?.length) return Response.json({ ok: true, sent: 0 })
 
-    const transport = mailer()
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zweitakthoden.de'
+    // Profil-Namen laden wenn Platzhalter vorhanden
+    let profileMap = {}
+    if (body.includes('{{')) {
+      const userIds = subscribers.filter(s => s.user_id).map(s => s.user_id)
+      if (userIds.length > 0) {
+        const { data: profiles } = await admin.from('profiles').select('id, name').in('id', userIds)
+        profileMap = Object.fromEntries(profiles?.map(p => [p.id, p.name]) ?? [])
+      }
+    }
 
-    let sent = 0
-    let failed = 0
+    let sent = 0, failed = 0
 
     for (const sub of subscribers) {
       try {
+        const profileName  = sub.user_id ? profileMap[sub.user_id] : null
+        const resolvedBody = resolvePlaceholders(body, profileName)
         const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=${sub.unsubscribe_token}`
-        const html = buildHtml({ headline, body, ctaLabel, ctaUrl, unsubscribeUrl })
+        const html = buildHtml({ headline, body: resolvedBody, ctaLabel, ctaUrl, imageUrl, unsubscribeUrl })
         await transport.sendMail({
           from: `"Zweitakthoden" <${process.env.NOTIFY_SMTP_USER}>`,
           to: sub.email,

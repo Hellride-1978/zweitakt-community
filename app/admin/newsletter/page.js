@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 
 const ADMIN_EMAIL = 'martin@delavega.de'
 
-function EmailPreview({ headline, body, ctaLabel, ctaUrl }) {
+function EmailPreview({ headline, body, ctaLabel, ctaUrl, imageUrl }) {
   const bodyParts = body.split('\n\n').filter(Boolean)
 
   return (
@@ -20,6 +20,10 @@ function EmailPreview({ headline, body, ctaLabel, ctaUrl }) {
             {headline || <span style={{ opacity: 0.3 }}>Headline…</span>}
           </div>
         </div>
+        {/* Bild */}
+        {imageUrl && (
+          <img src={imageUrl} alt="" style={{ width: '100%', display: 'block', maxHeight: 240, objectFit: 'cover' }} />
+        )}
         {/* Body */}
         <div style={{ padding: '24px 24px 20px' }}>
           {bodyParts.length > 0 ? bodyParts.map((p, i) => (
@@ -51,17 +55,22 @@ function EmailPreview({ headline, body, ctaLabel, ctaUrl }) {
 export default function AdminNewsletterPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const fileInputRef = useRef(null)
 
-  const [subject,    setSubject]    = useState('')
-  const [headline,   setHeadline]   = useState('')
-  const [body,       setBody]       = useState('')
-  const [ctaLabel,   setCtaLabel]   = useState('')
-  const [ctaUrl,     setCtaUrl]     = useState('')
-  const [subCount,   setSubCount]   = useState(null)
-  const [sending,    setSending]    = useState(false)
-  const [result,     setResult]     = useState(null)
-  const [error,      setError]      = useState(null)
-  const [confirmed,  setConfirmed]  = useState(false)
+  const [subject,       setSubject]       = useState('')
+  const [headline,      setHeadline]      = useState('')
+  const [body,          setBody]          = useState('')
+  const [ctaLabel,      setCtaLabel]      = useState('')
+  const [ctaUrl,        setCtaUrl]        = useState('')
+  const [imageUrl,      setImageUrl]      = useState('')
+  const [imagePreview,  setImagePreview]  = useState('')
+  const [imageUploading,setImageUploading]= useState(false)
+  const [subCount,      setSubCount]      = useState(null)
+  const [statsLoading,  setStatsLoading]  = useState(false)
+  const [sending,       setSending]       = useState(false)
+  const [result,        setResult]        = useState(null)
+  const [error,         setError]         = useState(null)
+  const [confirmed,     setConfirmed]     = useState(false)
 
   useEffect(() => {
     if (!loading && (!user || user.email !== ADMIN_EMAIL)) router.replace('/')
@@ -75,12 +84,51 @@ export default function AdminNewsletterPage() {
 
   if (loading || !user || user.email !== ADMIN_EMAIL) return null
 
+  async function getToken() {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token
+  }
+
+  async function handleImageSelect(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) { setError('Bild zu groß — max. 5 MB.'); return }
+    setImageUploading(true)
+    setError(null)
+    setImagePreview(URL.createObjectURL(file))
+    const ext  = file.name.split('.').pop() || 'jpg'
+    const path = `newsletter/${Date.now()}.${ext}`
+    const { error: upErr } = await supabase.storage.from('newsletter-images').upload(path, file, { upsert: true, contentType: file.type })
+    if (upErr) { setError('Bild-Upload fehlgeschlagen: ' + upErr.message); setImagePreview(''); setImageUploading(false); return }
+    const { data: { publicUrl } } = supabase.storage.from('newsletter-images').getPublicUrl(path)
+    setImageUrl(publicUrl)
+    setImageUploading(false)
+  }
+
+  function handleImageRemove() {
+    setImageUrl('')
+    setImagePreview('')
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  async function handleInsertStats() {
+    setStatsLoading(true)
+    const [{ count: memberCount }, { count: bikeCount }] = await Promise.all([
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('vehicles').select('id', { count: 'exact', head: true }),
+    ])
+    const line = `Aktuell sind ${memberCount ?? '?'} Schrauber und ${bikeCount ?? '?'} Bikes auf Zweitakthoden registriert.`
+    setBody(prev => prev.trim() ? `${prev.trim()}\n\n${line}` : line)
+    setStatsLoading(false)
+  }
+
   async function handlePreview() {
     setSending(true); setError(null); setResult(null)
+    const token = await getToken()
     const res = await fetch('/api/admin/send-newsletter', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subject, headline, body, ctaLabel, ctaUrl, adminEmail: user.email, preview: true }),
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ subject, headline, body, ctaLabel, ctaUrl, imageUrl, preview: true }),
     })
     const data = await res.json()
     setSending(false)
@@ -91,10 +139,11 @@ export default function AdminNewsletterPage() {
   async function handleSend() {
     if (!confirmed) { setError('Bitte bestätige den Versand.'); return }
     setSending(true); setError(null); setResult(null)
+    const token = await getToken()
     const res = await fetch('/api/admin/send-newsletter', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subject, headline, body, ctaLabel, ctaUrl, adminEmail: user.email, preview: false }),
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ subject, headline, body, ctaLabel, ctaUrl, imageUrl, preview: false }),
     })
     const data = await res.json()
     setSending(false)
@@ -128,56 +177,76 @@ export default function AdminNewsletterPage() {
 
           <div>
             <label className="zh-label">Betreff</label>
-            <input
-              className="zh-input"
-              value={subject}
-              onChange={e => setSubject(e.target.value)}
-              placeholder="z.B. News aus der Crew – Juni 2026"
-            />
+            <input className="zh-input" value={subject} onChange={e => setSubject(e.target.value)} placeholder="z.B. News aus der Crew – Juni 2026" />
           </div>
 
           <div>
             <label className="zh-label">Headline (fett, groß im dunklen Header)</label>
-            <input
-              className="zh-input"
-              value={headline}
-              onChange={e => setHeadline(e.target.value)}
-              placeholder="z.B. Neue Bikes. Neue Treffen."
-            />
+            <input className="zh-input" value={headline} onChange={e => setHeadline(e.target.value)} placeholder="z.B. Neue Bikes. Neue Treffen." />
           </div>
 
+          {/* Bild */}
           <div>
-            <label className="zh-label">Text (Leerzeile = neuer Absatz)</label>
+            <label className="zh-label">Bild (optional) — erscheint unter dem Header</label>
+            {imagePreview ? (
+              <div style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '1.5px solid var(--hairline)', marginBottom: 8 }}>
+                <img src={imagePreview} alt="Vorschau" style={{ width: '100%', maxHeight: 180, objectFit: 'cover', display: 'block' }} />
+                {imageUploading && (
+                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(26,17,8,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: '#fff' }}>
+                    Lädt hoch…
+                  </div>
+                )}
+                {!imageUploading && (
+                  <button
+                    onClick={handleImageRemove}
+                    style={{ position: 'absolute', top: 8, right: 8, background: '#1a1108', color: '#fff', border: 'none', borderRadius: 100, padding: '4px 10px', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1px', cursor: 'pointer' }}
+                  >
+                    × Entfernen
+                  </button>
+                )}
+              </div>
+            ) : (
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 10, border: '1.5px dashed var(--hairline)', cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-muted)' }}>
+                <span>📎</span>
+                <span>Bild auswählen (JPG, PNG, WebP — max. 5 MB)</span>
+                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" style={{ display: 'none' }} onChange={handleImageSelect} />
+              </label>
+            )}
+          </div>
+
+          {/* Text */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+              <label className="zh-label" style={{ marginBottom: 0 }}>Text (Leerzeile = neuer Absatz)</label>
+              <button
+                onClick={handleInsertStats}
+                disabled={statsLoading}
+                style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', background: 'none', border: '1px solid var(--hairline)', borderRadius: 6, padding: '3px 8px', cursor: 'pointer', color: 'var(--ink-muted)', opacity: statsLoading ? 0.5 : 1 }}
+              >
+                {statsLoading ? '…' : '📊 Aktuelle Zahlen einfügen'}
+              </button>
+            </div>
             <textarea
               className="zh-input"
               rows={10}
               value={body}
               onChange={e => setBody(e.target.value)}
-              placeholder="Schreib deinen Newsletter-Text hier…
-
-Jeder Absatz wird automatisch als eigener Textblock dargestellt."
+              placeholder={`Schreib deinen Newsletter-Text hier…\n\nJeder Absatz wird automatisch als eigener Textblock dargestellt.\n\nPlatzhalter: {{anrede}} → "Hallo Martin," | {{name}} → "Martin"`}
               style={{ resize: 'vertical', minHeight: 200 }}
             />
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1px', color: 'var(--ink-muted)', marginTop: 6 }}>
+              Platzhalter: <code style={{ background: 'var(--parchment)', padding: '1px 4px', borderRadius: 3 }}>{'{{anrede}}'}</code> → „Hallo Martin," &nbsp;|&nbsp; <code style={{ background: 'var(--parchment)', padding: '1px 4px', borderRadius: 3 }}>{'{{name}}'}</code> → „Martin"
+            </div>
           </div>
 
           <div className="newsletter-cta-row">
             <div>
               <label className="zh-label">Button-Text (optional)</label>
-              <input
-                className="zh-input"
-                value={ctaLabel}
-                onChange={e => setCtaLabel(e.target.value)}
-                placeholder="z.B. Zum Forum"
-              />
+              <input className="zh-input" value={ctaLabel} onChange={e => setCtaLabel(e.target.value)} placeholder="z.B. Zum Forum" />
             </div>
             <div>
               <label className="zh-label">Button-URL (optional)</label>
-              <input
-                className="zh-input"
-                value={ctaUrl}
-                onChange={e => setCtaUrl(e.target.value)}
-                placeholder="https://zweitakthoden.de/forum"
-              />
+              <input className="zh-input" value={ctaUrl} onChange={e => setCtaUrl(e.target.value)} placeholder="https://zweitakthoden.de/forum" />
             </div>
           </div>
 
@@ -191,31 +260,16 @@ Jeder Absatz wird automatisch als eigener Textblock dargestellt."
 
           {/* Aktionen */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 8, borderTop: '1px solid var(--hairline)' }}>
-            <button
-              onClick={handlePreview}
-              disabled={!canSend || sending}
-              className="zh-btn zh-btn-outline"
-              style={{ opacity: !canSend ? 0.4 : 1 }}
-            >
+            <button onClick={handlePreview} disabled={!canSend || sending || imageUploading} className="zh-btn zh-btn-outline" style={{ opacity: !canSend ? 0.4 : 1 }}>
               {sending ? 'Sendet…' : 'Vorschau an mich senden →'}
             </button>
 
             <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink-soft)' }}>
-              <input
-                type="checkbox"
-                checked={confirmed}
-                onChange={e => setConfirmed(e.target.checked)}
-                style={{ width: 16, height: 16, cursor: 'pointer' }}
-              />
+              <input type="checkbox" checked={confirmed} onChange={e => setConfirmed(e.target.checked)} style={{ width: 16, height: 16, cursor: 'pointer' }} />
               Ja, ich möchte diesen Newsletter an alle {subCount ?? '…'} Abonnenten senden.
             </label>
 
-            <button
-              onClick={handleSend}
-              disabled={!canSend || !confirmed || sending}
-              className="zh-btn"
-              style={{ opacity: (!canSend || !confirmed) ? 0.4 : 1 }}
-            >
+            <button onClick={handleSend} disabled={!canSend || !confirmed || sending || imageUploading} className="zh-btn" style={{ opacity: (!canSend || !confirmed) ? 0.4 : 1 }}>
               {sending ? 'Wird gesendet…' : `An ${subCount ?? '…'} Abonnenten senden →`}
             </button>
           </div>
@@ -226,7 +280,7 @@ Jeder Absatz wird automatisch als eigener Textblock dargestellt."
           <div style={{ fontFamily: 'var(--mono)', fontSize: 11, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginBottom: 12 }}>
             Live-Vorschau
           </div>
-          <EmailPreview headline={headline} body={body} ctaLabel={ctaLabel} ctaUrl={ctaUrl} />
+          <EmailPreview headline={headline} body={body} ctaLabel={ctaLabel} ctaUrl={ctaUrl} imageUrl={imagePreview || imageUrl} />
         </div>
 
       </div>
