@@ -18,11 +18,12 @@ export function tendencyLabel(points: number): string {
 export function stageLabel(stage: string | null): string {
   const map: Record<string, string> = {
     GROUP_STAGE: 'Gruppenphase',
+    ROUND_OF_32: 'Runde der letzten 32',
     ROUND_OF_16: 'Achtelfinale',
     QUARTER_FINALS: 'Viertelfinale',
     SEMI_FINALS: 'Halbfinale',
     THIRD_PLACE: 'Spiel um Platz 3',
     FINAL: 'Finale',
   }
-  return stage ? (map[stage] ?? stage) : 'Unbekannte Phase'
+  return stage ? (map[stage] ?? stage) : ''
 }

@@ -40,12 +40,12 @@ export interface WmMatch {
   home_score: number | null
   away_score: number | null
   minute: number | null
-  home_yellow_cards: number
-  away_yellow_cards: number
-  home_red_cards: number
-  away_red_cards: number
   matchday: number | null
   stage: string | null
+  group_name: string | null
+  manual_home_score: number | null
+  manual_away_score: number | null
+  use_manual_score: boolean
   last_updated: string
 }
 
@@ -129,6 +129,53 @@ export async function upsertMatches(matches: Partial<WmMatch>[]) {
   if (error) throw error
 }
 
+// Upsert non-score fields only (used when use_manual_score = true for a match)
+export async function upsertMatchesBase(matches: Omit<Partial<WmMatch>, 'home_score' | 'away_score'>[]) {
+  if (matches.length === 0) return
+  const { error } = await getClient()
+    .from('wm_matches_cache')
+    .upsert(matches, { onConflict: 'match_id' })
+  if (error) throw error
+}
+
+export async function getManualOverrideIds(): Promise<Set<number>> {
+  const { data } = await getClient()
+    .from('wm_matches_cache')
+    .select('match_id')
+    .eq('use_manual_score', true)
+  return new Set((data ?? []).map((r: { match_id: number }) => r.match_id))
+}
+
+export async function setManualOverride(
+  matchId: number,
+  homeScore: number,
+  awayScore: number
+) {
+  const { error } = await getClient()
+    .from('wm_matches_cache')
+    .update({
+      manual_home_score: homeScore,
+      manual_away_score: awayScore,
+      use_manual_score: true,
+      last_updated: new Date().toISOString(),
+    })
+    .eq('match_id', matchId)
+  if (error) throw error
+}
+
+export async function clearManualOverride(matchId: number) {
+  const { error } = await getClient()
+    .from('wm_matches_cache')
+    .update({
+      manual_home_score: null,
+      manual_away_score: null,
+      use_manual_score: false,
+      last_updated: new Date().toISOString(),
+    })
+    .eq('match_id', matchId)
+  if (error) throw error
+}
+
 // ─── Tips ─────────────────────────────────────────────────────────────────────
 
 export async function getTipByUserAndMatch(
@@ -185,18 +232,41 @@ export async function awardPoints(tipId: string, points: number) {
   if (error) throw error
 }
 
+export async function awardPointsForAllTips(matchId: number, homeScore: number, awayScore: number): Promise<number> {
+  const tips = await getTipsForMatch(matchId)
+  for (const tip of tips) {
+    let pts = 0
+    if (tip.home_goals === homeScore && tip.away_goals === awayScore) pts = 3
+    else if (Math.sign(tip.home_goals - tip.away_goals) === Math.sign(homeScore - awayScore)) pts = 1
+    await awardPoints(tip.id, pts)
+  }
+  return tips.length
+}
+
 export async function getLiveOrNextMatch(): Promise<WmMatch | null> {
   const client = getClient()
 
+  // 1. Live match (API status)
   const { data: live } = await client
     .from('wm_matches_cache')
     .select('*')
     .in('status', ['IN_PLAY', 'PAUSED'])
     .order('utc_date', { ascending: true })
     .limit(1)
-
   if (live && live.length > 0) return live[0] as WmMatch
 
+  // 2. Recently finished (up to 3h after kickoff)
+  const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
+  const { data: finished } = await client
+    .from('wm_matches_cache')
+    .select('*')
+    .eq('status', 'FINISHED')
+    .gt('utc_date', threeHoursAgo)
+    .order('utc_date', { ascending: false })
+    .limit(1)
+  if (finished && finished.length > 0) return finished[0] as WmMatch
+
+  // 3. Next upcoming
   const { data: next } = await client
     .from('wm_matches_cache')
     .select('*')
@@ -204,7 +274,6 @@ export async function getLiveOrNextMatch(): Promise<WmMatch | null> {
     .gt('utc_date', new Date().toISOString())
     .order('utc_date', { ascending: true })
     .limit(1)
-
   return next && next.length > 0 ? (next[0] as WmMatch) : null
 }
 

@@ -42,14 +42,14 @@ export default function WmSubNav({ username, isAdmin }: Props) {
             </Link>
           ))}
           {isAdmin && (
-            <a
-              href="/api/wm/sync-matches"
-              className="wm-subnav-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Sync
-            </a>
+            <>
+              <Link href="/wm/admin" className={`wm-subnav-link ${pathname.startsWith('/wm/admin') ? 'active' : ''}`}>
+                Admin
+              </Link>
+              <a href="/api/wm/sync-matches" className="wm-subnav-link" target="_blank" rel="noopener noreferrer">
+                Sync
+              </a>
+            </>
           )}
         </nav>
         <div className="wm-subnav-user">

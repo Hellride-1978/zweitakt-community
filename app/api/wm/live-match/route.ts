@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/wm-auth'
-import { getLiveOrNextMatch, getTipsForMatch, getAllUsernames } from '@/lib/wm-db'
+import { getLiveOrNextMatch, getTipsForMatch, getAllUsernames, getTipByUserAndMatch } from '@/lib/wm-db'
 
-function calcPoints(tipHome: number, tipAway: number, matchHome: number | null, matchAway: number | null): number {
-  if (matchHome === null || matchAway === null) return 0
-  if (tipHome === matchHome && tipAway === matchAway) return 3
-  const tipTendency = Math.sign(tipHome - tipAway)
-  const matchTendency = Math.sign(matchHome - matchAway)
-  if (tipTendency === matchTendency) return 1
+function calcPoints(tipH: number, tipA: number, mH: number | null, mA: number | null): number {
+  if (mH === null || mA === null) return 0
+  if (tipH === mH && tipA === mA) return 3
+  if (Math.sign(tipH - tipA) === Math.sign(mH - mA)) return 1
   return 0
 }
 
@@ -16,11 +14,16 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 })
 
   const match = await getLiveOrNextMatch()
-  if (!match) return NextResponse.json({ match: null, tips: [] })
+  if (!match) return NextResponse.json({ match: null, tips: [], current_user_tip: null })
+
+  // Resolve score: manual takes priority
+  const resolvedHome = match.use_manual_score ? match.manual_home_score : match.home_score
+  const resolvedAway = match.use_manual_score ? match.manual_away_score : match.away_score
 
   const isPostKickoff = ['IN_PLAY', 'PAUSED', 'FINISHED'].includes(match.status)
 
   let tips: { username: string; home_goals: number; away_goals: number; current_points: number }[] = []
+  let currentUserTip: { home_goals: number; away_goals: number; current_points: number } | null = null
 
   if (isPostKickoff) {
     const [rawTips, users] = await Promise.all([
@@ -34,9 +37,18 @@ export async function GET() {
         username: userMap.get(t.user_id) ?? 'Unbekannt',
         home_goals: t.home_goals,
         away_goals: t.away_goals,
-        current_points: calcPoints(t.home_goals, t.away_goals, match.home_score, match.away_score),
+        current_points: calcPoints(t.home_goals, t.away_goals, resolvedHome ?? null, resolvedAway ?? null),
       }))
       .sort((a, b) => b.current_points - a.current_points || a.username.localeCompare(b.username))
+
+    const myTip = await getTipByUserAndMatch(session.userId, match.match_id)
+    if (myTip) {
+      currentUserTip = {
+        home_goals: myTip.home_goals,
+        away_goals: myTip.away_goals,
+        current_points: calcPoints(myTip.home_goals, myTip.away_goals, resolvedHome ?? null, resolvedAway ?? null),
+      }
+    }
   }
 
   return NextResponse.json({
@@ -46,16 +58,16 @@ export async function GET() {
       away_team: match.away_team,
       home_team_flag: match.home_team_flag,
       away_team_flag: match.away_team_flag,
-      home_score: match.home_score,
-      away_score: match.away_score,
-      minute: match.minute ?? null,
+      home_score: resolvedHome ?? null,
+      away_score: resolvedAway ?? null,
       status: match.status,
-      home_yellow_cards: match.home_yellow_cards ?? 0,
-      away_yellow_cards: match.away_yellow_cards ?? 0,
-      home_red_cards: match.home_red_cards ?? 0,
-      away_red_cards: match.away_red_cards ?? 0,
+      minute: match.minute ?? null,
       utc_date: match.utc_date,
+      stage: match.stage ?? null,
+      group_name: match.group_name ?? null,
+      use_manual_score: match.use_manual_score,
     },
     tips,
+    current_user_tip: currentUserTip,
   })
 }
