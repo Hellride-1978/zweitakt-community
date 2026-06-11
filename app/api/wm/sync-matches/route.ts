@@ -17,8 +17,13 @@ function calcPoints(tipHome: number, tipAway: number, mHome: number, mAway: numb
 }
 
 export async function GET(request: Request) {
-  const cronSecret = request.headers.get('x-cron-secret')
-  const isCron = cronSecret && cronSecret === process.env.CRON_SECRET
+  const secret = process.env.CRON_SECRET
+  const xCron = request.headers.get('x-cron-secret')
+  const authHeader = request.headers.get('authorization')
+  const isCron = secret && (
+    xCron === secret ||
+    authHeader === `Bearer ${secret}`
+  )
   if (!isCron) {
     const session = await getSession()
     if (!session?.isAdmin) return NextResponse.json({ error: 'Nicht autorisiert.' }, { status: 401 })
