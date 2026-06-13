@@ -22,6 +22,7 @@ export default function WmSubNav({ username, isAdmin }: Props) {
     { href: '/wm/dashboard', label: 'Dashboard' },
     { href: '/wm/matches', label: 'Spiele' },
     { href: '/wm/leaderboard', label: 'Tabelle' },
+    { href: '/wm/history', label: 'Historie' },
   ]
 
   return (

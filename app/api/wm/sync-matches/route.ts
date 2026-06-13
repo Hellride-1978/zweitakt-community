@@ -7,14 +7,10 @@ import {
   getUnscoredTipsForMatch,
   awardPoints,
   getTipsForMatch,
+  getAllUsernames,
 } from '@/lib/wm-db'
 import { getSession } from '@/lib/wm-auth'
-
-function calcPoints(tipHome: number, tipAway: number, mHome: number, mAway: number): number {
-  if (tipHome === mHome && tipAway === mAway) return 3
-  if (Math.sign(tipHome - tipAway) === Math.sign(mHome - mAway)) return 1
-  return 0
-}
+import { calculatePoints } from '@/lib/wm/points'
 
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET
@@ -84,10 +80,15 @@ export async function GET(request: Request) {
   )
 
   let scored = 0
+  const usernames = finished.length > 0 ? await getAllUsernames() : []
+  const usernameMap = new Map(usernames.map(u => [u.id, u.username]))
+
   for (const match of finished) {
     const tips = await getUnscoredTipsForMatch(match.match_id)
     for (const tip of tips) {
-      await awardPoints(tip.id, calcPoints(tip.home_goals, tip.away_goals, match.home_score!, match.away_score!))
+      const pts = calculatePoints(tip.home_goals, tip.away_goals, match.home_score!, match.away_score!)
+      console.log(`[wm/points] ${usernameMap.get(tip.user_id) ?? tip.user_id} | ${match.home_team} vs ${match.away_team} | Tipp: ${tip.home_goals}:${tip.away_goals} | Ergebnis: ${match.home_score}:${match.away_score} | Punkte: ${pts}`)
+      await awardPoints(tip.id, pts)
       scored++
     }
   }

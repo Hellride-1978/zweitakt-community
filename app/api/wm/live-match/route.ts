@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/wm-auth'
 import { getLiveOrNextMatch, getTipsForMatch, getAllUsernames, getTipByUserAndMatch } from '@/lib/wm-db'
-
-function calcPoints(tipH: number, tipA: number, mH: number | null, mA: number | null): number {
-  if (mH === null || mA === null) return 0
-  if (tipH === mH && tipA === mA) return 3
-  if (Math.sign(tipH - tipA) === Math.sign(mH - mA)) return 1
-  return 0
-}
+import { calculatePoints } from '@/lib/wm/points'
 
 export async function GET() {
   const session = await getSession()
@@ -32,12 +26,17 @@ export async function GET() {
     ])
     const userMap = new Map(users.map(u => [u.id, u.username]))
 
+    const calcPts = (tipH: number, tipA: number) =>
+      resolvedHome != null && resolvedAway != null
+        ? calculatePoints(tipH, tipA, resolvedHome, resolvedAway)
+        : 0
+
     tips = rawTips
       .map(t => ({
         username: userMap.get(t.user_id) ?? 'Unbekannt',
         home_goals: t.home_goals,
         away_goals: t.away_goals,
-        current_points: calcPoints(t.home_goals, t.away_goals, resolvedHome ?? null, resolvedAway ?? null),
+        current_points: calcPts(t.home_goals, t.away_goals),
       }))
       .sort((a, b) => b.current_points - a.current_points || a.username.localeCompare(b.username))
 
@@ -46,7 +45,7 @@ export async function GET() {
       currentUserTip = {
         home_goals: myTip.home_goals,
         away_goals: myTip.away_goals,
-        current_points: calcPoints(myTip.home_goals, myTip.away_goals, resolvedHome ?? null, resolvedAway ?? null),
+        current_points: calcPts(myTip.home_goals, myTip.away_goals),
       }
     }
   }
