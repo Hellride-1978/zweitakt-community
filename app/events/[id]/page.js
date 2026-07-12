@@ -128,14 +128,32 @@ export default async function EventDetailPage({ params }) {
     '@type': 'Event',
     name: event.title,
     startDate: event.start_date,
-    ...(event.location && {
-      location: { '@type': 'Place', name: event.location },
-    }),
+    ...(event.end_date && { endDate: event.end_date }),
+    location: {
+      '@type': 'Place',
+      name: event.location || address || 'Wird noch bekanntgegeben',
+      ...(hasCoords && {
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: event.location_lat,
+          longitude: event.location_lng,
+        },
+      }),
+      ...(address && { address }),
+    },
+    image: [event.image_url || 'https://zweitakthoden.de/opengraph-image'],
     ...(event.description && { description: event.description }),
     organizer: {
       '@type': 'Organization',
       name: 'Zweitakthoden',
       url: 'https://zweitakthoden.de',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: `https://zweitakthoden.de/events/${id}`,
     },
     url: `https://zweitakthoden.de/events/${id}`,
     eventStatus: 'https://schema.org/EventScheduled',
