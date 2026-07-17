@@ -153,6 +153,7 @@ export default async function EventDetailPage({ params }) {
       price: '0',
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock',
+      validFrom: event.created_at,
       url: `https://zweitakthoden.de/events/${id}`,
     },
     url: `https://zweitakthoden.de/events/${id}`,
