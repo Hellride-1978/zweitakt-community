@@ -39,3 +39,10 @@ create index if not exists wm_tips_user_id_idx   on wm_tips(user_id);
 create index if not exists wm_tips_match_id_idx  on wm_tips(match_id);
 create index if not exists wm_matches_status_idx on wm_matches_cache(status);
 create index if not exists wm_matches_date_idx   on wm_matches_cache(utc_date);
+
+-- Zugriff läuft ausschließlich server-seitig über den Service-Role-Key
+-- (siehe lib/wm-db.ts), der RLS umgeht. RLS ohne Policies sperrt damit
+-- jeglichen öffentlichen Zugriff über den anon-Key, ohne die App zu brechen.
+alter table wm_users         enable row level security;
+alter table wm_tips          enable row level security;
+alter table wm_matches_cache enable row level security;
