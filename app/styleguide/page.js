@@ -60,7 +60,7 @@ const TECH = [
     cat: 'Fonts & Icons',
     items: [
       { name: 'Google Fonts', desc: 'Boogaloo (Display), DM Sans (Text), DM Mono (Mono) — via next/font', url: null },
-      { name: 'Font Awesome 6', desc: 'Icons über @fortawesome/react-fontawesome — nur solid + brands', url: 'https://fontawesome.com' },
+      { name: 'Font Awesome 7', desc: 'Icons über @fortawesome/react-fontawesome — nur solid + brands', url: 'https://fontawesome.com' },
     ],
   },
   {
@@ -107,7 +107,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '08.06.2026'
+const LAST_UPDATED = '26.07.2026'
 
 const BASE_COLORS = [
   { name: '--ink',          desc: 'Text (dunkel)' },

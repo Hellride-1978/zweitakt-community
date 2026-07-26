@@ -59,7 +59,7 @@ export default function DatenschutzPage() {
               Deine Daten werden ausschließlich für den Betrieb dieser Community-Plattform verwendet: Anmeldung, Profilverwaltung und Koordination von Ausfahrten. Eine Weitergabe an Dritte zu Werbezwecken findet nicht statt.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
-              Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, sowie neue Teilnehmer an deinen Terminen. Wenn du den Newsletter abonnierst, erhältst du gelegentlich Community-Updates und Neuigkeiten von Zweitakthoden — nur mit deiner ausdrücklichen Einwilligung (Double-Opt-in).
+              Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, neue Teilnehmer an deinen Terminen sowie neue Privat-Nachrichten von anderen Mitgliedern. Wenn du den Newsletter abonnierst, erhältst du gelegentlich Community-Updates und Neuigkeiten von Zweitakthoden — nur mit deiner ausdrücklichen Einwilligung (Double-Opt-in).
             </p>
           </section>
 
