@@ -1,4 +1,9 @@
 @AGENTS.md
+
+## Sprache
+
+Alle Antworten, Kommentare und Kommunikation ausschließlich auf Deutsch.
+
 ## Review-Prozess
 
 Nach jeder Implementierung von UI-Komponenten oder Seiten:
