@@ -39,14 +39,14 @@ const TECH = [
     cat: 'Backend & Datenbank',
     items: [
       { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos)', url: 'https://supabase.com' },
-      { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder), forum-images (Bild-Anhänge in Forum-Posts und -Antworten) – öffentliche Bild-URLs mit Cache-Busting', url: null },
+      { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder), forum-images (Bild-Anhänge in Forum-Posts und -Antworten), newsletter-images (Bilder in Newsletter-Mailings) – öffentliche Bild-URLs mit Cache-Busting', url: null },
     ],
   },
   {
     cat: 'E-Mail',
     items: [
-      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen — versendet von noreply@send.zweitakthoden.de', url: 'https://resend.com' },
-      { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de', url: null },
+      { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen (an Thread-Autor und alle vorherigen Antwortenden, mit max. 200-Zeichen-Vorschau) — versendet von noreply@send.zweitakthoden.de', url: 'https://resend.com' },
+      { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de. User-Benachrichtigungen: Privat-Nachrichten an Empfänger, Newsletter an Abonnenten.', url: null },
     ],
   },
   {
@@ -110,16 +110,20 @@ const TECH = [
 const LAST_UPDATED = '26.07.2026'
 
 const BASE_COLORS = [
-  { name: '--ink',          desc: 'Text (dunkel)' },
-  { name: '--ink-soft',     desc: 'Text (weich)' },
-  { name: '--ink-muted',    desc: 'Text (gedimmt)' },
-  { name: '--cream',        desc: 'Hintergrund' },
-  { name: '--parchment',    desc: 'Karten-BG' },
-  { name: '--hairline',     desc: 'Trennlinien' },
-  { name: '--cream-2',      desc: 'Leicht gedimmter Hintergrund (Karten, Inputs)' },
-  { name: '--ink-faint',    desc: 'Hauchdünne Trennlinie / Hover-Fläche' },
-  { name: '--accent-text',  desc: 'Akzentfarbe für Fließtext-Links (dunklere Variante)' },
-  { name: '--shadow',       desc: 'Box-Shadow-Farbe' },
+  { name: '--ink',               desc: 'Text (dunkel)' },
+  { name: '--ink-soft',          desc: 'Text (weich)' },
+  { name: '--ink-muted',         desc: 'Text (gedimmt)' },
+  { name: '--cream',             desc: 'Hintergrund' },
+  { name: '--parchment',         desc: 'Karten-BG' },
+  { name: '--hairline',          desc: 'Trennlinien' },
+  { name: '--cream-2',           desc: 'Leicht gedimmter Hintergrund (Karten, Inputs)' },
+  { name: '--ink-faint',         desc: 'Hauchdünne Trennlinie / Hover-Fläche' },
+  { name: '--accent-text',       desc: 'Akzentfarbe für Fließtext-Links (dunklere Variante)' },
+  { name: '--accent-accessible', desc: 'Kontraststarke Akzentfarbe für Links auf hellem Grund (WCAG AA)' },
+  { name: '--accent-hot',        desc: 'Aktiv- / Hover-Farbe in der Navigation' },
+  { name: '--accent-hot-2',      desc: 'Hellere Variante von --accent-hot' },
+  { name: '--accent-hot-3',      desc: 'Sehr helle Variante von --accent-hot' },
+  { name: '--shadow',            desc: 'Box-Shadow-Farbe' },
 ]
 
 export default function StyleguidePage() {
@@ -460,6 +464,44 @@ export default function StyleguidePage() {
               ['mms-search',            'MemberMapSplit: Suchfeld über der Liste'],
               ['mms-online-dot',        'Grüner Online-Indikator-Punkt auf Mitglieder-Avataren'],
               ['input-error-highlight', 'Rot-Outline auf Input-Feldern bei Validierungsfehler'],
+              // Desktop App Shell
+              ['zh-desktop-shell',    'Desktop-App-Grid (Sidebar 232px + Content 1fr) — verwendet in DesktopLayout'],
+              ['zd-side',             'Sidebar der Desktop-App: Brand, Nav-Gruppen, sticky links'],
+              ['zd-nav',              'Sidebar-Navigationslinks (flex, vertical, mit Gruppen-Labels)'],
+              ['zd-breadcrumb-bar',   'Breadcrumb-Leiste oben im Desktop-Content-Bereich'],
+              ['zd-inner',            'Content-Wrapper innerhalb der Desktop-Shell (Padding, max-width)'],
+              // Messages (Inbox)
+              ['msg-list',            'Nachrichten-Inbox: Liste aller Konversations-Zeilen'],
+              ['msg-row',             'Einzelne Konversations-Zeile (klickbar, Hover-Highlight)'],
+              ['msg-row unread',      'Ungelesene Konversations-Zeile (farbig hinterlegt)'],
+              ['msg-main',            'Haupt-Inhalt einer Nachrichtenzeile (Avatar + Content)'],
+              ['msg-content',         'Text-Bereich in Nachrichtenzeile (Absender, Betreff, Vorschau)'],
+              ['msg-sender',          'Absender-Name in Nachrichtenzeile'],
+              ['msg-subject',         'Betreff in Nachrichtenzeile'],
+              ['msg-preview',         'Vorschautext der letzten Nachricht in der Zeile'],
+              ['msg-dot',             'Ungelesen-Indikatorpunkt (blau, rund)'],
+              ['msg-bubble',          'Nachrichten-Blase im Thread (+ Modifier .own für eigene)'],
+              ['msg-bubble-header',   'Kopf einer Nachrichtenblase (Absender + Zeitstempel)'],
+              ['msg-bubble-body',     'Text-Inhalt einer Nachrichtenblase'],
+              // Onboarding Tour
+              ['zh-tour-overlay',     'Vollbild-Overlay für den modalen Onboarding-Einstieg'],
+              ['zh-tour-modal',       'Zentriertes Intro-Modal der Onboarding-Tour'],
+              ['zh-tour-backdrop',    'Halbdurchsichtiger Hintergrund für Tooltip-Schritte'],
+              ['zh-tour-tooltip',     'Tooltip-Schritt der Tour (positioniert neben Highlight-Element)'],
+              ['zh-tour-highlight',   'Hervorgehobenes Element während eines Tour-Schritts'],
+              ['zh-tour-arrow',       'Pfeil vom Tooltip zum hervorgehobenen Element'],
+              ['zh-tour-counter',     'Schritt-Anzeige im Tooltip (z.B. „2 / 5")'],
+              // Newsletter Admin
+              ['newsletter-layout',   'Zweispaltiges Layout im Admin-Newslettereditor (Editor + Vorschau)'],
+              ['newsletter-preview-col', 'Vorschau-Spalte im Newsletter-Admin (live E-Mail-Rendering)'],
+              ['newsletter-cta-row',  'CTA-Button-Reihe im Newsletter-Admin (Vorschau senden, Versenden)'],
+              // Feedback Widget
+              ['zh-feedback-btn',     'Floating-Feedback-Button (unten rechts, immer sichtbar)'],
+              ['zh-feedback-overlay', 'Vollbild-Overlay hinter dem Feedback-Modal'],
+              ['zh-feedback-modal',   'Feedback-Formular-Modal (Typ-Auswahl, Texteingabe)'],
+              ['zh-feedback-type',    'Feedback-Typ-Button (Lob / Bug / Idee, + .active Zustand)'],
+              ['zh-feedback-textarea','Textarea im Feedback-Modal'],
+              ['zh-feedback-success', 'Erfolgs-State nach Feedback-Absenden'],
             ].map(([cls, desc]) => (
               <div key={cls} style={{ display: 'flex', gap: 20, borderBottom: '1px solid var(--hairline)', padding: '10px 0', flexWrap: 'wrap' }}>
                 <code style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.5px', minWidth: 180 }}>.{cls}</code>
