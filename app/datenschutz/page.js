@@ -108,7 +108,7 @@ export default function DatenschutzPage() {
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Supabase Storage</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>), Termin-Titelbilder (Bucket: <code>event-images</code>) und Forum-Bilder in Posts und Antworten (Bucket: <code>forum-images</code>) nutzen wir Supabase Storage. Alle Fotos und Bilder sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
+              Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>), Termin-Titelbilder (Bucket: <code>event-images</code>), Forum-Bilder in Posts und Antworten (Bucket: <code>forum-images</code>) sowie Bilder in Newsletter-Mailings (Bucket: <code>newsletter-images</code>) nutzen wir Supabase Storage. Alle Fotos und Bilder sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
             </p>
           </section>
 

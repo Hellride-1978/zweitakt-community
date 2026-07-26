@@ -64,6 +64,13 @@ const TECH = [
     ],
   },
   {
+    cat: 'Stylesheets',
+    items: [
+      { name: 'globals.css', desc: 'Haupt-Stylesheet: Design Tokens (:root), alle zh-/zd-Klassen, Nav, Hero, Forum, Messages, Onboarding, Newsletter, Feedback-Widget, Desktop Shell. Importiert Tailwind CSS v4.', url: null },
+      { name: 'forum.css', desc: 'Eigenständiges Stylesheet für das Forum (app/forum/forum.css, ~517 Zeilen): Post-Karten, Antwort-Threads, Vote-Buttons, Bild-Anhänge, Tag-Pills, Lade-Skeletons. Wird direkt in app/forum/layout.js importiert.', url: null },
+    ],
+  },
+  {
     cat: 'Analytics',
     items: [
       { name: 'Vercel Analytics', desc: 'Cookieloser Pageview-Tracker von Vercel — keine IP-Speicherung, keine Nutzerprofile, DSGVO-konform. Ergänzt durch eigenes Tracking (page_views-Tabelle in Supabase) für Admin-Statistiken.', url: 'https://vercel.com/docs/analytics' },
@@ -82,8 +89,7 @@ const TECH = [
   {
     cat: 'Features & Extras',
     items: [
-      { name: 'Dark Mode', desc: 'Helles/Dunkles Theme via ThemeToggle — systembasierter Default, localStorage-persistent, Flash-frei via ThemeProvider', url: null },
-      { name: 'Color Theming', desc: '5 Farbpaletten (Blau, Rosa, Grün, Amber, Lila) — localStorage-persistent, Flash-frei via inline <script> in <head>', url: null },
+      { name: 'Color Theming', desc: '5 Farbpaletten (Blau, Rosa, Grün, Amber, Lila) — wählbar via ThemeToggle in der Nav, localStorage-persistent, Flash-frei durch inline <script> in <head> der layout.js (setzt CSS-Custom-Properties bevor React hydratisiert). Kein globales Dark/Light-Theme vorhanden — die Seite ist immer hell; „zd-card dark" ist eine komponentenlokale CSS-Variante (ink-Hintergrund) für einzelne Karten, kein seitenweiter Modus.', url: null },
       { name: 'Image Crop', desc: 'react-image-crop — Zuschneiden von Avataren (rund) und Fahrzeugfotos (4:3) direkt im Browser', url: null },
       { name: 'Password Strength', desc: 'Live-Passwortprüfung mit 4 Regeln + Stärkebalken auf Registrierung und Passwort-Reset', url: null },
       { name: 'Account Deletion', desc: 'Zweistufige Bestätigung, löscht Profile + Fahrzeuge + Teilnahmen + Storage + Auth-User via Service Role Key', url: null },
