@@ -113,7 +113,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '26.07.2026'
+const LAST_UPDATED = '27.07.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -433,6 +433,14 @@ export default function StyleguidePage() {
               ['zh-bike-card',      'Einzelne Bike-Kachel mit Bild, Body und Footer'],
               ['zh-credo',          'Dreispaltige Credo-Sektion'],
               ['zh-credo-card',     'Einzelne Credo-Kachel mit num, h3 und kicker'],
+              ['zh-credo-accordion','Akkordeon-Variante der Credo-Sektion (stacked, border-separated)'],
+              ['zh-credo-acc-item', 'Einzelner Akkordeon-Eintrag (+ .open für geöffneten Zustand)'],
+              ['zh-credo-acc-trigger','Klickbarer Button-Header des Akkordeon-Eintrags'],
+              ['acc-num',           'Eyebrow-Label im Akkordeon-Trigger (Mono, uppercase, muted)'],
+              ['acc-title',         'Display-Titel im Akkordeon-Trigger (h3, Boogaloo)'],
+              ['zh-credo-acc-icon', 'Plus/Minus-Icon im Trigger (rotiert 45° bei .open)'],
+              ['zh-credo-acc-body', 'Collapsible Content-Bereich (max-height Transition)'],
+              ['zh-credo-acc-inner','Inner Padding des ausgeklappten Inhalts (linksbündig mit Titel)'],
               ['events-card-grid',  'Responsives Event-Karten-Grid'],
               ['ec / ec-head / ec-body', 'Event-Card und ihre Bereiche (Datum-Block + Content)'],
               ['detail-grid',       'Zweispaltiges Layout für Event-/Fahrzeugdetailseiten'],

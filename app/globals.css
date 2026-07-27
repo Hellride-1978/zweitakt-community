@@ -705,6 +705,110 @@ body::before {
   line-height: 1.2;
 }
 
+/* ─── CREDO ACCORDION ─── */
+.zh-credo-accordion {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--gutter);
+  border-top: 1.5px solid var(--hairline);
+}
+.zh-credo-acc-item {
+  border-bottom: 1.5px solid var(--hairline);
+}
+.zh-credo-acc-trigger {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: clamp(20px, 3vw, 32px) 0;
+  text-align: left;
+}
+.zh-credo-acc-trigger:hover .acc-title { color: var(--accent-text); }
+.acc-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  min-width: 160px;
+  padding-top: 6px;
+}
+.acc-title {
+  flex: 1;
+  font-family: var(--display);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1;
+  color: var(--ink);
+  -webkit-text-stroke: 0.4px var(--ink);
+  paint-order: stroke fill;
+  margin: 0;
+  transition: color 0.18s;
+}
+.zh-credo-acc-icon {
+  font-family: var(--mono);
+  font-size: 22px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 4px;
+  transition: transform 0.25s ease;
+}
+.zh-credo-acc-item.open .zh-credo-acc-icon { transform: rotate(45deg); }
+.zh-credo-acc-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+.zh-credo-acc-item.open .zh-credo-acc-body { max-height: 700px; }
+.zh-credo-acc-inner {
+  padding: 0 0 clamp(20px, 3vw, 36px);
+  padding-left: calc(160px + 20px);
+}
+.zh-credo-acc-inner .lede {
+  font-size: clamp(15px, 1.5vw, 17px);
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+.zh-credo-acc-inner ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+.zh-credo-acc-inner ul li {
+  font-size: 15px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  line-height: 1.4;
+}
+.zh-credo-acc-inner ul li::before {
+  content: "—";
+  color: var(--ink-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.zh-credo-acc-inner .kicker {
+  font-family: var(--display);
+  font-size: clamp(18px, 1.8vw, 22px);
+  color: var(--ink-soft);
+  line-height: 1.2;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .acc-num { display: none; }
+  .zh-credo-acc-inner { padding-left: 0; }
+}
+
 /* ─── CREDO STRIP ─── */
 .credo-strip-wrap {
   max-width: 1280px;
