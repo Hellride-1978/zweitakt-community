@@ -47,6 +47,7 @@ const TECH = [
     items: [
       { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen (an Thread-Autor und alle vorherigen Antwortenden, mit max. 200-Zeichen-Vorschau) — versendet von noreply@send.zweitakthoden.de', url: 'https://resend.com' },
       { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de. User-Benachrichtigungen: Privat-Nachrichten an Empfänger, Newsletter an Abonnenten.', url: null },
+      { name: 'jose', desc: 'JWT-Bibliothek (JSON Object Signing and Encryption) — signiert und verifiziert die personalisierten Abmelde-Tokens im Newsletter-Footer. Jeder Token ist an die E-Mail-Adresse des Empfängers gebunden und läuft nicht ab.', url: 'https://github.com/panva/jose' },
     ],
   },
   {
