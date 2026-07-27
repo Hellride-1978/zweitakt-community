@@ -113,6 +113,11 @@ export default function DatenschutzPage() {
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Für Profilbilder (Bucket: <code>avatars</code>), Fahrzeugfotos (Bucket: <code>vehicles</code>), Schrauberhallen-Fotos (Bucket: <code>garage</code>), Termin-Titelbilder (Bucket: <code>event-images</code>), Forum-Bilder in Posts und Antworten (Bucket: <code>forum-images</code>) sowie Bilder in Newsletter-Mailings (Bucket: <code>newsletter-images</code>) nutzen wir Supabase Storage. Alle Fotos und Bilder sind öffentlich über eine URL abrufbar. Du kannst deine Fotos jederzeit in den Einstellungen löschen.
             </p>
+
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Google Search Console</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Wir nutzen Google Search Console (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland) zur Überwachung der Sichtbarkeit dieser Website in der Google-Suche. Dabei übermitteln wir unsere Sitemap an Google und erhalten anonymisierte Informationen darüber, wie die Seite in den Suchergebnissen erscheint (z.&nbsp;B. Klickzahlen, Impressionen, Crawling-Fehler). Es werden keine personenbezogenen Daten der Seitenbesucher an Google übermittelt. Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)' }}>policies.google.com/privacy</a>
+            </p>
           </section>
 
           <section>

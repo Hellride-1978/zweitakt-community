@@ -48,6 +48,7 @@ const TECH = [
       { name: 'Resend', desc: 'Transaktions-E-Mails an User: Registrierungsbestätigung (Supabase Auth) + Forum-Antwortbenachrichtigungen (an Thread-Autor und alle vorherigen Antwortenden, mit max. 200-Zeichen-Vorschau) — versendet von noreply@send.zweitakthoden.de', url: 'https://resend.com' },
       { name: 'Nodemailer / SMTP', desc: 'Interne Admin-Benachrichtigungen via SMTP: neues Mitglied, neuer Termin, neues Bike — versendet an info@zweitakthoden.de. User-Benachrichtigungen: Privat-Nachrichten an Empfänger, Newsletter an Abonnenten.', url: null },
       { name: 'jose', desc: 'JWT-Bibliothek (JSON Object Signing and Encryption) — signiert und verifiziert die personalisierten Abmelde-Tokens im Newsletter-Footer. Jeder Token ist an die E-Mail-Adresse des Empfängers gebunden und läuft nicht ab.', url: 'https://github.com/panva/jose' },
+      { name: 'bcryptjs', desc: 'Passwort-Hashing-Bibliothek (rein serverseitig) — wird für interne Token-Vergleiche und Hashing-Operationen verwendet. Keine Nutzer-Passwörter werden damit gehasht (das übernimmt Supabase Auth).', url: null },
     ],
   },
   {
@@ -60,7 +61,7 @@ const TECH = [
   {
     cat: 'Fonts & Icons',
     items: [
-      { name: 'Google Fonts', desc: 'Boogaloo (Display), DM Sans (Text), DM Mono (Mono) — via next/font', url: null },
+      { name: 'Google Fonts', desc: 'Boogaloo (Display), DM Sans (Text), DM Mono (Mono) — via next/font/google. Fonts werden beim Build heruntergeladen und self-hosted ausgeliefert — keine Runtime-Requests an Google-Server, kein Datenschutzproblem.', url: null },
       { name: 'Font Awesome 7', desc: 'Icons über @fortawesome/react-fontawesome — nur solid + brands', url: 'https://fontawesome.com' },
     ],
   },
@@ -131,6 +132,8 @@ const BASE_COLORS = [
   { name: '--accent-hot-2',      desc: 'Hellere Variante von --accent-hot' },
   { name: '--accent-hot-3',      desc: 'Sehr helle Variante von --accent-hot' },
   { name: '--shadow',            desc: 'Box-Shadow-Farbe' },
+  { name: '--background',        desc: 'Alias für --cream — Tailwind-Theme-Bridge (@theme inline)' },
+  { name: '--foreground',        desc: 'Alias für --ink — Tailwind-Theme-Bridge (@theme inline)' },
 ]
 
 export default function StyleguidePage() {
@@ -405,7 +408,18 @@ export default function StyleguidePage() {
               ['zh-error',        'Fehler-Box (rot)'],
               ['zh-pill',         'Kleines Badge / Tag'],
               ['zh-avatar',       'Runder Avatar-Container'],
-              ['zh-nav',          'Fixierte Navigation'],
+              ['zh-nav',          'Fixierte Navigation (position: fixed, z-index 1000, backdrop-blur)'],
+              ['zh-nav-inner',    'Zentrierter Nav-Container (max 1280px, flex, justify-content: space-between)'],
+              ['zh-nav-logo',     'Nav-Logo (Boogaloo, text-stroke, accent-Span für farbigen Teil)'],
+              ['zh-nav-links',    'Zentrierte Link-Liste (Desktop, absolute positioniert)'],
+              ['zh-nav-dropdown-wrap', 'Wrapper für Community-Dropdown (position: relative)'],
+              ['zh-nav-dropdown-trigger', 'Button zum Öffnen des Dropdowns (Mono, + .open state)'],
+              ['zh-nav-chevron',  'Pfeil-Icon im Dropdown-Trigger (rotiert bei .open)'],
+              ['zh-nav-dropdown', 'Dropdown-Panel (opacity-Transition, + .open state)'],
+              ['zh-nav-right',    'Rechte Seite der Nav (Icons + CTA, margin-left: auto)'],
+              ['zh-nav-icon-link','Icon-Button in Nav-Right (Nachrichten-Badge etc., 36×36px rund)'],
+              ['zh-nav-cta',     'CTA-Pill rechts in Nav (schwarz, Mono-Text, Hover → accent)'],
+              ['zh-nav-cta-dot', 'Blinkender grüner Punkt im Nav-CTA (animation zh-blink)'],
               ['zh-footer',       'Footer-Bereich'],
               ['zd-mono',         'Mono-Typografie-Helfer'],
               ['zd-h1 / zd-h2',   'Display-Überschriften mit em-Italic'],
