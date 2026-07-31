@@ -113,11 +113,12 @@ const TECH = [
       { name: 'Forum — Die Anlaufstelle', desc: 'Q&A-Forum mit Posts, Antworten, optionalen Bild-Anhängen (Supabase Storage, Bucket: forum-images), Upvote/Downvote-System, Tag-Filterung (Marken-Dropdown + Themen-Pills), Server Actions mit Zod-Validierung, E-Mail-Benachrichtigung bei Antworten via Resend', url: null },
       { name: 'PLZ-Nudge-Banner', desc: 'Modal-Nudge (PlzNudgeBanner) für eingeloggte User ohne hinterlegte PLZ — erscheint seitenübergreifend, außer auf der Profilseite. Kann für 7 Tage gesnoozed werden (localStorage: zh-plz-nudge-v3-snoozed). Verschwindet dauerhaft sobald eine PLZ gespeichert ist.', url: null },
       { name: 'Avatar-Lightbox', desc: 'AvatarLightbox-Komponente: Klick auf ein Profilbild öffnet eine Vollbild-Overlay-Ansicht des Avatars. Nutzt die bestehende .zh-avatar-Klasse, kein eigenes Stylesheet. Kein Modal-Fokus-Trap — Klick auf Overlay schließt.', url: null },
+      { name: 'Breadcrumb', desc: 'Breadcrumb-Navigationsleiste oben auf Desktop-Seiten (über DesktopLayout via crumb-Prop). Zeigt: Haus-Chip → Section-Chip → aktueller-Seiten-Chip. Nutzt inline Styles, keine eigene CSS-Klasse. Rendert nur wenn eine bekannte Section (events, vehicles, profiles, messages, schrauberhalle, forum) erkannt wird.', url: null },
     ],
   },
 ]
 
-const LAST_UPDATED = '28.07.2026'
+const LAST_UPDATED = '31.07.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -501,6 +502,16 @@ export default function StyleguidePage() {
               ['skip-link',         'WCAG-Skiplink „Zum Hauptinhalt springen" (nur sichtbar bei Fokus)'],
               ['feed-col',              'Flex-Spalten-Wrapper für Feed-Seiten (Forum, Datenschutz etc.)'],
               ['feed-head',             'Kopfzeile einer Feed-Seite mit Titel und optionalen Filtern'],
+              ['feed-grid',             '2-spaltiges Feed-Layout mit Rail (1fr + 320px)'],
+              ['feed-rail',             'Rechte Rail-Spalte in Feed-Layouts'],
+              ['create-grid',           'Erstell-Formular-Layout: Formular links + Vorschau rechts (2-spaltig)'],
+              ['create-form',           'Linke Formular-Spalte im create-grid'],
+              ['create-preview',        'Rechte Vorschau-Spalte im create-grid'],
+              ['form-row-2',            '2-spaltiges Grid für Formularzeilen (z.B. Ort + Datum)'],
+              ['garage-grid',           '2-spaltiges Grid für Schrauberhallen-Fotoupload (2×1fr)'],
+              ['bike-detail-grid',      'Zweispaltiges Layout auf Fahrzeugdetailseiten'],
+              ['bike-hero-big',         'Großes Hauptfoto auf Fahrzeugdetailseiten'],
+              ['bike-thumbs',           'Thumbnail-Reihe (3-spaltig) auf Fahrzeugdetailseiten'],
               ['zh-manifest',           'Manifest-Sektion auf der Startseite (großes Zitat/Statement)'],
               ['zh-closing',            'Abschluss-CTA-Sektion (dark, mit Radial-Gradient)'],
               ['credo-strip',           'Dreispaltige Info-Leiste (dark bg) auf der Startseite'],
