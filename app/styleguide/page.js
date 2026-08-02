@@ -118,7 +118,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '31.07.2026'
+const LAST_UPDATED = '02.08.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -129,8 +129,8 @@ const BASE_COLORS = [
   { name: '--hairline',          desc: 'Trennlinien' },
   { name: '--cream-2',           desc: 'Leicht gedimmter Hintergrund (Karten, Inputs)' },
   { name: '--ink-faint',         desc: 'Hauchdünne Trennlinie / Hover-Fläche' },
-  { name: '--accent-text',       desc: 'Akzentfarbe für Fließtext-Links (dunklere Variante)' },
-  { name: '--accent-accessible', desc: 'Kontraststarke Akzentfarbe für Links auf hellem Grund (WCAG AA)' },
+  { name: '--accent-text',       desc: 'Akzentfarbe für Fließtext-Links — statisch, wird beim Palettenwechsel NICHT aktualisiert (immer #1a6080)' },
+  { name: '--accent-accessible', desc: 'Kontraststarke Akzentfarbe für Links auf hellem Grund (WCAG AA) — palette-variabel, wird mit dem Farbschema gesetzt' },
   { name: '--accent-hot',        desc: 'Aktiv- / Hover-Farbe in der Navigation' },
   { name: '--accent-hot-2',      desc: 'Hellere Variante von --accent-hot' },
   { name: '--accent-hot-3',      desc: 'Sehr helle Variante von --accent-hot' },
@@ -200,6 +200,7 @@ export default function StyleguidePage() {
                     { label: 'accent-2', value: p.accent2 },
                     { label: 'accent-3', value: p.accent3 },
                     { label: 'accent-ink', value: p.accentInk },
+                    { label: 'accent-accessible', value: p.accentAccessible },
                   ].map((c) => (
                     <div key={c.label} style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 100 }}>
                       <div style={{ width: '100%', height: 48, borderRadius: 10, background: c.value, border: '1.5px solid var(--hairline)' }} />
@@ -286,6 +287,13 @@ export default function StyleguidePage() {
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                 <button className="zh-btn zh-btn-outline">Abbrechen</button>
                 <button className="zh-btn zh-btn-outline">Bearbeiten <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 12 }} /></button>
+              </div>
+            </div>
+            <div>
+              <Label>zh-btn-accent — Accent-Farbe mit hellem Box-Shadow</Label>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                <button className="zh-btn-accent">Jetzt mitmachen <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 12 }} /></button>
+                <button className="zh-btn-accent" disabled style={{ opacity: 0.5 }}>Disabled</button>
               </div>
             </div>
             <div>

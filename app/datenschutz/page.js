@@ -123,6 +123,11 @@ export default function DatenschutzPage() {
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Wir nutzen Google Search Console (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland) zur Überwachung der Sichtbarkeit dieser Website in der Google-Suche. Dabei übermitteln wir unsere Sitemap an Google und erhalten anonymisierte Informationen darüber, wie die Seite in den Suchergebnissen erscheint (z.&nbsp;B. Klickzahlen, Impressionen, Crawling-Fehler). Es werden keine personenbezogenen Daten der Seitenbesucher an Google übermittelt. Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-accessible)' }}>policies.google.com/privacy</a>
             </p>
+
+            <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Externe Links</h3>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Diese Website enthält Links zu externen Plattformen, z.&nbsp;B. Instagram (Meta Platforms Ireland Limited, 4 Grand Canal Square, Dublin 2, Irland). Beim Klick auf solche Links verlässt du unsere Plattform. Für die Datenverarbeitung auf diesen externen Seiten ist ausschließlich der jeweilige Anbieter verantwortlich. Wir haben keinen Einfluss auf deren Datenschutzpraktiken und empfehlen, die jeweiligen Datenschutzerklärungen zu lesen.
+            </p>
           </section>
 
           <section>
