@@ -114,11 +114,12 @@ const TECH = [
       { name: 'PLZ-Nudge-Banner', desc: 'Modal-Nudge (PlzNudgeBanner) für eingeloggte User ohne hinterlegte PLZ — erscheint seitenübergreifend, außer auf der Profilseite. Kann für 7 Tage gesnoozed werden (localStorage: zh-plz-nudge-v3-snoozed). Verschwindet dauerhaft sobald eine PLZ gespeichert ist.', url: null },
       { name: 'Avatar-Lightbox', desc: 'AvatarLightbox-Komponente: Klick auf ein Profilbild öffnet eine Vollbild-Overlay-Ansicht des Avatars. Nutzt die bestehende .zh-avatar-Klasse, kein eigenes Stylesheet. Kein Modal-Fokus-Trap — Klick auf Overlay schließt.', url: null },
       { name: 'Breadcrumb', desc: 'Breadcrumb-Navigationsleiste oben auf Desktop-Seiten (über DesktopLayout via crumb-Prop). Zeigt: Haus-Chip → Section-Chip → aktueller-Seiten-Chip. Nutzt inline Styles, keine eigene CSS-Klasse. Rendert nur wenn eine bekannte Section (events, vehicles, profiles, messages, schrauberhalle, forum) erkannt wird.', url: null },
+      { name: 'Admin-Changelog', desc: 'Changelog-Übersicht aller Features und Fixes unter /admin/changelog — nur für Admin sichtbar. Einträge nach Datum oder Kategorie sortierbar, farblich nach Kategorie codiert (Farb-Legende ein-/ausblendbar). Enthält Todo-Liste für ausstehende SQL-Migrationen. Statische Datenliste direkt im JS, kein API-Aufruf.', url: null },
     ],
   },
 ]
 
-const LAST_UPDATED = '02.08.2026'
+const LAST_UPDATED = '03.08.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -451,6 +452,7 @@ export default function StyleguidePage() {
               ['zh-member-card',  'Einzelne Member-Kachel'],
               ['zh-bubble-stack',   'Hero-Schriftzug (animiert, 3 Zeilen)'],
               ['zh-hero-stats',     'Stats-Leiste im Hero (klickbare Links)'],
+              ['zh-hero-actions',   'Wrapper für CTA-Buttons im Hero (flex, opacity-Einstiegsanimation)'],
               ['zh-stat / zh-stat-link', 'Einzelne Stat-Zahl + Label, als Link'],
               ['zd-ride',           'Event-Zeile mit Datum-Block'],
               ['zd-bike',           'Fahrzeug-Kachel in Garage-Grid'],
@@ -501,7 +503,11 @@ export default function StyleguidePage() {
               ['zh-vehicle-photo',  'Foto-Container 4:3 mit Hatch-Placeholder'],
               ['zh-btn-accent',     'Dritter Button-Typ: Accent-Farbe mit hellem Box-Shadow'],
               ['zh-hero-split',     'Hero-Variante mit Text links, Karte rechts (ab 1024px zweispaltig)'],
+              ['zh-hero-text',      'Linke Text-Spalte in zh-hero-split (45% Breite, flex-column, align-items: flex-start)'],
+              ['zh-hero-map-col',   'Rechte Karten-Spalte in zh-hero-split (flex: 1 1 0, min-width: 0, align-self: center)'],
               ['zh-ticker',         'Scrollender Marquee-Streifen (dark bg, pausiert on hover)'],
+              ['zh-ticker-inner',   'Innerer Marquee-Container in zh-ticker (display: inline-flex, animation zh-ticker 36s linear)'],
+              ['zh-ticker-item',    'Einzelnes Ticker-Element (Boogaloo, 22px, letter-spacing 2px; + .hot-Variante für weiße Farbe)'],
               ['zh-teaser',         'Dreispaltiges Feature-Teaser-Grid'],
               ['zh-teaser-item',    'Einzelne Teaser-Zeile mit Icon, Text und Pfeil'],
               ['zh-clubs-grid',     'Vierspaltiges Grid für Club-Kacheln'],
