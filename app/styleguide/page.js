@@ -119,7 +119,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '03.08.2026'
+const LAST_UPDATED = '04.08.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -130,7 +130,11 @@ const BASE_COLORS = [
   { name: '--hairline',          desc: 'Trennlinien' },
   { name: '--cream-2',           desc: 'Leicht gedimmter Hintergrund (Karten, Inputs)' },
   { name: '--ink-faint',         desc: 'Hauchdünne Trennlinie / Hover-Fläche' },
-  { name: '--accent-text',       desc: 'Akzentfarbe für Fließtext-Links — statisch, wird beim Palettenwechsel NICHT aktualisiert (immer #1a6080)' },
+  { name: '--accent',             desc: 'Primäre Akzentfarbe (palette-variabel) — Button-BG, Highlights, aktive Zustände' },
+  { name: '--accent-2',           desc: 'Zweite Akzentstufe (palette-variabel) — hellere Variante, z.&nbsp;B. Hero-Schriftzug Zeile 2' },
+  { name: '--accent-3',           desc: 'Dritte Akzentstufe (palette-variabel) — sehr hell, z.&nbsp;B. Hero-Schriftzug Zeile 1' },
+  { name: '--accent-ink',         desc: 'Dunkle Akzentfarbe (palette-variabel) — Links, Icons, Nav-Logo-Span' },
+  { name: '--accent-text',        desc: 'Akzentfarbe für Fließtext-Links — statisch, wird beim Palettenwechsel NICHT aktualisiert (immer #1a6080)' },
   { name: '--accent-accessible', desc: 'Kontraststarke Akzentfarbe für Links auf hellem Grund (WCAG AA) — palette-variabel, wird mit dem Farbschema gesetzt' },
   { name: '--accent-hot',        desc: 'Aktiv- / Hover-Farbe in der Navigation' },
   { name: '--accent-hot-2',      desc: 'Hellere Variante von --accent-hot' },
@@ -527,6 +531,8 @@ export default function StyleguidePage() {
               ['bike-hero-big',         'Großes Hauptfoto auf Fahrzeugdetailseiten'],
               ['bike-thumbs',           'Thumbnail-Reihe (3-spaltig) auf Fahrzeugdetailseiten'],
               ['zh-manifest',           'Manifest-Sektion auf der Startseite (großes Zitat/Statement)'],
+              ['zh-manifest-headline',  'Großer Display-Schriftzug im Manifest (clamp 40–92px, Italic via em)'],
+              ['zh-manifest-lead',      'Fließtext-Absatz unter dem Manifest-Headline (clamp 18–24px, max 52ch)'],
               ['zh-closing',            'Abschluss-CTA-Sektion (dark, mit Radial-Gradient)'],
               ['credo-strip',           'Dreispaltige Info-Leiste (dark bg) auf der Startseite'],
               ['mms-split',             'MemberMapSplit: zweispaltiges Grid (Liste + Karte)'],

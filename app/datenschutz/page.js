@@ -44,6 +44,7 @@ export default function DatenschutzPage() {
               <li>Privat-Nachrichten (Inhalt, Zeitstempel, Sender/Empfänger – nur für die beteiligten Nutzer sichtbar)</li>
               <li>Likes auf Terminen, Profilen und Fahrzeugen (Zuordnung zum Profil und zum Zielobjekt)</li>
               <li>Letzter Aktivitätszeitpunkt (<code>last_seen</code>) – wird alle 5 Minuten automatisch aktualisiert solange du eingeloggt bist, für den Online-Status auf Profilkacheln</li>
+              <li>Benachrichtigungs-Einstellungen (z.&nbsp;B. ob du bei neuen Forum-Antworten per E-Mail benachrichtigt werden möchtest) – in deinem Profil gespeichert und jederzeit in den Einstellungen änderbar</li>
             </ul>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
               Daten, die du in deinem Profil, bei Terminen oder im Forum einträgst, sind öffentlich sichtbar — auch ohne Anmeldung. Forum-Beiträge können von dir als Autor jederzeit bearbeitet oder gelöscht werden.
