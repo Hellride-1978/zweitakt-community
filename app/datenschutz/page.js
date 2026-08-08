@@ -13,6 +13,7 @@ export default function DatenschutzPage() {
           <div>
             <div className="zd-mono accent">Rechtliches</div>
             <h1 className="zd-h1" style={{ marginTop: 6 }}>Datenschutz.</h1>
+            <p style={{ fontFamily: 'var(--mono)', fontSize: '10px', letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', marginTop: 8 }}>Stand: August 2026</p>
           </div>
         </div>
         <div style={{ maxWidth: 780, margin: '0 auto' }}>
@@ -50,25 +51,53 @@ export default function DatenschutzPage() {
               Daten, die du in deinem Profil, bei Terminen oder im Forum einträgst, sind öffentlich sichtbar — auch ohne Anmeldung. Forum-Beiträge können von dir als Autor jederzeit bearbeitet oder gelöscht werden.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
-              Wenn du das Kontaktformular verwendest, werden Name, E-Mail-Adresse und Nachricht dauerhaft in unserer Datenbank gespeichert. Wenn du eine Schrauberhalle anlegst, werden Beschreibung, bis zu fünf Fotos und deine Schrauber-Skills gespeichert und sind für alle Mitglieder öffentlich sichtbar.
+              Wenn du das Kontaktformular verwendest, werden Name, E-Mail-Adresse und Nachricht in unserer Datenbank gespeichert (Speicherdauer: 3 Jahre). Wenn du eine Schrauberhalle anlegst, werden Beschreibung, bis zu fünf Fotos und deine Schrauber-Skills gespeichert und sind für alle Mitglieder öffentlich sichtbar.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
               Wenn du das Feedback-Widget (der Button unten rechts auf jeder Seite) verwendest, werden Feedback-Typ (Lob, Bug oder Idee), Nachrichtentext sowie die aktuelle Seiten-URL in unserer Datenbank gespeichert. Die Angabe einer E-Mail-Adresse ist optional — wird sie angegeben, wird sie zusammen mit dem Feedback-Inhalt als interne Admin-Benachrichtigung per E-Mail (SMTP, Strato AG) an info@zweitakthoden.de weitergeleitet. Das Feedback-Widget kann auch ohne Anmeldung genutzt werden — in diesem Fall wird kein Nutzerkonto verknüpft.
             </p>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
+              Wenn du dein Konto löschst, werden dein Profil, deine Fahrzeuge, deine Ausfahrts-Teilnahmen, deine Schrauberhalle, deine Forum-Beiträge und -Antworten sowie dein Profilbild sofort und unwiderruflich gelöscht. Feedback-Einträge verbleiben anonymisiert in unserer Datenbank (die Zuordnung zu deinem Profil wird entfernt). Dein Newsletter-Abonnement (E-Mail-Adresse und Anmeldezeitpunkt) verbleibt zu gesetzlichen Nachweiszwecken gespeichert; du kannst die vollständige Löschung dieser Daten jederzeit per E-Mail an uns beantragen.
+            </p>
           </section>
 
           <section>
-            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>3. Zweck der Verarbeitung</h2>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>3. Zweck der Verarbeitung und Rechtsgrundlagen</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Deine Daten werden ausschließlich für den Betrieb dieser Community-Plattform verwendet: Anmeldung, Profilverwaltung und Koordination von Ausfahrten. Eine Weitergabe an Dritte zu Werbezwecken findet nicht statt.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
               Deine E-Mail-Adresse wird außerdem verwendet, um dich über Community-Aktivitäten zu benachrichtigen, an denen du beteiligt bist: neue Kommentare auf deinen Terminen oder Fahrzeugen, Änderungen an Terminen für die du angemeldet bist, neue Teilnehmer an deinen Terminen sowie neue Privat-Nachrichten von anderen Mitgliedern. Wenn du den Newsletter abonnierst, erhältst du gelegentlich Community-Updates und Neuigkeiten von Zweitakthoden — nur mit deiner ausdrücklichen Einwilligung (Double-Opt-in).
             </p>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '12px' }}>
+              Die Rechtsgrundlagen der jeweiligen Verarbeitungen im Überblick:
+            </p>
+            <ul style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.9, color: 'var(--ink-soft)', paddingLeft: '20px', marginTop: '8px' }}>
+              <li><strong>Profil, Fahrzeuge, Termine, Forum, Nachrichten, Kommentare, Likes:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung / Betrieb der Plattform)</li>
+              <li><strong>Benachrichtigungs-E-Mails (Kommentare, Teilnahmen, Nachrichten):</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung)</li>
+              <li><strong>Newsletter:</strong> Art. 6 Abs. 1 lit. a DSGVO (ausdrückliche Einwilligung via Double-Opt-in)</li>
+              <li><strong>Eigenes Seitenaufruf-Tracking (page_views):</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse — Analyse und Verbesserung des Plattformbetriebs; kein Personenbezug)</li>
+              <li><strong>Kontaktformular und Feedback-Widget:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse — Bearbeitung von Anfragen und Verbesserung der Plattform)</li>
+            </ul>
           </section>
 
           <section>
-            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>4. Eingesetzte Dienste</h2>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>4. Speicherdauer</h2>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+              Wir speichern personenbezogene Daten nur so lange, wie es für den jeweiligen Zweck erforderlich ist oder gesetzliche Aufbewahrungsfristen bestehen. Im Einzelnen:
+            </p>
+            <ul style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.9, color: 'var(--ink-soft)', paddingLeft: '20px', marginTop: '8px' }}>
+              <li><strong>Profildaten, Fahrzeuge, Schrauberhalle, Forum-Beiträge und -Antworten:</strong> Bis zur Kontolöschung — danach sofortige und automatische Löschung</li>
+              <li><strong>Newsletter-Abonnements:</strong> Die E-Mail-Adresse und der Anmeldezeitpunkt werden nach Abmeldung für 3 Jahre als Double-Opt-in-Nachweis aufbewahrt (§ 7 Abs. 2 Nr. 3 UWG), danach gelöscht</li>
+              <li><strong>Kontaktformular-Nachrichten:</strong> 3 Jahre ab Eingang (allgemeine Verjährungsfrist nach § 195 BGB)</li>
+              <li><strong>Feedback-Einträge:</strong> 2 Jahre ab Eingang, danach anonymisiert oder gelöscht</li>
+              <li><strong>Seitenaufruf-Statistiken (page_views):</strong> Rollierend 12 Monate — ältere Einträge werden gelöscht</li>
+              <li><strong>Vercel-Zugriffslogs:</strong> Gemäß Vercel-Datenschutzrichtlinie (typisch: 30 Tage)</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>5. Eingesetzte Dienste</h2>
 
             <h3 style={{ fontFamily: 'var(--sans)', fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px', textTransform: 'uppercase', color: 'var(--ink)', marginBottom: '6px', marginTop: '16px' }}>Supabase</h3>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
@@ -132,7 +161,7 @@ export default function DatenschutzPage() {
           </section>
 
           <section>
-            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>5. Cookies und lokale Speicherung</h2>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>6. Cookies und lokale Speicherung</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Wir setzen ausschließlich technisch notwendige Cookies und lokale Speicherung ein, um deine Anmeldung zu ermöglichen. Es werden keine Tracking- oder Werbe-Cookies verwendet.
             </p>
@@ -142,7 +171,7 @@ export default function DatenschutzPage() {
           </section>
 
           <section>
-            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>6. Deine Rechte</h2>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>7. Deine Rechte</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Du hast jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung deiner gespeicherten Daten sowie das Recht auf Datenübertragbarkeit. Wende dich dazu an: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-accessible)' }}>info@zweitakthoden.de</a>
             </p>
@@ -152,7 +181,7 @@ export default function DatenschutzPage() {
           </section>
 
           <section>
-            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>7. Kontakt Datenschutz</h2>
+            <h2 style={{ fontFamily: 'var(--display)', fontSize: '20px', marginBottom: '8px' }}>8. Kontakt Datenschutz</h2>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)' }}>
               Bei Fragen zum Datenschutz erreichst du uns unter: <a href="mailto:info@zweitakthoden.de" style={{ color: 'var(--accent-accessible)' }}>info@zweitakthoden.de</a>
             </p>

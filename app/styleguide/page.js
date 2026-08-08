@@ -92,7 +92,7 @@ const TECH = [
     cat: 'Features & Extras',
     items: [
       { name: 'Color Theming', desc: '5 Farbpaletten (Blau, Rosa, Grün, Amber, Lila) — wählbar via ThemeToggle in der Nav, localStorage-persistent, Flash-frei durch inline <script> in <head> der layout.js (setzt CSS-Custom-Properties bevor React hydratisiert). Kein globales Dark/Light-Theme vorhanden — die Seite ist immer hell; „zd-card dark" ist eine komponentenlokale CSS-Variante (ink-Hintergrund) für einzelne Karten, kein seitenweiter Modus.', url: null },
-      { name: 'Image Crop', desc: 'react-image-crop — Zuschneiden von Avataren (rund) und Fahrzeugfotos (4:3) direkt im Browser', url: null },
+      { name: 'Image Crop', desc: 'react-image-crop — Zuschneiden von Avataren (rund) und Fahrzeugfotos (4:3) direkt im Browser. Implementiert über components/CropModal.js (gemeinsames Modal für Profil- und Fahrzeug-Upload).', url: null },
       { name: 'Password Strength', desc: 'Live-Passwortprüfung mit 4 Regeln + Stärkebalken auf Registrierung und Passwort-Reset', url: null },
       { name: 'Account Deletion', desc: 'Zweistufige Bestätigung, löscht Profile + Fahrzeuge + Teilnahmen + Storage + Auth-User via Service Role Key', url: null },
       { name: 'Onboarding Flow', desc: 'Neue User werden nach Login/OAuth-Callback zu /profile/edit weitergeleitet wenn kein Name gesetzt ist', url: null },
@@ -119,7 +119,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '04.08.2026'
+const LAST_UPDATED = '07.08.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
@@ -489,7 +489,7 @@ export default function StyleguidePage() {
               ['ec / ec-head / ec-body', 'Event-Card und ihre Bereiche (ec-head: Datum-Block dunkel; ec-body: Content-Bereich)'],
               ['zh-attendees',      'Teilnehmer-Avatar-Stack: überlagernde Avatare (margin-left: -8px) + Zähler-Chip'],
               ['zh-post-card',      'Forum-Post-Kachel in der Übersicht (Border, Hover-Shadow — separate Klasse neben forum-card)'],
-              ['zh-club-list-card', 'Club-Kachel in der Listen-Ansicht (Border, Hover-Lift — kompakter als zh-club-card)'],
+              ['zh-club-list-card', 'Club-Kachel in der Listen-Ansicht (Border, Hover-Lift — kompakter als zh-club-card) — CSS vorbereitet, Feature noch in Entwicklung'],
               ['detail-grid',       'Zweispaltiges Layout für Event-/Fahrzeugdetailseiten'],
               ['msg-bubble',        'Nachrichten-Blase im Thread (+ Modifier .own)'],
               ['zh-mobile-menu',    'Mobile Navigationsoverlay'],
@@ -514,8 +514,8 @@ export default function StyleguidePage() {
               ['zh-ticker-item',    'Einzelnes Ticker-Element (Boogaloo, 22px, letter-spacing 2px; + .hot-Variante für weiße Farbe)'],
               ['zh-teaser',         'Dreispaltiges Feature-Teaser-Grid'],
               ['zh-teaser-item',    'Einzelne Teaser-Zeile mit Icon, Text und Pfeil'],
-              ['zh-clubs-grid',     'Vierspaltiges Grid für Club-Kacheln'],
-              ['zh-club-card',      'Einzelne Club-Kachel mit Bild, Stamp und Body'],
+              ['zh-clubs-grid',     'Vierspaltiges Grid für Club-Kacheln — CSS vorbereitet, Feature noch in Entwicklung (keine aktive /clubs-Seite)'],
+              ['zh-club-card',      'Einzelne Club-Kachel mit Bild, Stamp und Body — CSS vorbereitet, Feature noch in Entwicklung'],
               ['zh-roller-btn',     'Farbwechsel-Button (animiert durch alle 5 Paletten)'],
               ['skip-link',         'WCAG-Skiplink „Zum Hauptinhalt springen" (nur sichtbar bei Fokus)'],
               ['feed-col',              'Flex-Spalten-Wrapper für Feed-Seiten (Forum, Datenschutz etc.)'],
@@ -541,9 +541,9 @@ export default function StyleguidePage() {
               ['mms-search',            'MemberMapSplit: Suchfeld über der Liste'],
               ['mms-online-dot',        'Grüner Online-Indikator-Punkt auf Mitglieder-Avataren'],
               ['input-error-highlight', 'Rot-Outline auf Input-Feldern bei Validierungsfehler'],
-              // Desktop App Shell
+              // Desktop App Shell — components/DesktopLayout.js (Wrapper), components/DesktopSidebar.js (Sidebar-Spalte), components/DesktopTopRow.js (Breadcrumb + Aktionsleiste)
               ['zh-desktop-shell',    'Desktop-App-Grid (Sidebar 232px + Content 1fr) — verwendet in DesktopLayout'],
-              ['zd-side',             'Sidebar der Desktop-App: Brand, Nav-Gruppen, sticky links'],
+              ['zd-side',             'Sidebar der Desktop-App: Brand, Nav-Gruppen, sticky links — gerendert via DesktopSidebar.js'],
               ['zd-nav',              'Sidebar-Navigationslinks (flex, vertical, mit Gruppen-Labels)'],
               ['zd-breadcrumb-bar',   'Breadcrumb-Leiste oben im Desktop-Content-Bereich'],
               ['zd-inner',            'Content-Wrapper innerhalb der Desktop-Shell (Padding, max-width)'],
