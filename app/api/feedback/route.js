@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
-import { requireBearerAuth } from '@/lib/internalApiAuth'
+import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
 
 const TYPE_LABELS = { lob: '👍 Lob', bug: '🐛 Bug melden', idee: '💡 Idee / Wunsch' }
 
@@ -55,6 +55,12 @@ function buildHtml({ typeLabel, message, url, senderLabel }) {
 
 export async function POST(request) {
   try {
+    // Feedback ist bewusst auch ohne Anmeldung möglich – deshalb kein Auth-Zwang,
+    // stattdessen Rate-Limit gegen Missbrauch (jeder Aufruf löst SMTP-Versand aus).
+    const ip = getClientIp(request)
+    const rateLimitError = rateLimit(`feedback:${ip}`, 5, 60_000)
+    if (rateLimitError) return rateLimitError
+
     // Token optional – eingeloggte User werden identifiziert, anonymes Feedback bleibt erlaubt
     const token = request.headers.get('Authorization')?.replace('Bearer ', '')
     let verifiedUserId = null

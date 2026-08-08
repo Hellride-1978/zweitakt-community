@@ -183,7 +183,11 @@ function EditProfilePageInner() {
   const handleDelete = async () => {
     setDeleting(true)
     try {
-      const res = await fetch('/api/delete-account', { method: 'DELETE' })
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/delete-account', {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${session?.access_token}` },
+      })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       await supabase.auth.signOut()
