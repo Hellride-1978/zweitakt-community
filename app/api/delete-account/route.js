@@ -10,21 +10,43 @@ const USER_BUCKETS = [
   { bucket: 'event-images', prefix: (uid) => uid },
 ]
 
+const PAGE_SIZE = 100
+
+// list() liefert per Default nur 100 Einträge – deshalb seitenweise durchgehen.
+// Erst vollständig auflisten, dann löschen: würde man währenddessen löschen,
+// verschieben sich die Offsets und es bliebe etwas stehen.
+async function listAll(admin, bucket, prefix) {
+  const all = []
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const { data, error } = await admin.storage
+      .from(bucket)
+      .list(prefix, { limit: PAGE_SIZE, offset })
+    if (error) throw error
+    if (!data?.length) break
+    all.push(...data)
+    if (data.length < PAGE_SIZE) break
+  }
+  return all
+}
+
 // Löscht rekursiv alle Dateien unterhalb eines Präfix. Fehler werden geloggt,
 // brechen die Kontolöschung aber nicht ab – die DB-Löschung hat Vorrang.
+// Ordner erkennt man daran, dass id null ist (so dokumentiert in storage-js).
 async function removeFolder(admin, bucket, prefix) {
   try {
-    const { data: entries, error } = await admin.storage.from(bucket).list(prefix, { limit: 1000 })
-    if (error || !entries?.length) return
+    const entries = await listAll(admin, bucket, prefix)
+    if (!entries.length) return
 
     const files = entries.filter(e => e.id !== null).map(e => `${prefix}/${e.name}`)
-    if (files.length) {
-      const { error: rmError } = await admin.storage.from(bucket).remove(files)
+    for (let i = 0; i < files.length; i += PAGE_SIZE) {
+      const { error: rmError } = await admin.storage
+        .from(bucket)
+        .remove(files.slice(i, i + PAGE_SIZE))
       if (rmError) console.error(`delete-account: remove failed for ${bucket}/${prefix}`, rmError)
     }
 
-    // Unterordner (z.B. vehicles/<uid>/ hat keine, garage/<uid>/ ebenfalls nicht –
-    // aber falls sich das Pfadschema ändert, bleibt hier nichts liegen)
+    // Unterordner: aktuell legt kein Upload-Pfad welche an, aber falls sich das
+    // Schema ändert, bleibt hier trotzdem nichts liegen.
     for (const dir of entries.filter(e => e.id === null)) {
       await removeFolder(admin, bucket, `${prefix}/${dir.name}`)
     }
@@ -62,10 +84,13 @@ export async function DELETE(request) {
     if (avatarError) console.error('delete-account: avatar removal failed', avatarError)
 
     // comments, likes, messages, forum_*, garage* hängen per ON DELETE CASCADE an
-    // profiles. Die beiden folgenden Löschungen sind dadurch eigentlich redundant –
-    // sie bleiben bewusst stehen, weil das reale FK-Verhalten der Produktions-DB
-    // nicht aus den Migrationen im Repo hervorgeht (siehe SUPABASE_SETUP.md).
+    // profiles. Die folgenden Löschungen sind dadurch eigentlich redundant – sie
+    // stehen bewusst hier, weil das reale FK-Verhalten der Produktions-DB nicht aus
+    // ausführbaren Migrationen hervorgeht, sondern nur aus SUPABASE_SETUP.md.
+    // Reihenfolge: erst eigene Teilnahmen, dann eigene Termine (das räumt auch die
+    // Teilnahmen anderer an diesen Terminen ab), dann Fahrzeuge.
     await admin.from('ride_participants').delete().eq('user_id', user.id)
+    await admin.from('rides').delete().eq('creator_id', user.id)
     await admin.from('vehicles').delete().eq('user_id', user.id)
 
     const { error: profileError } = await admin.from('profiles').delete().eq('id', user.id)
