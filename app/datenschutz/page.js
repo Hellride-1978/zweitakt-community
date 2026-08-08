@@ -52,7 +52,7 @@ export default function DatenschutzPage() {
               Daten, die du in deinem Profil, bei Terminen oder im Forum einträgst, sind öffentlich sichtbar — auch ohne Anmeldung. Forum-Beiträge können von dir als Autor jederzeit bearbeitet oder gelöscht werden.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
-              Wenn du das Kontaktformular verwendest, werden Name, E-Mail-Adresse und Nachricht in unserer Datenbank gespeichert (Speicherdauer: 3 Jahre). Wenn du eine Schrauberhalle anlegst, werden Beschreibung, bis zu fünf Fotos und deine Schrauber-Skills gespeichert und sind für alle Mitglieder öffentlich sichtbar.
+              Wenn du das Kontaktformular verwendest, werden Name, E-Mail-Adresse und Nachricht in unserer Datenbank gespeichert (zur Speicherdauer siehe Abschnitt 4). Wenn du eine Schrauberhalle anlegst, werden Beschreibung, bis zu fünf Fotos und deine Schrauber-Skills gespeichert und sind für alle Mitglieder öffentlich sichtbar.
             </p>
             <p style={{ fontFamily: 'var(--sans)', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink-soft)', marginTop: '8px' }}>
               Wenn du das Feedback-Widget (der Button unten rechts auf jeder Seite) verwendest, werden Feedback-Typ (Lob, Bug oder Idee), Nachrichtentext sowie die aktuelle Seiten-URL in unserer Datenbank gespeichert. Die Angabe einer E-Mail-Adresse ist optional — wird sie angegeben, wird sie zusammen mit dem Feedback-Inhalt als interne Admin-Benachrichtigung per E-Mail (SMTP, Strato AG) an info@zweitakthoden.de weitergeleitet. Das Feedback-Widget kann auch ohne Anmeldung genutzt werden — in diesem Fall wird kein Nutzerkonto verknüpft.
