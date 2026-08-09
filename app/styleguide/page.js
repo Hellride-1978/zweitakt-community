@@ -38,8 +38,9 @@ const TECH = [
   {
     cat: 'Backend & Datenbank',
     items: [
-      { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos)', url: 'https://supabase.com' },
+      { name: 'Supabase', desc: 'PostgreSQL-Datenbank, Auth (E-Mail + Google OAuth), Row Level Security, Storage (Avatare & Fahrzeugfotos). PostGIS-Extension aktiv: ermöglicht die Umkreissuche (find_users_nearby-RPC, ST_DWithin) auf der Schrauber-Karte.', url: 'https://supabase.com' },
       { name: 'Supabase Storage', desc: 'Buckets: avatars (Profilbilder), vehicles (Fahrzeugfotos), garage (Schrauberhallen-Fotos), event-images (Termin-Titelbilder), forum-images (Bild-Anhänge in Forum-Posts und -Antworten), newsletter-images (Bilder in Newsletter-Mailings) – öffentliche Bild-URLs mit Cache-Busting', url: null },
+      { name: 'Zod v4', desc: 'Schema-Validierung serverseitig in Forum-Server-Actions (app/forum/actions.js) — Post- und Antwortformular. Kein Drittdienst, keine Datenübertragung nach außen.', url: 'https://zod.dev' },
     ],
   },
   {
@@ -121,7 +122,7 @@ const TECH = [
   },
 ]
 
-const LAST_UPDATED = '08.08.2026'
+const LAST_UPDATED = '09.08.2026'
 
 const BASE_COLORS = [
   { name: '--ink',               desc: 'Text (dunkel)' },
