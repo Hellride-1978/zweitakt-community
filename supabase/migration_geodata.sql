@@ -1,6 +1,11 @@
 -- Geodaten für Umkreissuche in profiles
 
 -- PostGIS aktivieren (auf Supabase meist schon aktiv)
+-- ACHTUNG: ohne SCHEMA-Angabe landet die Extension in "public" und legt
+-- dort spatial_ref_sys ohne RLS an → Security-Advisor meldet
+-- "rls_disabled_in_public". Bei einer Neuinstallation stattdessen
+-- "CREATE EXTENSION postgis SCHEMA extensions;" verwenden.
+-- Bestandsfix siehe migration_rls_fix_20260812.sql.
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- Felder zur profiles-Tabelle hinzufügen
