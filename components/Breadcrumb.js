@@ -13,6 +13,7 @@ const SECTION_MAP = {
   messages:       { label: 'Nachrichten',   href: '/messages' },
   schrauberhalle: { label: 'Schrauberhalle',href: '/schrauberhalle' },
   forum:          { label: 'Forum',         href: '/forum' },
+  music:          { label: 'Poster-Generator', href: '/music' },
 }
 
 const chipBase = {
