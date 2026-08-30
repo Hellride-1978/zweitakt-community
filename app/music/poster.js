@@ -395,15 +395,18 @@ export function drawPoster(ctx, W, H, data) {
     sansFamily,
   } = data
 
-  const activeBackdrop = backdrop && Boolean(cover)
-  const colors = posterColors(paper, activeBackdrop ? veilAlpha(backdropStrength) : 1)
+  // Bei Stärke 0 deckt der Schleier vollständig – dann gibt es nichts zu
+  // zeichnen und der QR-Code braucht auch keine eigene Fläche.
+  const alpha = veilAlpha(backdropStrength)
+  const activeBackdrop = backdrop && Boolean(cover) && alpha < 1
+  const colors = posterColors(paper, activeBackdrop ? alpha : 1)
 
   ctx.save()
   ctx.clearRect(0, 0, W, H)
   ctx.fillStyle = colors.paper
   ctx.fillRect(0, 0, W, H)
   if (activeBackdrop) {
-    drawBackdrop(ctx, cover, W, H, colors, veilAlpha(backdropStrength))
+    drawBackdrop(ctx, cover, W, H, colors, alpha)
   }
   ctx.textBaseline = 'alphabetic'
 

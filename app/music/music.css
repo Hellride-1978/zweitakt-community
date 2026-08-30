@@ -15,6 +15,7 @@
 
 .mp-panel { display: flex; flex-direction: column; gap: 14px; }
 .mp-panel .zd-h3 { margin: 0; }
+.mp-panel-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
 .mp-panel-head {
   display: flex;
@@ -22,6 +23,41 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.mp-panel-title { flex: 1 1 auto; min-width: 0; }
+
+.mp-panel-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+}
+.mp-panel-toggle:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 4px; }
+
+.mp-panel-chevron {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1;
+  color: var(--ink-muted);
+  transition: transform 0.2s ease, color 0.18s;
+  flex: none;
+}
+.mp-panel-toggle:hover .mp-panel-chevron { color: var(--ink); }
+/* Aufgeklappt zeigt der Pfeil nach oben. */
+.mp-panel-toggle[aria-expanded="true"] .mp-panel-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mp-panel-chevron { transition: none; }
 }
 
 .mp-hint {

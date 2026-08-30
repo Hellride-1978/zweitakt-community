@@ -84,6 +84,35 @@ function triggerDownload(blob, filename) {
   URL.revokeObjectURL(url)
 }
 
+/**
+ * Aufklappbarer Abschnitt. Der Inhalt bleibt im DOM und wird nur ausgeblendet –
+ * so behalten Datei-Input und Formularfelder ihre Referenzen und ihren Zustand.
+ */
+function Panel({ id, title, open, onToggle, headerExtra = null, className = '', children }) {
+  return (
+    <section className={`zd-card mp-panel${className ? ` ${className}` : ''}`}>
+      <div className="mp-panel-head">
+        <h2 className="zd-h3 mp-panel-title">
+          <button
+            type="button"
+            className="mp-panel-toggle"
+            onClick={onToggle}
+            aria-expanded={open}
+            aria-controls={`${id}-body`}
+          >
+            <span>{title}</span>
+            <span className="mp-panel-chevron" aria-hidden="true">▾</span>
+          </button>
+        </h2>
+        {headerExtra}
+      </div>
+      <div id={`${id}-body`} className="mp-panel-body" hidden={!open}>
+        {children}
+      </div>
+    </section>
+  )
+}
+
 export default function PosterGenerator() {
   const [manualMode, setManualMode] = useState(false)
 
@@ -112,6 +141,18 @@ export default function PosterGenerator() {
   const [exporting, setExporting] = useState(null) // null | 'png' | 'pdf'
   const [exportError, setExportError] = useState(null)
 
+  // Zugeklappt startet, was nach der Albumsuche ohnehin vorbelegt ist. Einstieg
+  // und Export bleiben offen, damit der Weg zum Druckfile sichtbar bleibt.
+  const [openPanels, setOpenPanels] = useState({
+    find: true,
+    text: false,
+    cover: false,
+    design: false,
+    export: true,
+  })
+  const togglePanel = (key) => setOpenPanels((prev) => ({ ...prev, [key]: !prev[key] }))
+  const openPanel = (key) => setOpenPanels((prev) => (prev[key] ? prev : { ...prev, [key]: true }))
+
   const canvasRef = useRef(null)
   const previewWrapRef = useRef(null)
   const fileInputRef = useRef(null)
@@ -123,7 +164,11 @@ export default function PosterGenerator() {
   const exportSize = pixelSize(format, dpi)
   const exportPixels = exportSize.width * exportSize.height
   const showResults = !manualMode && artistQuery.trim().length >= 2
-  const backdropActive = backdrop && Boolean(coverSrc)
+  // Dieselbe Bedingung wie in drawPoster: Ohne fertig geladenes Bild gibt es
+  // keinen Hintergrund – sonst zeigte die Oberfläche Regler und Kontrasthinweis
+  // für einen Effekt, der gar nicht gezeichnet wird.
+  const hasCover = Boolean(coverSrc && coverImage)
+  const backdropActive = backdrop && hasCover
   const paperContrast = posterColors(
     paper,
     backdropActive ? veilAlpha(backdropStrength) : 1
@@ -269,6 +314,8 @@ export default function PosterGenerator() {
       if (!active) return
       setCoverImage(null)
       setCoverError('Das Cover konnte nicht geladen werden. Lade stattdessen ein eigenes Bild hoch.')
+      // Sonst bliebe die Meldung im zugeklappten Panel unsichtbar.
+      setOpenPanels((prev) => (prev.cover ? prev : { ...prev, cover: true }))
     }
     img.src = coverSrc
     return () => {
@@ -287,6 +334,7 @@ export default function PosterGenerator() {
     const error = validateImageFile(file)
     if (error) {
       setCoverError(error)
+      openPanel('cover')
       return
     }
     if (uploadUrl) URL.revokeObjectURL(uploadUrl)
@@ -424,14 +472,17 @@ export default function PosterGenerator() {
       <div className="mp-layout">
         <div className="mp-controls">
           {/* ── Suche ── */}
-          <section className="zd-card mp-panel">
-            <div className="mp-panel-head">
-              <h2 className="zd-h3">1 — Album finden</h2>
+          <Panel
+            id="mp-find"
+            title="1 — Album finden"
+            open={openPanels.find}
+            onToggle={() => togglePanel('find')}
+            headerExtra={
               <div className="tab-pills" role="group" aria-label="Eingabemodus">
                 <button
                   type="button"
                   className={`tab-pill${manualMode ? '' : ' on'}`}
-                  onClick={() => setManualMode(false)}
+                  onClick={() => { setManualMode(false); openPanel('find') }}
                   aria-pressed={!manualMode}
                 >
                   Suche
@@ -439,13 +490,14 @@ export default function PosterGenerator() {
                 <button
                   type="button"
                   className={`tab-pill${manualMode ? ' on' : ''}`}
-                  onClick={() => setManualMode(true)}
+                  onClick={() => { setManualMode(true); openPanel('find') }}
                   aria-pressed={manualMode}
                 >
                   Manuell
                 </button>
               </div>
-            </div>
+            }
+          >
 
             {manualMode ? (
               <p className="mp-hint">
@@ -535,11 +587,10 @@ export default function PosterGenerator() {
             )}
 
             {apiError && <p className="zh-error" style={{ marginTop: 14 }}>{apiError}</p>}
-          </section>
+          </Panel>
 
           {/* ── Text ── */}
-          <section className="zd-card mp-panel">
-            <h2 className="zd-h3">2 — Text</h2>
+          <Panel id="mp-text" title="2 — Text" open={openPanels.text} onToggle={() => togglePanel('text')}>
             <p className="mp-hint">Alles frei überschreibbar – die Suche füllt die Felder nur vor.</p>
 
             <div className="mp-field-row">
@@ -592,11 +643,10 @@ export default function PosterGenerator() {
                 Wird bei der Suche automatisch übernommen. Ohne Link bleibt die Ecke frei.
               </p>
             </div>
-          </section>
+          </Panel>
 
           {/* ── Cover ── */}
-          <section className="zd-card mp-panel">
-            <h2 className="zd-h3">3 — Cover</h2>
+          <Panel id="mp-cover" title="3 — Cover" open={openPanels.cover} onToggle={() => togglePanel('cover')}>
             <p className="mp-hint">
               Das Cover wird unverändert übernommen – kein Filter, kein Duotone, nur passend
               zugeschnitten. Für großformatigen Druck lohnt ein eigenes Bild in hoher Auflösung.
@@ -630,11 +680,10 @@ export default function PosterGenerator() {
               </div>
             </div>
             {coverError && <p className="zh-error" style={{ marginTop: 14 }}>{coverError}</p>}
-          </section>
+          </Panel>
 
           {/* ── Gestaltung ── */}
-          <section className="zd-card mp-panel">
-            <h2 className="zd-h3">4 — Gestaltung</h2>
+          <Panel id="mp-design" title="4 — Gestaltung" open={openPanels.design} onToggle={() => togglePanel('design')}>
 
             <div className="mp-field">
               <span className="zh-label">Hintergrund</span>
@@ -672,16 +721,16 @@ export default function PosterGenerator() {
             </div>
 
             <div className="mp-field">
-              <label className={`mp-check${coverSrc ? '' : ' is-disabled'}`}>
+              <label className={`mp-check${hasCover ? '' : ' is-disabled'}`}>
                 <input
                   type="checkbox"
                   checked={backdrop}
-                  disabled={!coverSrc}
+                  disabled={!hasCover}
                   onChange={(e) => setBackdrop(e.target.checked)}
                 />
                 <span>Cover unscharf als Hintergrund</span>
               </label>
-              {!coverSrc && (
+              {!hasCover && (
                 <p className="mp-hint">Dafür wird ein Cover benötigt — wähl oben ein Album oder lade ein Bild hoch.</p>
               )}
               {backdropActive && (
@@ -722,7 +771,7 @@ export default function PosterGenerator() {
               ))}
               </div>
             </div>
-          </section>
+          </Panel>
         </div>
 
         {/* ── Vorschau & Export ── */}
@@ -732,8 +781,7 @@ export default function PosterGenerator() {
               <canvas ref={canvasRef} className="mp-canvas" role="img" aria-label="Vorschau des Posters" />
             </div>
 
-            <div className="zd-card mp-panel mp-export-panel">
-              <h2 className="zd-h3">5 — Export</h2>
+            <Panel id="mp-export" title="5 — Export" open={openPanels.export} onToggle={() => togglePanel('export')} className="mp-export-panel">
 
               <div className="mp-field">
                 <label className="zh-label" htmlFor="mp-format">Format</label>
@@ -780,7 +828,7 @@ export default function PosterGenerator() {
               </div>
 
               {exportError && <p className="zh-error" style={{ marginTop: 14 }}>{exportError}</p>}
-            </div>
+            </Panel>
           </div>
         </aside>
       </div>
