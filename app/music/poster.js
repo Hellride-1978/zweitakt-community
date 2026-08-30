@@ -193,17 +193,17 @@ function wrapLines(ctx, text, maxWidth) {
 }
 
 // Sucht die größte Schriftgröße, bei der der Text in maxLines Zeilen passt.
-function fitBlock(ctx, text, family, maxWidth, maxSize, minSize, maxLines) {
+function fitBlock(ctx, text, family, weight, maxWidth, maxSize, minSize, maxLines) {
   const step = Math.max(1, maxSize * 0.025)
   for (let size = maxSize; size >= minSize; size -= step) {
-    ctx.font = `400 ${size}px "${family}"`
+    ctx.font = `${weight} ${size}px "${family}"`
     const lines = wrapLines(ctx, text, maxWidth)
     // Ein einzelnes überlanges Wort lässt sich nicht umbrechen und ragt sonst
     // über den Satzspiegel hinaus – deshalb zusätzlich die Breite prüfen.
     const withinWidth = lines.every((line) => ctx.measureText(line).width <= maxWidth)
     if (lines.length <= maxLines && withinWidth) return { size, lines }
   }
-  ctx.font = `400 ${minSize}px "${family}"`
+  ctx.font = `${weight} ${minSize}px "${family}"`
   const all = wrapLines(ctx, text, maxWidth)
   const lines = all.slice(0, maxLines).map((line) => ellipsize(ctx, line, maxWidth))
   // Abgeschnittene Zeilen kennzeichnen, damit die Kürzung sichtbar bleibt.
@@ -217,7 +217,7 @@ function fitBlock(ctx, text, family, maxWidth, maxSize, minSize, maxLines) {
    zusammen in die Höhe über dem QR-Code passen. Passt es nicht, werden Interpret
    und Album gemeinsam kleiner skaliert – so fällt nie ein Element ganz weg. */
 function layoutRightColumn(ctx, content, opts) {
-  const { W, rightW, availH, displayFamily } = opts
+  const { W, rightW, availH, displayFamily, displayWeight } = opts
   const { release, artist, album } = content
   const dateSize = W * 0.019
   const STEPS = 11
@@ -227,10 +227,10 @@ function layoutRightColumn(ctx, content, opts) {
     const dateGap = W * 0.022 * scale
     const midGap = W * 0.012 * scale
     const artistFit = artist
-      ? fitBlock(ctx, artist, displayFamily, rightW, W * 0.062 * scale, W * 0.022 * scale, 2)
+      ? fitBlock(ctx, artist, displayFamily, displayWeight, rightW, W * 0.062 * scale, W * 0.022 * scale, 2)
       : null
     const albumFit = album
-      ? fitBlock(ctx, album, displayFamily, rightW, W * 0.036 * scale, W * 0.014 * scale, 2)
+      ? fitBlock(ctx, album, displayFamily, displayWeight, rightW, W * 0.036 * scale, W * 0.014 * scale, 2)
       : null
 
     let height = release ? dateSize + dateGap : 0
@@ -370,6 +370,7 @@ export function drawPoster(ctx, W, H, data) {
     backdrop = false,
     backdropStrength = DEFAULT_BACKDROP_STRENGTH,
     displayFamily,
+    displayWeight = '400',
     monoFamily,
     sansFamily,
   } = data
@@ -455,7 +456,7 @@ export function drawPoster(ctx, W, H, data) {
   const layout = layoutRightColumn(
     ctx,
     { release, artist, album },
-    { W, rightW, availH: textBottom - bodyTop, displayFamily }
+    { W, rightW, availH: textBottom - bodyTop, displayFamily, displayWeight }
   )
   let cursorY = bodyTop
 
@@ -469,7 +470,7 @@ export function drawPoster(ctx, W, H, data) {
 
   if (layout.artist) {
     // fitBlock hat ctx.font zuletzt für die Messung gesetzt – vor dem Zeichnen neu setzen.
-    ctx.font = `400 ${layout.artist.size}px "${displayFamily}"`
+    ctx.font = `${displayWeight} ${layout.artist.size}px "${displayFamily}"`
     ctx.fillStyle = colors.ink
     for (const line of layout.artist.lines) {
       cursorY += layout.artist.size * 0.86
@@ -480,7 +481,7 @@ export function drawPoster(ctx, W, H, data) {
   }
 
   if (layout.album) {
-    ctx.font = `400 ${layout.album.size}px "${displayFamily}"`
+    ctx.font = `${displayWeight} ${layout.album.size}px "${displayFamily}"`
     ctx.fillStyle = colors.inkSoft
     for (const line of layout.album.lines) {
       cursorY += layout.album.size * 0.92
@@ -542,12 +543,22 @@ export function drawPoster(ctx, W, H, data) {
  * Lädt die benötigten Schriften nach, bevor auf den Canvas gezeichnet wird.
  * Ohne diesen Schritt rendert der erste Export mit der Fallback-Schrift.
  */
-export async function ensureFontsLoaded(families) {
+export async function ensureFontsLoaded(faces, text = '') {
   if (typeof document === 'undefined' || !document.fonts) return
+  // Der Text muss mitgegeben werden: Die Schriften sind nach unicode-range
+  // aufgeteilt, und ohne Textargument laedt der Browser nur den Standardschnitt.
+  // Ein Titel mit Ł oder ğ wuerde sonst mit der Fallback-Schrift gezeichnet.
+  const probe = text.slice(0, 2000) || ' '
   await Promise.all(
-    families.filter(Boolean).map((family) =>
-      document.fonts.load(`400 100px "${family}"`).catch(() => {})
-    )
+    faces
+      .filter((face) => face && face.family)
+      .map((face) =>
+        document.fonts
+          .load(`${face.weight || 400} 100px "${face.family}"`, probe)
+          .catch(() => {})
+      )
   )
-  await document.fonts.ready
+  // Bewusst kein `await document.fonts.ready`: Das wartet auf jeden offenen
+  // Download – auch auf die 16 Schriften der Auswahlkacheln – und wuerde jede
+  // Neuzeichnung der Vorschau unnoetig aufhalten.
 }

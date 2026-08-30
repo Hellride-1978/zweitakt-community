@@ -73,6 +73,12 @@ function releaseCanvas(canvas) {
   canvas.height = 0
 }
 
+// Alle Zeichen, die auf dem Poster vorkommen – damit die passenden
+// unicode-range-Schnitte geladen werden, bevor gezeichnet wird.
+function posterText(data) {
+  return [data.artist, data.album, data.release, ...(data.tracks || [])].filter(Boolean).join(' ')
+}
+
 function triggerDownload(blob, filename) {
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -203,8 +209,12 @@ export default function PosterGenerator() {
       backdrop,
       backdropStrength,
       displayFamily: font.family,
+      displayWeight: font.weight,
     }),
-    [coverSrc, coverImage, form, tracks, showQr, paper, backdrop, backdropStrength, font.family]
+    [
+      coverSrc, coverImage, form, tracks, showQr, paper, backdrop, backdropStrength,
+      font.family, font.weight,
+    ]
   )
 
   // Die Schriften der Seite stehen nur im Browser fest, deshalb erst beim
@@ -392,7 +402,14 @@ export default function PosterGenerator() {
     const ratio = Math.min(window.devicePixelRatio || 1, 2)
     const cssHeight = (previewWidth * format.hMm) / format.wMm
 
-    ensureFontsLoaded([data.displayFamily, data.monoFamily, data.sansFamily]).then(() => {
+    ensureFontsLoaded(
+      [
+        { family: data.displayFamily, weight: data.displayWeight },
+        { family: data.monoFamily },
+        { family: data.sansFamily },
+      ],
+      posterText(data)
+    ).then(() => {
       if (!active) return
       canvas.width = Math.round(previewWidth * ratio)
       canvas.height = Math.round(cssHeight * ratio)
@@ -415,7 +432,14 @@ export default function PosterGenerator() {
     const ctx = canvas.getContext('2d')
     if (!ctx) throw new Error('Canvas konnte nicht erstellt werden.')
     const data = buildPosterData()
-    await ensureFontsLoaded([data.displayFamily, data.monoFamily, data.sansFamily])
+    await ensureFontsLoaded(
+      [
+        { family: data.displayFamily, weight: data.displayWeight },
+        { family: data.monoFamily },
+        { family: data.sansFamily },
+      ],
+      posterText(data)
+    )
     drawPoster(ctx, width, height, data)
     return canvas
   }
