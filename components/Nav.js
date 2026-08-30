@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane, faChartBar } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane, faChartBar, faMusic } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
@@ -53,7 +53,7 @@ export default function Nav() {
               {user?.email === 'martin@delavega.de' && (
                 <li className="zh-nav-dropdown-wrap">
                   <button
-                    className={`zh-nav-dropdown-trigger${adminOpen ? ' open' : ''}${pathname.startsWith('/admin') || pathname.startsWith('/styleguide') ? ' active' : ''}`}
+                    className={`zh-nav-dropdown-trigger${adminOpen ? ' open' : ''}${pathname.startsWith('/admin') || pathname.startsWith('/styleguide') || pathname.startsWith('/music') ? ' active' : ''}`}
                     onClick={() => setAdminOpen(v => !v)}
                     onBlur={e => { if (!e.currentTarget.closest('.zh-nav-dropdown-wrap').contains(e.relatedTarget)) setAdminOpen(false) }}
                   >
@@ -75,6 +75,9 @@ export default function Nav() {
                     </Link>
                     <Link href="/styleguide" onClick={() => setAdminOpen(false)}>
                       <FontAwesomeIcon icon={faPalette} /> Style Guide
+                    </Link>
+                    <Link href="/music" onClick={() => setAdminOpen(false)}>
+                      <FontAwesomeIcon icon={faMusic} /> Poster
                     </Link>
                   </div>
                 </li>
@@ -203,6 +206,12 @@ export default function Nav() {
                   <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <FontAwesomeIcon icon={faPalette} style={{ fontSize: 14, width: 16 }} />
                     Style Guide
+                  </span>
+                </Link>
+                <Link href="/music" onClick={close}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FontAwesomeIcon icon={faMusic} style={{ fontSize: 14, width: 16 }} />
+                    Poster
                   </span>
                 </Link>
               </>

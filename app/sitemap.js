@@ -10,7 +10,6 @@ export default async function sitemap() {
     { url: `${BASE}/events`,      lastModified: now, changeFrequency: 'daily',   priority: 0.9 },
     { url: `${BASE}/vehicles`,    lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
     { url: `${BASE}/profiles`,    lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
-    { url: `${BASE}/music`,       lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/impressum`,   lastModified: now, changeFrequency: 'monthly', priority: 0.2 },
     { url: `${BASE}/datenschutz`, lastModified: now, changeFrequency: 'monthly', priority: 0.2 },
   ]
