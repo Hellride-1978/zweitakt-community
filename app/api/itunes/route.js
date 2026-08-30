@@ -18,10 +18,17 @@ function upscaleArtwork(url, size) {
 }
 
 async function fetchItunes(path, revalidate) {
-  const res = await fetch(`${ITUNES}${path}`, {
-    headers: { 'User-Agent': 'zweitakthoden/1.0' },
-    next: { revalidate },
-  })
+  let res
+  try {
+    res = await fetch(`${ITUNES}${path}`, {
+      headers: { 'User-Agent': 'zweitakthoden/1.0' },
+      next: { revalidate },
+    })
+  } catch {
+    // Netzwerkfehler wie jeden anderen Ausfall behandeln: leere Trefferliste
+    // statt einer 500er-Seite.
+    return null
+  }
   if (!res.ok) return null
   // Apple antwortet auf lookup-Endpoints mit text/javascript – res.json()
   // würde daran scheitern, deshalb der Umweg über den Text.

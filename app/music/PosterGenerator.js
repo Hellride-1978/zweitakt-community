@@ -81,7 +81,9 @@ function triggerDownload(blob, filename) {
   document.body.appendChild(link)
   link.click()
   link.remove()
-  URL.revokeObjectURL(url)
+  // Nicht sofort freigeben: Bei grossen Dateien (A3 mit 300 dpi) brechen
+  // Firefox und Safari den Download sonst ab, bevor er begonnen hat.
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
 }
 
 /**
@@ -127,7 +129,10 @@ export default function PosterGenerator() {
 
   const [form, setForm] = useState(EMPTY_FORM)
   const [coverSrc, setCoverSrc] = useState(null)
-  const [coverImage, setCoverImage] = useState(null)
+  // Das geladene Bild wird zusammen mit seiner Quelle gehalten. Sonst zeigten
+  // Vorschau und ein waehrenddessen gestarteter Export beim Albumwechsel noch
+  // das Cover des vorherigen Albums, bis das neue fertig geladen ist.
+  const [loadedCover, setLoadedCover] = useState({ src: null, img: null })
   const [coverError, setCoverError] = useState(null)
   const [uploadUrl, setUploadUrl] = useState(null)
 
@@ -158,7 +163,10 @@ export default function PosterGenerator() {
   const previewWrapRef = useRef(null)
   const fileInputRef = useRef(null)
   const albumRequest = useRef(0)
+  const artistRequest = useRef(0)
   const [previewWidth, setPreviewWidth] = useState(0)
+
+  const coverImage = loadedCover.src === coverSrc ? loadedCover.img : null
 
   const format = getFormat(formatKey)
   const font = getPosterFont(fontKey)
@@ -236,6 +244,11 @@ export default function PosterGenerator() {
 
   /* ── Alben des gewählten Interpreten ── */
   const loadAlbums = useCallback(async (artist) => {
+    // Wie bei der Albumwahl: Eine verspaetete Antwort darf die Liste des
+    // inzwischen gewaehlten Interpreten nicht mehr ueberschreiben.
+    const token = artistRequest.current + 1
+    artistRequest.current = token
+
     setSelectedArtist(artist)
     setSearch(IDLE_SEARCH)
     setAlbums([])
@@ -244,12 +257,14 @@ export default function PosterGenerator() {
     try {
       const res = await fetch(`/api/itunes?type=albums&artistId=${artist.id}`)
       const data = await res.json()
+      if (artistRequest.current !== token) return
       setAlbums(data.results || [])
       setApiError(null)
     } catch {
+      if (artistRequest.current !== token) return
       setApiError('Die Alben konnten nicht geladen werden.')
     } finally {
-      setAlbumsLoading(false)
+      if (artistRequest.current === token) setAlbumsLoading(false)
     }
   }, [])
 
@@ -267,10 +282,14 @@ export default function PosterGenerator() {
       ...prev,
       artist: album.artist || prev.artist,
       album: album.name || prev.album,
-      release: formatReleaseDate(album.releaseDate) || prev.release,
+      // Fehlt der API ein Feld, wird geleert statt den Wert des vorher
+      // gewaehlten Albums stehen zu lassen – sonst landete ein fremdes Datum
+      // oder ein fremder Link im Druckfile.
+      release: formatReleaseDate(album.releaseDate),
       // collectionViewUrl kommt direkt aus der API – kein konstruierter Link.
-      qrUrl: album.appleMusicUrl || prev.qrUrl,
+      qrUrl: album.appleMusicUrl || '',
     }))
+    if (!album.appleMusicUrl) setShowQr(false)
 
     if (album.artworkPrint) {
       setUploadUrl(null)
@@ -309,12 +328,12 @@ export default function PosterGenerator() {
     img.crossOrigin = 'anonymous'
     img.onload = () => {
       if (!active) return
-      setCoverImage(img)
+      setLoadedCover({ src: coverSrc, img })
       setCoverError(null)
     }
     img.onerror = () => {
       if (!active) return
-      setCoverImage(null)
+      setLoadedCover({ src: coverSrc, img: null })
       setCoverError('Das Cover konnte nicht geladen werden. Lade stattdessen ein eigenes Bild hoch.')
       // Sonst bliebe die Meldung im zugeklappten Panel unsichtbar.
       setOpenPanels((prev) => (prev.cover ? prev : { ...prev, cover: true }))

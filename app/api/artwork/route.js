@@ -46,10 +46,16 @@ export async function GET(request) {
     return new Response('Host nicht erlaubt', { status: 400 })
   }
 
-  const upstream = await fetch(target.toString(), {
-    headers: { 'User-Agent': 'zweitakthoden/1.0' },
-    next: { revalidate: 86400 },
-  })
+  let upstream
+  try {
+    upstream = await fetch(target.toString(), {
+      headers: { 'User-Agent': 'zweitakthoden/1.0' },
+      next: { revalidate: 86400 },
+    })
+  } catch {
+    // Ohne den Fang wuerde ein Netzwerkfehler als 500 durchschlagen.
+    return new Response('Cover nicht erreichbar', { status: 502 })
+  }
 
   if (!upstream.ok) return new Response('Cover nicht erreichbar', { status: 502 })
 

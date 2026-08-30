@@ -507,10 +507,12 @@ export function drawPoster(ctx, W, H, data) {
 
     const colGap = cols === 1 ? 0 : leftW * 0.06
     const colW = (leftW - colGap * (cols - 1)) / cols
-    const rows = Math.ceil(list.length / cols)
-    // Was selbst in drei Spalten bei kleinster Schrift nicht mehr passt, wird
-    // abgeschnitten – besser als Text, der unten aus dem Poster läuft.
-    const visible = list.slice(0, cols * rowsAtMinSize)
+    // Die Zeilenzahl je Spalte muss gedeckelt werden, nicht nur die Gesamtzahl:
+    // Sonst fuellt die erste Spalte weiter nach unten, als der Satzspiegel hoch
+    // ist, und die Liste laeuft aus dem Poster. Was dann nicht mehr passt, wird
+    // abgeschnitten.
+    const rows = Math.min(Math.ceil(list.length / cols), rowsAtMinSize)
+    const visible = list.slice(0, cols * rows)
 
     let size = maxSize
     while (size > minSize && rows * size * 1.75 > bodyH) size -= W * 0.0004
