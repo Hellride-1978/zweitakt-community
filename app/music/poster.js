@@ -559,6 +559,6 @@ export async function ensureFontsLoaded(faces, text = '') {
       )
   )
   // Bewusst kein `await document.fonts.ready`: Das wartet auf jeden offenen
-  // Download – auch auf die 16 Schriften der Auswahlkacheln – und wuerde jede
+  // Download – auch auf alle Schriften der Auswahlkacheln – und wuerde jede
   // Neuzeichnung der Vorschau unnoetig aufhalten.
 }

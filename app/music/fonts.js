@@ -8,6 +8,7 @@ import {
   Bungee,
   Lobster,
   Monoton,
+  New_Rocker,
   Oswald,
   Permanent_Marker,
   Playfair_Display,
@@ -41,6 +42,7 @@ const boogaloo        = Boogaloo({ weight: '400', subsets: ['latin', 'latin-ext'
 const bungee          = Bungee({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
 const lobster         = Lobster({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
 const monoton         = Monoton({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
+const newRocker       = New_Rocker({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
 const oswald          = Oswald({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
 const permanentMarker = Permanent_Marker({ weight: '400', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
 const playfairDisplay = Playfair_Display({ weight: '800', subsets: ['latin', 'latin-ext'], display: 'swap', preload: false })
@@ -88,6 +90,7 @@ export const POSTER_FONTS = [
   entry('playfair', 'Playfair Display', playfairDisplay),
   entry('abril', 'Abril Fatface', abrilFatface),
   entry('monoton', 'Monoton', monoton),
+  entry('newrocker', 'New Rocker', newRocker),
   entry('lobster', 'Lobster', lobster),
   entry('marker', 'Permanent Marker', permanentMarker),
 ]
