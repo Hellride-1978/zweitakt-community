@@ -133,6 +133,7 @@ export default function PosterGenerator() {
 
   const [fontKey, setFontKey] = useState(DEFAULT_FONT_KEY)
   const [paper, setPaper] = useState(DEFAULT_PAPER)
+  const [showQr, setShowQr] = useState(false)
   const [backdrop, setBackdrop] = useState(false)
   const [backdropStrength, setBackdropStrength] = useState(DEFAULT_BACKDROP_STRENGTH)
   const [formatKey, setFormatKey] = useState(DEFAULT_FORMAT_KEY)
@@ -189,12 +190,13 @@ export default function PosterGenerator() {
       release: form.release,
       tracks,
       qrUrl: form.qrUrl.trim(),
+      showQr,
       paper,
       backdrop,
       backdropStrength,
       displayFamily: font.family,
     }),
-    [coverSrc, coverImage, form, tracks, paper, backdrop, backdropStrength, font.family]
+    [coverSrc, coverImage, form, tracks, showQr, paper, backdrop, backdropStrength, font.family]
   )
 
   // Die Schriften der Seite stehen nur im Browser fest, deshalb erst beim
@@ -453,6 +455,15 @@ export default function PosterGenerator() {
 
   const setField = (name) => (event) => setForm((prev) => ({ ...prev, [name]: event.target.value }))
 
+  const handleQrUrlChange = (event) => {
+    const value = event.target.value
+    setForm((prev) => ({ ...prev, qrUrl: value }))
+    // Ohne Link gibt es nichts anzuzeigen. Der Schalter faellt deshalb zurueck –
+    // sonst bliebe er angehakt und ein spaeter eingetragener Link wuerde den
+    // Code unbemerkt wieder einblenden.
+    if (!value.trim()) setShowQr(false)
+  }
+
   const busy = exporting !== null
 
   return (
@@ -465,7 +476,8 @@ export default function PosterGenerator() {
         </h1>
         <p className="zh-page-lead">
           Interpret suchen, Album wählen, Format einstellen – fertig ist das Druckfile. Cover und
-          Tracklist kommen direkt von Apple, der QR-Code führt zum Album in Apple Music.
+          Tracklist kommen direkt von Apple. Unter „Gestaltung“ lässt sich zusätzlich ein
+          QR-Code einblenden, der zum Album in Apple Music führt.
         </p>
       </div>
 
@@ -636,11 +648,12 @@ export default function PosterGenerator() {
                 className="zh-input"
                 type="url"
                 value={form.qrUrl}
-                onChange={setField('qrUrl')}
+                onChange={handleQrUrlChange}
                 placeholder="https://music.apple.com/de/album/…"
               />
               <p className="mp-hint">
-                Wird bei der Suche automatisch übernommen. Ohne Link bleibt die Ecke frei.
+                Wird bei der Suche automatisch übernommen. Angezeigt wird der Code erst,
+                wenn du ihn unter „Gestaltung“ einschaltest.
               </p>
             </div>
           </Panel>
@@ -718,6 +731,24 @@ export default function PosterGenerator() {
                 Die Schriftfarbe passt sich automatisch an — auf dunklem Grund wird sie hell.
                 {paperContrast < 4.5 && ' Bei dieser Farbe wird der Text allerdings schwer lesbar.'}
               </p>
+            </div>
+
+            <div className="mp-field">
+              <label className={`mp-check${form.qrUrl.trim() ? '' : ' is-disabled'}`}>
+                <input
+                  type="checkbox"
+                  checked={showQr}
+                  disabled={!form.qrUrl.trim()}
+                  onChange={(e) => setShowQr(e.target.checked)}
+                />
+                <span>QR-Code zum Album anzeigen</span>
+              </label>
+              {!form.qrUrl.trim() && (
+                <p className="mp-hint">
+                  Dafür wird ein Apple-Music-Link gebraucht — der kommt aus der Suche oder
+                  lässt sich unter „Text“ eintragen.
+                </p>
+              )}
             </div>
 
             <div className="mp-field">

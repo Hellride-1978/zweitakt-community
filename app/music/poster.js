@@ -387,6 +387,7 @@ export function drawPoster(ctx, W, H, data) {
     release = '',
     tracks = [],
     qrUrl = '',
+    showQr = false,
     paper = DEFAULT_PAPER,
     backdrop = false,
     backdropStrength = DEFAULT_BACKDROP_STRENGTH,
@@ -450,7 +451,9 @@ export function drawPoster(ctx, W, H, data) {
 
   /* ── Rechte Spalte: Release, Artist, Album, QR-Code ── */
   const qrSize = Math.min(innerW * 0.155, bodyH * 0.42)
-  const qr = qrUrl ? buildQr(qrUrl) : null
+  // Der QR-Code ist zuschaltbar und standardmässig aus. Ohne ihn bekommt der
+  // Textblock die volle Höhe des Satzspiegels.
+  const qr = showQr && qrUrl ? buildQr(qrUrl) : null
   const hasQr = Boolean(qr)
   const qrY = bodyBottom - qrSize
   if (hasQr) {
