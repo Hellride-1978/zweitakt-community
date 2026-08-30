@@ -67,6 +67,9 @@ export async function GET(request) {
   const length = Number(upstream.headers.get('content-length') || 0)
   if (length > MAX_BYTES) return new Response('Bild zu groß', { status: 413 })
 
+  // Ohne Body liefe pipeThrough in einen TypeError und damit in eine 500.
+  if (!upstream.body) return new Response('Cover nicht erreichbar', { status: 502 })
+
   return new Response(upstream.body.pipeThrough(limitStream(MAX_BYTES)), {
     headers: {
       'Content-Type': contentType,

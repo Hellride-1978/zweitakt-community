@@ -45,17 +45,20 @@ function formatReleaseDate(iso) {
   if (!iso) return ''
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return ''
+  // Bewusst in UTC: Apple liefert einen UTC-Zeitstempel, und die Umrechnung in
+  // die lokale Zone kann das Datum um einen Tag verschieben.
   return new Intl.DateTimeFormat('de-DE', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   }).format(date)
 }
 
 function releaseYear(iso) {
   if (!iso) return ''
   const date = new Date(iso)
-  return Number.isNaN(date.getTime()) ? '' : String(date.getFullYear())
+  return Number.isNaN(date.getTime()) ? '' : String(date.getUTCFullYear())
 }
 
 function slugify(text) {
@@ -236,12 +239,16 @@ export default function PosterGenerator() {
         const res = await fetch(`/api/itunes?type=artists&term=${encodeURIComponent(term)}`, {
           signal: controller.signal,
         })
+        // Ohne diese Pruefung erschiene ein Rate-Limit als „nichts gefunden“.
+        if (!res.ok) throw new Error(String(res.status))
         const data = await res.json()
         setSearch({ status: 'done', results: data.results || [] })
         setApiError(null)
       } catch (err) {
         if (err.name === 'AbortError') return
-        setSearch({ status: 'done', results: [] })
+        // Eigener Status: Sonst stuende neben der Fehlermeldung auch noch
+        // „Nichts gefunden“ – zwei widersprechende Aussagen.
+        setSearch({ status: 'error', results: [] })
         setApiError('Die Suche ist gerade nicht erreichbar.')
       }
     }, 350)
@@ -266,6 +273,7 @@ export default function PosterGenerator() {
     setAlbumsLoading(true)
     try {
       const res = await fetch(`/api/itunes?type=albums&artistId=${artist.id}`)
+      if (!res.ok) throw new Error(String(res.status))
       const data = await res.json()
       if (artistRequest.current !== token) return
       setAlbums(data.results || [])
@@ -311,12 +319,15 @@ export default function PosterGenerator() {
 
     try {
       const res = await fetch(`/api/itunes?type=tracks&collectionId=${album.id}`)
+      if (!res.ok) throw new Error(String(res.status))
       const data = await res.json()
       if (albumRequest.current !== token) return
       const list = data.results || []
       setForm((prev) => ({
         ...prev,
-        tracksText: list.length ? list.map((t) => t.name).join('\n') : prev.tracksText,
+        // Auch leer uebernehmen: Sonst stuenden unter Cover und Titel des neuen
+        // Albums noch die Tracks des vorher gewaehlten.
+        tracksText: list.map((t) => t.name).join('\n'),
         qrUrl: data.album?.appleMusicUrl || prev.qrUrl,
       }))
       setApiError(null)

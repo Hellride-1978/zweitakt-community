@@ -163,6 +163,16 @@ function drawSpaced(ctx, text, x, y, spacing) {
   }
 }
 
+// Wie ellipsize, aber fuer den gesperrt gesetzten Text mit drawSpaced.
+function ellipsizeSpaced(ctx, text, maxWidth, spacing) {
+  if (spacedWidth(ctx, text, spacing) <= maxWidth) return text
+  let out = text
+  while (out.length > 1 && spacedWidth(ctx, `${out}…`, spacing) > maxWidth) {
+    out = out.slice(0, -1)
+  }
+  return `${out.trimEnd()}…`
+}
+
 function ellipsize(ctx, text, maxWidth) {
   if (ctx.measureText(text).width <= maxWidth) return text
   let lo = 0
@@ -464,7 +474,16 @@ export function drawPoster(ctx, W, H, data) {
     ctx.font = `400 ${layout.dateSize}px "${monoFamily}"`
     ctx.fillStyle = colors.inkSoft
     cursorY += layout.dateSize
-    drawSpaced(ctx, release.toUpperCase(), rightX, cursorY, W * 0.0026)
+    // Als einziges Textelement war die Release-Zeile bisher unbegrenzt: Ein
+    // frei eingetragener Langtext lief ueber den Satzspiegel hinaus.
+    const dateSpacing = W * 0.0026
+    drawSpaced(
+      ctx,
+      ellipsizeSpaced(ctx, release.toUpperCase(), rightW, dateSpacing),
+      rightX,
+      cursorY,
+      dateSpacing
+    )
     cursorY += layout.dateGap
   }
 
