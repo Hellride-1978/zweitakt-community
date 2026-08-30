@@ -346,28 +346,6 @@ function drawQr(ctx, qr, x, y, size, colors) {
   }
 }
 
-// Registrier-Ecken – das Signature-Element im Zweitakthoden-Druckstil.
-function drawRegistrationCorners(ctx, W, H, margin, colors) {
-  const inset = margin * 0.42
-  const arm = W * 0.028
-  ctx.strokeStyle = colors.ink
-  ctx.lineWidth = Math.max(1, W * 0.0032)
-  ctx.lineCap = 'butt'
-  const corners = [
-    [inset, inset, 1, 1],
-    [W - inset, inset, -1, 1],
-    [inset, H - inset, 1, -1],
-    [W - inset, H - inset, -1, -1],
-  ]
-  for (const [cx, cy, sx, sy] of corners) {
-    ctx.beginPath()
-    ctx.moveTo(cx, cy + sy * arm)
-    ctx.lineTo(cx, cy)
-    ctx.lineTo(cx + sx * arm, cy)
-    ctx.stroke()
-  }
-}
-
 /* ───────────────────────── Poster ───────────────────────── */
 
 /**
@@ -555,7 +533,6 @@ export function drawPoster(ctx, W, H, data) {
     }
   }
 
-  drawRegistrationCorners(ctx, W, H, margin, colors)
   ctx.restore()
 }
 
