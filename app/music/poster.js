@@ -28,6 +28,19 @@ const LIGHT_INK = '#f7f5f0'
 
 export const DEFAULT_PAPER = '#f6f3ec'
 
+// Der Papierschleier über dem Cover-Hintergrund. Bei 0 % deckt er vollständig,
+// das Cover ist dann unsichtbar; beim stärksten Wert bleiben 70 % Papier stehen.
+// Die Schriftfarben werden gegen genau diesen Schleier gerechnet, siehe
+// posterColors.
+export const BACKDROP_VEIL_MIN = 0.70
+export const BACKDROP_VEIL_MAX = 1
+export const DEFAULT_BACKDROP_STRENGTH = 70
+
+export function veilAlpha(strength) {
+  const t = Math.min(100, Math.max(0, strength)) / 100
+  return BACKDROP_VEIL_MAX - t * (BACKDROP_VEIL_MAX - BACKDROP_VEIL_MIN)
+}
+
 export const PAPER_PRESETS = [
   { key: 'papier',  label: 'Papier',  value: '#f6f3ec' },
   { key: 'weiss',   label: 'Weiß',    value: '#ffffff' },
@@ -73,9 +86,21 @@ export function contrastRatio(a, b) {
  * wird nicht fest gesetzt, sondern es gewinnt die Variante mit dem größeren
  * Kontrast – sonst stünde auf dunklem Grund dunkler Text.
  */
-export function posterColors(paper) {
-  const onLight = contrastRatio(paper, DARK_INK)
-  const onDark = contrastRatio(paper, LIGHT_INK)
+export function posterColors(paper, backdropAlpha = 1) {
+  // Mit Cover-Hintergrund liegt hinter der Schrift nicht mehr das reine Papier,
+  // sondern Papier über einem beliebigen Bildausschnitt. Gerechnet wird deshalb
+  // gegen die beiden Extremfälle – Cover komplett schwarz bzw. komplett weiss.
+  // Sonst verspräche die Kontrastprüfung etwas, das im Druck nicht gilt.
+  const backgrounds =
+    backdropAlpha >= 1
+      ? [paper]
+      : [mixHex('#000000', paper, backdropAlpha), mixHex('#ffffff', paper, backdropAlpha)]
+
+  const worstContrast = (color) =>
+    Math.min(...backgrounds.map((bg) => contrastRatio(bg, color)))
+
+  const onLight = worstContrast(DARK_INK)
+  const onDark = worstContrast(LIGHT_INK)
   const useLight = onDark > onLight
   const ink = useLight ? LIGHT_INK : DARK_INK
 
@@ -86,7 +111,7 @@ export function posterColors(paper) {
   let inkSoft = ink
   for (const t of [0.35, 0.25, 0.15]) {
     const candidate = mixHex(ink, paper, t)
-    if (contrastRatio(paper, candidate) >= 4.5) {
+    if (worstContrast(candidate) >= 4.5) {
       inkSoft = candidate
       break
     }
@@ -102,9 +127,10 @@ export function posterColors(paper) {
     qrNeedsPatch: onLight < 4,
     qrPatch: '#ffffff',
     qrInk: DARK_INK,
-    // Massgeblich ist die schwächste tatsächlich verwendete Tinte, sonst
-    // bliebe die Warnung genau dann aus, wenn der Sekundärtext untergeht.
-    textContrast: Math.min(contrastRatio(paper, ink), contrastRatio(paper, inkSoft)),
+    // Massgeblich ist die schwächste tatsächlich verwendete Tinte auf dem
+    // ungünstigsten Untergrund, sonst bliebe die Warnung genau dann aus, wenn
+    // der Sekundärtext untergeht.
+    textContrast: Math.min(worstContrast(ink), worstContrast(inkSoft)),
   }
 }
 
@@ -247,6 +273,55 @@ function buildQr(text) {
   }
 }
 
+/**
+ * Zeichnet das Cover formatfüllend und stark unscharf als Hintergrund.
+ *
+ * Die Unschärfe entsteht nicht über ctx.filter = 'blur()' – das würde bei einem
+ * A3-Export mit 300 dpi über 17 Millionen Pixel filtern und den Browser
+ * sekundenlang blockieren. Stattdessen wird das Cover auf wenige Pixel
+ * heruntergerechnet und wieder hochskaliert: Das Ergebnis ist praktisch
+ * kostenlos, sieht in Vorschau und Export gleich aus und ist unabhängig von der
+ * gewählten Auflösung.
+ */
+function drawBackdrop(ctx, img, W, H, colors, alpha) {
+  const SMALL_W = 40
+  const small = document.createElement('canvas')
+  small.width = SMALL_W
+  small.height = Math.max(1, Math.round((SMALL_W * H) / W))
+  const smallCtx = small.getContext('2d')
+  if (!smallCtx) return
+  // Der Verkleinerungsschritt ist der einzige verlustbehaftete – ohne 'high'
+  // saehe der Hintergrund je nach Aufloesung der Quelldatei anders aus.
+  smallCtx.imageSmoothingEnabled = true
+  smallCtx.imageSmoothingQuality = 'high'
+  drawCoverImage(smallCtx, img, 0, 0, small.width, small.height)
+
+  // Zwischenstufe: Zwei sanfte Vergrößerungen statt einer harten – sonst
+  // zeichnen sich die Kanten der Ausgangspixel im Verlauf ab.
+  const mid = document.createElement('canvas')
+  mid.width = 480
+  mid.height = Math.max(1, Math.round((480 * H) / W))
+  const midCtx = mid.getContext('2d')
+  if (!midCtx) return
+  midCtx.imageSmoothingEnabled = true
+  midCtx.imageSmoothingQuality = 'high'
+  midCtx.drawImage(small, 0, 0, mid.width, mid.height)
+
+  ctx.save()
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  // Über das Format hinaus vergrößern und mittig beschneiden: Der Hintergrund
+  // ist dadurch kein deckungsgleiches Abbild des scharfen Covers mehr, sondern
+  // ein eigener Farbverlauf.
+  const zoom = 1.35
+  ctx.drawImage(mid, (W - W * zoom) / 2, (H - H * zoom) / 2, W * zoom, H * zoom)
+  // Papierfarbe darüber, damit die Schrift ihren Kontrast behält.
+  ctx.globalAlpha = alpha
+  ctx.fillStyle = colors.paper
+  ctx.fillRect(0, 0, W, H)
+  ctx.restore()
+}
+
 function drawQr(ctx, qr, x, y, size, colors) {
   const count = qr.getModuleCount()
   const quiet = 2
@@ -313,17 +388,23 @@ export function drawPoster(ctx, W, H, data) {
     tracks = [],
     qrUrl = '',
     paper = DEFAULT_PAPER,
+    backdrop = false,
+    backdropStrength = DEFAULT_BACKDROP_STRENGTH,
     displayFamily,
     monoFamily,
     sansFamily,
   } = data
 
-  const colors = posterColors(paper)
+  const activeBackdrop = backdrop && Boolean(cover)
+  const colors = posterColors(paper, activeBackdrop ? veilAlpha(backdropStrength) : 1)
 
   ctx.save()
   ctx.clearRect(0, 0, W, H)
   ctx.fillStyle = colors.paper
   ctx.fillRect(0, 0, W, H)
+  if (activeBackdrop) {
+    drawBackdrop(ctx, cover, W, H, colors, veilAlpha(backdropStrength))
+  }
   ctx.textBaseline = 'alphabetic'
 
   const margin = W * 0.062
@@ -370,7 +451,14 @@ export function drawPoster(ctx, W, H, data) {
   const hasQr = Boolean(qr)
   const qrY = bodyBottom - qrSize
   if (hasQr) {
-    drawQr(ctx, qr, rightX, qrY, qrSize, colors)
+    // Mit Cover-Hintergrund liegt hinter dem Code kein einheitliches Papier
+    // mehr, sondern ein durchscheinendes Bild. Der Kontrast der Module lässt
+    // sich dann nicht mehr aus der Papierfarbe ableiten – der Code bekommt
+    // deshalb immer seine eigene helle Fläche.
+    drawQr(ctx, qr, rightX, qrY, qrSize, {
+      ...colors,
+      qrNeedsPatch: colors.qrNeedsPatch || activeBackdrop,
+    })
     ctx.fillStyle = colors.inkSoft
     ctx.font = `400 ${W * 0.0145}px "${monoFamily}"`
     const capX = rightX + qrSize + W * 0.018

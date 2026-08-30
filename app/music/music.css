@@ -196,6 +196,9 @@
   background:
     conic-gradient(from 0deg, #e05252, #e0c452, #62c46a, #52a8e0, #a06ad0, #e05252);
 }
+/* Ist eine eigene Farbe gewählt, zeigt die Kachel sie an statt des Verlaufs –
+   sonst bliebe in der Reihe gar keine Auswahl sichtbar. */
+.mp-paper-custom.is-chosen { background-image: none; }
 .mp-paper-custom input {
   position: absolute;
   inset: 0;
@@ -206,6 +209,29 @@
   padding: 0;
   cursor: pointer;
 }
+
+.mp-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  cursor: pointer;
+  min-height: 44px;
+}
+.mp-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent-ink);
+  cursor: pointer;
+  flex: none;
+}
+.mp-check input:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; }
+.mp-check.is-disabled { color: var(--ink-muted); cursor: not-allowed; }
+.mp-check.is-disabled input { cursor: not-allowed; }
+
+.mp-strength-label { margin-top: 6px; }
 
 /* ─── Schriftauswahl ─── */
 .mp-font-grid {

@@ -7,6 +7,7 @@ import {
   FORMATS,
   DEFAULT_FORMAT_KEY,
   DEFAULT_DPI,
+  DEFAULT_BACKDROP_STRENGTH,
   DEFAULT_PAPER,
   DPI_MIN,
   DPI_MAX,
@@ -17,6 +18,7 @@ import {
   getFormat,
   pixelSize,
   posterColors,
+  veilAlpha,
 } from './poster'
 import './music.css'
 
@@ -102,6 +104,8 @@ export default function PosterGenerator() {
 
   const [fontKey, setFontKey] = useState(DEFAULT_FONT_KEY)
   const [paper, setPaper] = useState(DEFAULT_PAPER)
+  const [backdrop, setBackdrop] = useState(false)
+  const [backdropStrength, setBackdropStrength] = useState(DEFAULT_BACKDROP_STRENGTH)
   const [formatKey, setFormatKey] = useState(DEFAULT_FORMAT_KEY)
   const [dpi, setDpi] = useState(DEFAULT_DPI)
 
@@ -119,7 +123,12 @@ export default function PosterGenerator() {
   const exportSize = pixelSize(format, dpi)
   const exportPixels = exportSize.width * exportSize.height
   const showResults = !manualMode && artistQuery.trim().length >= 2
-  const paperContrast = posterColors(paper).textContrast
+  const backdropActive = backdrop && Boolean(coverSrc)
+  const paperContrast = posterColors(
+    paper,
+    backdropActive ? veilAlpha(backdropStrength) : 1
+  ).textContrast
+  const isPresetPaper = PAPER_PRESETS.some((preset) => preset.value === paper.toLowerCase())
 
   const tracks = useMemo(
     () => form.tracksText.split('\n').map((t) => t.trim()).filter(Boolean),
@@ -136,9 +145,11 @@ export default function PosterGenerator() {
       tracks,
       qrUrl: form.qrUrl.trim(),
       paper,
+      backdrop,
+      backdropStrength,
       displayFamily: font.family,
     }),
-    [coverSrc, coverImage, form, tracks, paper, font.family]
+    [coverSrc, coverImage, form, tracks, paper, backdrop, backdropStrength, font.family]
   )
 
   // Die Schriften der Seite stehen nur im Browser fest, deshalb erst beim
@@ -641,7 +652,11 @@ export default function PosterGenerator() {
                     <span className="sr-only">{preset.label}</span>
                   </button>
                 ))}
-                <label className="mp-paper mp-paper-custom" title="Eigene Farbe">
+                <label
+                  className={`mp-paper mp-paper-custom${isPresetPaper ? '' : ' is-active is-chosen'}`}
+                  style={isPresetPaper ? undefined : { background: paper }}
+                  title="Eigene Farbe"
+                >
                   <span className="sr-only">Eigene Hintergrundfarbe</span>
                   <input
                     type="color"
@@ -654,6 +669,41 @@ export default function PosterGenerator() {
                 Die Schriftfarbe passt sich automatisch an — auf dunklem Grund wird sie hell.
                 {paperContrast < 4.5 && ' Bei dieser Farbe wird der Text allerdings schwer lesbar.'}
               </p>
+            </div>
+
+            <div className="mp-field">
+              <label className={`mp-check${coverSrc ? '' : ' is-disabled'}`}>
+                <input
+                  type="checkbox"
+                  checked={backdrop}
+                  disabled={!coverSrc}
+                  onChange={(e) => setBackdrop(e.target.checked)}
+                />
+                <span>Cover unscharf als Hintergrund</span>
+              </label>
+              {!coverSrc && (
+                <p className="mp-hint">Dafür wird ein Cover benötigt — wähl oben ein Album oder lade ein Bild hoch.</p>
+              )}
+              {backdropActive && (
+                <>
+                  <label className="zh-label mp-strength-label" htmlFor="mp-backdrop">
+                    Stärke — {backdropStrength} %
+                  </label>
+                  <input
+                    id="mp-backdrop"
+                    className="mp-range"
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={5}
+                    value={backdropStrength}
+                    onChange={(e) => setBackdropStrength(Number(e.target.value))}
+                  />
+                  <p className="mp-hint">
+                    Das Cover bleibt bewusst gedämpft, damit Tracklist und Titel lesbar bleiben.
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="mp-field">
