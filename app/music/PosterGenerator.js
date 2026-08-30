@@ -7,13 +7,16 @@ import {
   FORMATS,
   DEFAULT_FORMAT_KEY,
   DEFAULT_DPI,
+  DEFAULT_PAPER,
   DPI_MIN,
   DPI_MAX,
+  PAPER_PRESETS,
   PIXEL_WARN_THRESHOLD,
   drawPoster,
   ensureFontsLoaded,
   getFormat,
   pixelSize,
+  posterColors,
 } from './poster'
 import './music.css'
 
@@ -98,6 +101,7 @@ export default function PosterGenerator() {
   const [uploadUrl, setUploadUrl] = useState(null)
 
   const [fontKey, setFontKey] = useState(DEFAULT_FONT_KEY)
+  const [paper, setPaper] = useState(DEFAULT_PAPER)
   const [formatKey, setFormatKey] = useState(DEFAULT_FORMAT_KEY)
   const [dpi, setDpi] = useState(DEFAULT_DPI)
 
@@ -115,6 +119,7 @@ export default function PosterGenerator() {
   const exportSize = pixelSize(format, dpi)
   const exportPixels = exportSize.width * exportSize.height
   const showResults = !manualMode && artistQuery.trim().length >= 2
+  const paperContrast = posterColors(paper).textContrast
 
   const tracks = useMemo(
     () => form.tracksText.split('\n').map((t) => t.trim()).filter(Boolean),
@@ -130,9 +135,10 @@ export default function PosterGenerator() {
       release: form.release,
       tracks,
       qrUrl: form.qrUrl.trim(),
+      paper,
       displayFamily: font.family,
     }),
-    [coverSrc, coverImage, form, tracks, font.family]
+    [coverSrc, coverImage, form, tracks, paper, font.family]
   )
 
   // Die Schriften der Seite stehen nur im Browser fest, deshalb erst beim
@@ -615,11 +621,44 @@ export default function PosterGenerator() {
             {coverError && <p className="zh-error" style={{ marginTop: 14 }}>{coverError}</p>}
           </section>
 
-          {/* ── Schrift ── */}
+          {/* ── Gestaltung ── */}
           <section className="zd-card mp-panel">
-            <h2 className="zd-h3">4 — Schrift</h2>
-            <p className="mp-hint">Gilt für Interpret und Albumtitel auf dem Poster.</p>
-            <div className="mp-font-grid">
+            <h2 className="zd-h3">4 — Gestaltung</h2>
+
+            <div className="mp-field">
+              <span className="zh-label">Hintergrund</span>
+              <div className="mp-paper-row">
+                {PAPER_PRESETS.map((preset) => (
+                  <button
+                    key={preset.key}
+                    type="button"
+                    className={`mp-paper${paper.toLowerCase() === preset.value ? ' is-active' : ''}`}
+                    style={{ background: preset.value }}
+                    onClick={() => setPaper(preset.value)}
+                    aria-pressed={paper.toLowerCase() === preset.value}
+                    title={preset.label}
+                  >
+                    <span className="sr-only">{preset.label}</span>
+                  </button>
+                ))}
+                <label className="mp-paper mp-paper-custom" title="Eigene Farbe">
+                  <span className="sr-only">Eigene Hintergrundfarbe</span>
+                  <input
+                    type="color"
+                    value={paper}
+                    onChange={(e) => setPaper(e.target.value)}
+                  />
+                </label>
+              </div>
+              <p className="mp-hint">
+                Die Schriftfarbe passt sich automatisch an — auf dunklem Grund wird sie hell.
+                {paperContrast < 4.5 && ' Bei dieser Farbe wird der Text allerdings schwer lesbar.'}
+              </p>
+            </div>
+
+            <div className="mp-field">
+              <span className="zh-label">Schrift für Interpret und Albumtitel</span>
+              <div className="mp-font-grid">
               {POSTER_FONTS.map((item) => (
                 <button
                   key={item.key}
@@ -631,6 +670,7 @@ export default function PosterGenerator() {
                   {item.label}
                 </button>
               ))}
+              </div>
             </div>
           </section>
         </div>

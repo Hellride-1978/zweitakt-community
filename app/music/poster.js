@@ -23,9 +23,90 @@ export const DEFAULT_DPI = 300
 // darüber ohne Fehlermeldung ab. Ab dieser Schwelle warnen wir vorab.
 export const PIXEL_WARN_THRESHOLD = 16_000_000
 
-const PAPER = '#f6f3ec'
-const INK = '#1a1108'
-const INK_SOFT = '#5e5248'
+const DARK_INK = '#1a1108'
+const LIGHT_INK = '#f7f5f0'
+
+export const DEFAULT_PAPER = '#f6f3ec'
+
+export const PAPER_PRESETS = [
+  { key: 'papier',  label: 'Papier',  value: '#f6f3ec' },
+  { key: 'weiss',   label: 'Weiß',    value: '#ffffff' },
+  { key: 'sand',    label: 'Sand',    value: '#eadfc8' },
+  { key: 'salbei',  label: 'Salbei',  value: '#d4e0d6' },
+  { key: 'nacht',   label: 'Nacht',   value: '#1a1108' },
+  { key: 'tiefsee', label: 'Tiefsee', value: '#16293d' },
+]
+
+function hexToRgb(hex) {
+  const clean = String(hex).replace('#', '')
+  const full = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean
+  const n = Number.parseInt(full, 16)
+  return Number.isNaN(n) ? [255, 255, 255] : [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+// Relative Leuchtdichte nach WCAG – Grundlage für die Kontrastrechnung.
+function relativeLuminance(hex) {
+  const [r, g, b] = hexToRgb(hex).map((value) => {
+    const c = value / 255
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  })
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+// Mischt zwei Farben; t = 0 liefert a, t = 1 liefert b.
+function mixHex(a, b, t) {
+  const ca = hexToRgb(a)
+  const cb = hexToRgb(b)
+  return `#${ca
+    .map((v, i) => Math.round(v + (cb[i] - v) * t).toString(16).padStart(2, '0'))
+    .join('')}`
+}
+
+export function contrastRatio(a, b) {
+  const la = relativeLuminance(a)
+  const lb = relativeLuminance(b)
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)
+}
+
+/**
+ * Leitet alle Posterfarben aus der gewählten Hintergrundfarbe ab. Die Schrift
+ * wird nicht fest gesetzt, sondern es gewinnt die Variante mit dem größeren
+ * Kontrast – sonst stünde auf dunklem Grund dunkler Text.
+ */
+export function posterColors(paper) {
+  const onLight = contrastRatio(paper, DARK_INK)
+  const onDark = contrastRatio(paper, LIGHT_INK)
+  const useLight = onDark > onLight
+  const ink = useLight ? LIGHT_INK : DARK_INK
+
+  // Die gedämpfte Tinte für Tracknummern, Album und Datum entsteht durch
+  // Mischen Richtung Papier. Bei mitteltonigem Untergrund reicht das nicht mehr
+  // für lesbaren Text, deshalb wird schrittweise weniger gemischt – Lesbarkeit
+  // geht vor feiner Abstufung.
+  let inkSoft = ink
+  for (const t of [0.35, 0.25, 0.15]) {
+    const candidate = mixHex(ink, paper, t)
+    if (contrastRatio(paper, candidate) >= 4.5) {
+      inkSoft = candidate
+      break
+    }
+  }
+
+  return {
+    paper,
+    ink,
+    inkSoft,
+    placeholder: mixHex(paper, ink, 0.1),
+    // Ein QR-Code braucht dunkle Module auf hellem Grund. Reicht der Kontrast
+    // zum Papier nicht, bekommt er eine eigene helle Fläche untergelegt.
+    qrNeedsPatch: onLight < 4,
+    qrPatch: '#ffffff',
+    qrInk: DARK_INK,
+    // Massgeblich ist die schwächste tatsächlich verwendete Tinte, sonst
+    // bliebe die Warnung genau dann aus, wenn der Sekundärtext untergeht.
+    textContrast: Math.min(contrastRatio(paper, ink), contrastRatio(paper, inkSoft)),
+  }
+}
 
 export function getFormat(key) {
   return FORMATS.find((f) => f.key === key) || FORMATS[0]
@@ -166,14 +247,16 @@ function buildQr(text) {
   }
 }
 
-function drawQr(ctx, qr, x, y, size) {
+function drawQr(ctx, qr, x, y, size, colors) {
   const count = qr.getModuleCount()
   const quiet = 2
   const cell = size / (count + quiet * 2)
 
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(x, y, size, size)
-  ctx.fillStyle = INK
+  if (colors.qrNeedsPatch) {
+    ctx.fillStyle = colors.qrPatch
+    ctx.fillRect(x, y, size, size)
+  }
+  ctx.fillStyle = colors.qrInk
   for (let row = 0; row < count; row++) {
     for (let col = 0; col < count; col++) {
       if (!qr.isDark(row, col)) continue
@@ -189,10 +272,10 @@ function drawQr(ctx, qr, x, y, size) {
 }
 
 // Registrier-Ecken – das Signature-Element im Zweitakthoden-Druckstil.
-function drawRegistrationCorners(ctx, W, H, margin) {
+function drawRegistrationCorners(ctx, W, H, margin, colors) {
   const inset = margin * 0.42
   const arm = W * 0.028
-  ctx.strokeStyle = INK
+  ctx.strokeStyle = colors.ink
   ctx.lineWidth = Math.max(1, W * 0.0032)
   ctx.lineCap = 'butt'
   const corners = [
@@ -229,14 +312,17 @@ export function drawPoster(ctx, W, H, data) {
     release = '',
     tracks = [],
     qrUrl = '',
+    paper = DEFAULT_PAPER,
     displayFamily,
     monoFamily,
     sansFamily,
   } = data
 
+  const colors = posterColors(paper)
+
   ctx.save()
   ctx.clearRect(0, 0, W, H)
-  ctx.fillStyle = PAPER
+  ctx.fillStyle = colors.paper
   ctx.fillRect(0, 0, W, H)
   ctx.textBaseline = 'alphabetic'
 
@@ -249,21 +335,21 @@ export function drawPoster(ctx, W, H, data) {
   if (cover) {
     drawCoverImage(ctx, cover, margin, coverTop, coverSize, coverSize)
   } else {
-    ctx.fillStyle = '#e6e1d6'
+    ctx.fillStyle = colors.placeholder
     ctx.fillRect(margin, coverTop, coverSize, coverSize)
-    ctx.fillStyle = INK_SOFT
+    ctx.fillStyle = colors.inkSoft
     ctx.font = `400 ${W * 0.022}px "${monoFamily}"`
     const spacing = W * 0.008
     const labelX = margin + coverSize / 2 - spacedWidth(ctx, 'COVER', spacing) / 2
     drawSpaced(ctx, 'COVER', labelX, coverTop + coverSize / 2, spacing)
   }
-  ctx.strokeStyle = INK
+  ctx.strokeStyle = colors.ink
   ctx.lineWidth = Math.max(1, W * 0.002)
   ctx.strokeRect(margin, coverTop, coverSize, coverSize)
 
   /* Trenner */
   const ruleY = coverTop + coverSize + W * 0.042
-  ctx.strokeStyle = INK
+  ctx.strokeStyle = colors.ink
   ctx.lineWidth = Math.max(1, W * 0.0045)
   ctx.beginPath()
   ctx.moveTo(margin, ruleY)
@@ -284,8 +370,8 @@ export function drawPoster(ctx, W, H, data) {
   const hasQr = Boolean(qr)
   const qrY = bodyBottom - qrSize
   if (hasQr) {
-    drawQr(ctx, qr, rightX, qrY, qrSize)
-    ctx.fillStyle = INK_SOFT
+    drawQr(ctx, qr, rightX, qrY, qrSize, colors)
+    ctx.fillStyle = colors.inkSoft
     ctx.font = `400 ${W * 0.0145}px "${monoFamily}"`
     const capX = rightX + qrSize + W * 0.018
     const capSpacing = W * 0.0022
@@ -303,7 +389,7 @@ export function drawPoster(ctx, W, H, data) {
 
   if (release) {
     ctx.font = `400 ${layout.dateSize}px "${monoFamily}"`
-    ctx.fillStyle = INK_SOFT
+    ctx.fillStyle = colors.inkSoft
     cursorY += layout.dateSize
     drawSpaced(ctx, release.toUpperCase(), rightX, cursorY, W * 0.0026)
     cursorY += layout.dateGap
@@ -312,7 +398,7 @@ export function drawPoster(ctx, W, H, data) {
   if (layout.artist) {
     // fitBlock hat ctx.font zuletzt für die Messung gesetzt – vor dem Zeichnen neu setzen.
     ctx.font = `400 ${layout.artist.size}px "${displayFamily}"`
-    ctx.fillStyle = INK
+    ctx.fillStyle = colors.ink
     for (const line of layout.artist.lines) {
       cursorY += layout.artist.size * 0.86
       ctx.fillText(line, rightX, cursorY)
@@ -323,7 +409,7 @@ export function drawPoster(ctx, W, H, data) {
 
   if (layout.album) {
     ctx.font = `400 ${layout.album.size}px "${displayFamily}"`
-    ctx.fillStyle = INK_SOFT
+    ctx.fillStyle = colors.inkSoft
     for (const line of layout.album.lines) {
       cursorY += layout.album.size * 0.92
       ctx.fillText(line, rightX, cursorY)
@@ -366,16 +452,16 @@ export function drawPoster(ctx, W, H, data) {
       const y = bodyTop + row * lineH + size
 
       ctx.font = `400 ${size * 0.92}px "${monoFamily}"`
-      ctx.fillStyle = INK_SOFT
+      ctx.fillStyle = colors.inkSoft
       ctx.fillText(String(i + 1).padStart(2, '0'), x, y)
 
       ctx.font = `400 ${size}px "${sansFamily}"`
-      ctx.fillStyle = INK
+      ctx.fillStyle = colors.ink
       ctx.fillText(ellipsize(ctx, visible[i].trim(), colW - numW), x + numW, y)
     }
   }
 
-  drawRegistrationCorners(ctx, W, H, margin)
+  drawRegistrationCorners(ctx, W, H, margin, colors)
   ctx.restore()
 }
 

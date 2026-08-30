@@ -169,6 +169,44 @@
 }
 .mp-cover-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
+/* ─── Hintergrundfarbe ─── */
+.mp-paper-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.mp-paper {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1.5px solid var(--hairline);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.mp-paper:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); border-color: var(--ink); }
+.mp-paper.is-active { border-color: var(--ink); box-shadow: 3px 3px 0 var(--accent-ink); }
+.mp-paper:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 2px; }
+/* Nur die Kachel mit dem verdeckten Color-Input braucht focus-within – auf den
+   Preset-Buttons bliebe sonst nach einem Mausklick ein Outline stehen. */
+.mp-paper-custom:focus-within { outline: 2.5px solid var(--ink); outline-offset: 2px; }
+
+/* Der native Farbwähler bleibt unsichtbar, die Kachel ist die Bedienfläche. */
+.mp-paper-custom {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  background:
+    conic-gradient(from 0deg, #e05252, #e0c452, #62c46a, #52a8e0, #a06ad0, #e05252);
+}
+.mp-paper-custom input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 /* ─── Schriftauswahl ─── */
 .mp-font-grid {
   display: grid;
@@ -244,6 +282,7 @@
   /* Touch-Targets wie im übrigen Projekt */
   .mp-result { min-height: 44px; padding: 14px; }
   .mp-range { height: 44px; }
+  .mp-paper { width: 44px; height: 44px; }
 }
 
 @media (max-width: 560px) {
