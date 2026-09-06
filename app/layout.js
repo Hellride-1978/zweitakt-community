@@ -27,8 +27,8 @@ export const metadata = {
     default: 'Zweitakthoden – Moped & Mofa Community für Schrauber',
     template: '%s — Zweitakthoden',
   },
-  description: 'Die Community für Zweitakt-Schrauber in Deutschland. Simson, Puch, Zündapp, Tomos – Moped-Forum, Ausfahrten und Bike-Profile. Kostenlos mitmachen.',
-  keywords: ['Zweitakt Community', 'Moped Forum', 'Mofa Community', 'Simson Treffen', 'Zweitakt schrauben', 'Moped Schrauber', 'Simson Community Deutschland', 'Zündapp Forum', 'Puch Maxi Community', 'Zweitakt Forum'],
+  description: 'Die Community für Zweitakt-Schrauber in Deutschland. Simson, Puch, Zündapp, Tomos – Treffen, Ausfahrten und Bike-Profile. Kostenlos mitmachen.',
+  keywords: ['Zweitakt Community', 'Zweitakt Treffen', 'Mofa Community', 'Simson Treffen', 'Zweitakt schrauben', 'Moped Schrauber', 'Simson Community Deutschland', 'Zündapp Treffen', 'Puch Maxi Community', 'Moped Ausfahrten'],
   openGraph: {
     title: 'Zweitakthoden – Moped & Mofa Community',
     description: 'Die Community für Zweitakt-Schrauber. Simson-Treffen, Ausfahrten planen, Bikes vorstellen.',

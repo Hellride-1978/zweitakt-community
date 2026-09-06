@@ -10,10 +10,10 @@ import { faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 export const metadata = {
   title: 'Zweitakt-Community – Moped, Mofa & Simson-Schrauber in Deutschland',
-  description: 'Zweitakthoden: Das Moped-Forum für Zweitakt-Schrauber. Simson-Treffen, Ausfahrten planen, Bikes vorstellen – für Fans von Simson, Puch, Zündapp, Tomos & Co. Kostenlos und ohne Verpflichtung.',
+  description: 'Zweitakthoden: Der Termin-Kalender für Zweitakt-Schrauber. Simson-Treffen, Ausfahrten planen, Bikes vorstellen – für Fans von Simson, Puch, Zündapp, Tomos & Co. Kostenlos und ohne Verpflichtung.',
   openGraph: {
     title: 'Zweitakthoden – Moped & Mofa Community für Schrauber',
-    description: 'Das Moped-Forum für Zweitakt-Fans: Simson-Treffen, Ausfahrten, Schrauber-Profil anlegen. Kostenlos.',
+    description: 'Termine für Zweitakt-Fans: Simson-Treffen, Ausfahrten, Schrauber-Profil anlegen. Kostenlos.',
     type: 'website',
   },
 }
@@ -118,7 +118,7 @@ export default async function Home() {
     '@type': 'Organization',
     name: 'Zweitakthoden',
     url: 'https://zweitakthoden.de',
-    description: 'Community für Zweitakt-Schrauber in Deutschland. Moped-Forum, Simson-Treffen, Ausfahrten und Bike-Profile.',
+    description: 'Community für Zweitakt-Schrauber in Deutschland. Termine, Simson-Treffen, Ausfahrten und Bike-Profile.',
     sameAs: ['https://www.instagram.com/zweitakt_hoden/'],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -141,7 +141,7 @@ export default async function Home() {
 
         <p className="zh-hero-tagline">
           Offen für alle, die den Zweitakt lieben.<br /><br />
-          Die Community für Zweitakt-Fans: Bikes vorstellen, im Forum diskutieren, Ausfahrten planen, Treffen organisieren – kostenlos.
+          Die Community für Zweitakt-Fans: Bikes vorstellen, Ausfahrten planen, Treffen organisieren – kostenlos.
         </p>
 
         <HeroActions />
