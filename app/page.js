@@ -79,7 +79,7 @@ export default async function Home() {
   ] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, name, avatar_url, location, last_seen, created_at, vehicles(id, make, model, title, year, displacement_cc)')
+      .select('id, name, avatar_url, location, created_at, vehicles(id, make, model, title, year, displacement_cc)') // [DEAKTIVIERT 2026-09: presence] last_seen entfernt
       .order('created_at', { ascending: false })
       .limit(8),
     supabase
@@ -97,7 +97,7 @@ export default async function Home() {
     supabase.from('vehicles').select('*', { count: 'exact', head: true }),
     supabase
       .from('profiles')
-      .select('id, name, location, avatar_url, lat, lng, last_seen, created_at, vehicles(id, make, model, year)')
+      .select('id, name, location, avatar_url, lat, lng, created_at, vehicles(id, make, model, year)') // [DEAKTIVIERT 2026-09: presence] last_seen entfernt
       .not('lat', 'is', null)
       .not('lng', 'is', null),
   ])
@@ -246,7 +246,8 @@ export default async function Home() {
               const latestVehicle = m.vehicles?.[0]
               const initial = (m.name || '?').charAt(0).toUpperCase()
               const since = formatTimeAgo(m.created_at)
-              const isOnline = m.last_seen && (Date.now() - new Date(m.last_seen).getTime()) < 10 * 60 * 1000
+              // [DEAKTIVIERT 2026-09: presence] Online-Status wird nicht mehr angezeigt.
+              const isOnline = false
               return (
                 <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>
                   <div className="zh-member-top">

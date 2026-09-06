@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { requireInternalSecret } from '@/lib/internalApiAuth'
+import { isEnabled } from '@/lib/features'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -59,6 +60,8 @@ function buildHtml({ postTitle, postUrl, replierName, replyPreview, isParticipan
 }
 
 export async function POST(request) {
+  // [DEAKTIVIERT 2026-09: forum] Route liefert 404, solange das Feature aus ist.
+  if (!isEnabled('forum')) return new Response(null, { status: 404 })
   try {
     const secretError = requireInternalSecret(request)
     if (secretError) return secretError

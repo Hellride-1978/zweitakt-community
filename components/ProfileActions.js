@@ -3,7 +3,7 @@ import { useAuth } from '@/lib/useAuth'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
 
 export default function ProfileActions({ profileId, hasPlz }) {
   const { user, loading } = useAuth()
@@ -47,14 +47,7 @@ export default function ProfileActions({ profileId, hasPlz }) {
     )
   }
 
-  return (
-    <Link
-      href={`/messages/new?to=${profileId}`}
-      className="zd-btn accent"
-      style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 15, padding: '10px 16px' }}
-    >
-      <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 14 }} />
-      Nachricht senden
-    </Link>
-  )
+  // [DEAKTIVIERT 2026-09: messages] Auf fremden Profilen stand hier ein Button
+  // "Nachricht senden" → /messages/new?to=… . Die Route liefert jetzt 404.
+  return null
 }

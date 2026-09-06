@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import nodemailer from 'nodemailer'
 import { buildConfirmationEmail } from '@/lib/newsletter-emails'
 import { rateLimit, getClientIp } from '@/lib/internalApiAuth'
+import { isEnabled } from '@/lib/features'
 
 function adminClient() {
   return createClient(
@@ -20,6 +21,8 @@ function mailer() {
 }
 
 export async function POST(request) {
+  // [DEAKTIVIERT 2026-09: newsletter] Route liefert 404, solange das Feature aus ist.
+  if (!isEnabled('newsletter')) return new Response(null, { status: 404 })
   try {
     const ip = getClientIp(request)
     const rateLimitError = rateLimit(`subscribe:${ip}`, 3, 300_000) // 3 Versuche pro 5 Min

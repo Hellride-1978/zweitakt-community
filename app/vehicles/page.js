@@ -15,16 +15,8 @@ export default async function VehiclesPage() {
     .select('id, make, model, title, year, displacement_cc, image_url, user_id, created_at, profiles(id, name, avatar_url)')
     .order('created_at', { ascending: false })
 
-  const ids = (vehicles ?? []).map(v => v.id)
-  let likeCounts = {}
-  if (ids.length > 0) {
-    const { data: likes } = await supabase
-      .from('likes')
-      .select('target_id')
-      .eq('target_type', 'vehicle')
-      .in('target_id', ids)
-    likes?.forEach(l => { likeCounts[l.target_id] = (likeCounts[l.target_id] || 0) + 1 })
-  }
+  // [DEAKTIVIERT 2026-09: likes] Like-Zähler werden nicht mehr geladen und
+  // nicht mehr an VehiclesGrid übergeben (dort ist auch der Button ausgehängt).
 
   return (
     <DesktopLayout>
@@ -37,7 +29,7 @@ export default async function VehiclesPage() {
           <VehiclesCreateButton />
         </div>
 
-        <VehiclesGrid vehicles={vehicles ?? []} likeCounts={likeCounts} />
+        <VehiclesGrid vehicles={vehicles ?? []} />
       </div>
     </DesktopLayout>
   )

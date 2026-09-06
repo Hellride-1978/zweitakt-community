@@ -31,9 +31,10 @@ function MapCapture({ mapRef, tab }) {
   return null
 }
 
-function isOnline(lastSeen) {
-  if (!lastSeen) return false
-  return Date.now() - new Date(lastSeen).getTime() < 10 * 60 * 1000
+// [DEAKTIVIERT 2026-09: presence] Online-Status wird nicht mehr ausgewertet.
+// Original: Date.now() - new Date(lastSeen).getTime() < 10 * 60 * 1000
+function isOnline() {
+  return false
 }
 
 function MemberRow({ m, active, onSelect }) {

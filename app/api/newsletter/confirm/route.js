@@ -11,6 +11,11 @@ function adminClient() {
 }
 
 export async function GET(request) {
+  // [DEAKTIVIERT 2026-09: newsletter] Route liefert 404, solange das Feature aus ist.
+  // Bewusst NICHT flag-geschützt: in bereits versendeten Bestätigungsmails
+  // stehen Opt-in-Links. Würden die ins Leere laufen, blieben die Einträge
+  // dauerhaft auf 'pending'. Neuanmeldungen sind über /api/newsletter/subscribe
+  // ohnehin nicht mehr möglich. [Feature-Kontext: FEATURES.newsletter]
   const { searchParams } = new URL(request.url)
   const token = searchParams.get('token')
 

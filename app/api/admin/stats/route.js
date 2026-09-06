@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { isEnabled } from '@/lib/features'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'martin@delavega.de'
 
@@ -88,8 +89,15 @@ export async function GET(request) {
       admin.from('newsletter_subscribers').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       admin.from('newsletter_subscribers').select('opt_in_at').gte('opt_in_at', cutoffIso).eq('status', 'confirmed'),
       admin.from('newsletter_subscribers').select('unsubscribed_at').gte('unsubscribed_at', cutoffIso).eq('status', 'unsubscribed'),
-      admin.from('forum_posts').select('id', { count: 'exact', head: true }),
-      admin.from('forum_replies').select('id', { count: 'exact', head: true }),
+      // [DEAKTIVIERT 2026-09: forum] Zählt nur noch, solange das Feature aktiv ist.
+      // Wichtig: Vor einem DROP der forum_*-Tabellen (Phase 3) müssen diese
+      // beiden Zeilen und die zugehörigen KPI-Kacheln ganz raus.
+      isEnabled('forum')
+        ? admin.from('forum_posts').select('id', { count: 'exact', head: true })
+        : Promise.resolve({ count: 0, error: null }),
+      isEnabled('forum')
+        ? admin.from('forum_replies').select('id', { count: 'exact', head: true })
+        : Promise.resolve({ count: 0, error: null }),
       admin.from('feedbacks').select('id', { count: 'exact', head: true }),
       admin.from('profiles').select('id', { count: 'exact', head: true }),
       admin.from('page_views').select('viewed_at').gte('viewed_at', cutoffIso),

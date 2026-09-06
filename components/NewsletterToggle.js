@@ -8,7 +8,7 @@ const STATUS_LABEL = {
   pending:       { text: 'Ausstehend – bitte E-Mail bestätigen', color: '#92400e' },
   confirmed:     { text: 'Angemeldet',                            color: '#166534' },
   unsubscribed:  { text: 'Abgemeldet',                            color: 'var(--ink-muted)' },
-  none:          { text: 'Nicht angemeldet',                      color: 'var(--ink-muted)' },
+  none:          { text: 'Nicht angemeldet – der Newsletter ruht derzeit', color: 'var(--ink-muted)' },
 }
 
 export default function NewsletterToggle() {
@@ -35,27 +35,9 @@ export default function NewsletterToggle() {
       })
   }, [user])
 
-  async function handleSubscribe() {
-    if (!email) return
-    setWorking(true)
-    setFeedback(null)
-    const res = await fetch('/api/newsletter/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, userId: user.id }),
-    })
-    const data = await res.json()
-    setWorking(false)
-    if (data.message) {
-      setFeedback({ type: 'info', text: data.message })
-      setStatus('confirmed')
-    } else if (data.ok) {
-      setFeedback({ type: 'info', text: 'Bestätigungsmail wurde gesendet. Bitte prüfe dein Postfach.' })
-      setStatus('pending')
-    } else {
-      setFeedback({ type: 'error', text: data.error || 'Fehler bei der Anmeldung.' })
-    }
-  }
+  // [DEAKTIVIERT 2026-09: newsletter] handleSubscribe lag hier und rief
+  // /api/newsletter/subscribe — die Route liefert jetzt 404. Neuanmeldungen
+  // sind nicht mehr möglich; die Abmeldung unten bleibt bewusst erhalten.
 
   async function handleUnsubscribe() {
     setWorking(true)
@@ -93,26 +75,9 @@ export default function NewsletterToggle() {
           </div>
         </div>
         <div style={{ flexShrink: 0 }}>
-          {(status === 'none' || status === 'unsubscribed') && (
-            <button
-              onClick={handleSubscribe}
-              disabled={working}
-              className="zh-btn"
-              style={{ fontSize: 13, padding: '8px 16px' }}
-            >
-              {working ? 'Moment…' : 'Anmelden'}
-            </button>
-          )}
-          {status === 'pending' && (
-            <button
-              onClick={handleSubscribe}
-              disabled={working}
-              className="zd-btn outline"
-              style={{ fontSize: 13, padding: '8px 16px' }}
-            >
-              {working ? 'Moment…' : 'Erneut senden'}
-            </button>
-          )}
+          {/* [DEAKTIVIERT 2026-09: newsletter] Buttons "Anmelden" und
+              "Erneut senden" entfernt — der Newsletter nimmt keine neuen
+              Anmeldungen mehr an. */}
           {status === 'confirmed' && (
             <button
               onClick={handleUnsubscribe}

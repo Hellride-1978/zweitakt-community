@@ -1538,8 +1538,12 @@ body::before {
   transition: transform 0.25s;
 }
 .zh-member-card:hover .zh-avatar { transform: rotate(5deg); }
+/* [DEAKTIVIERT 2026-09: presence] Der Status-Punkt am Avatar ist aus.
+   Ohne Presence-Heartbeat stünde er dauerhaft auf "offline" und würde einen
+   Status suggerieren, den es nicht mehr gibt. Zum Reaktivieren `content: none`
+   in der ersten Regel wieder auf `content: ""` ändern. */
 .zh-avatar::after {
-  content: "";
+  content: none;
   position: absolute;
   bottom: -2px; right: -2px;
   width: 14px; height: 14px;

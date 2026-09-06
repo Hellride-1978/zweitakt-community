@@ -7,15 +7,15 @@ import Nav from "@/components/Nav";
 import ScrollReset from "@/components/ScrollReset";
 import ThemeProvider from "@/components/ThemeProvider";
 import FeedbackWidget from "@/components/FeedbackWidget";
-import OnboardingTour from "@/components/OnboardingTour";
+// [DEAKTIVIERT 2026-09: onboarding] import OnboardingTour from "@/components/OnboardingTour";
 import CookieConsent from "@/components/CookieConsent"
 import PlzNudgeBanner from "@/components/PlzNudgeBanner"
-import PresenceUpdater from "@/components/PresenceUpdater";
+// [DEAKTIVIERT 2026-09: presence] import PresenceUpdater from "@/components/PresenceUpdater";
 import PageTracker from "@/components/PageTracker";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from "next/link";
-import NewsletterForm from "@/components/NewsletterForm";
+// [DEAKTIVIERT 2026-09: newsletter] import NewsletterForm from "@/components/NewsletterForm";
 
 const boogaloo = Boogaloo({ weight: "400", subsets: ["latin"], variable: "--font-display" });
 const dmSans   = DM_Sans({ subsets: ["latin"], weight: ["300","400","500","600"], variable: "--font-sans" });
@@ -65,10 +65,10 @@ export default function RootLayout({ children }) {
         <div aria-hidden="true" style={{ height: 'var(--nav-h)' }} />
         <main id="main-content" className="flex-1">{children}</main>
         <FeedbackWidget />
-        <OnboardingTour />
+        {/* [DEAKTIVIERT 2026-09: onboarding] <OnboardingTour /> */}
         <CookieConsent />
         <PlzNudgeBanner />
-        <PresenceUpdater />
+        {/* [DEAKTIVIERT 2026-09: presence] <PresenceUpdater /> — schrieb profiles.last_seen alle 5 Min. */}
         <PageTracker />
         <Analytics />
         <SpeedInsights />
@@ -77,9 +77,7 @@ export default function RootLayout({ children }) {
           <div className="zh-footer-top">
             <div className="zh-footer-brand">
               <Link href="/" className="zh-footer-logo">zweitakt<span>hoden</span>.de</Link>
-              <div style={{ marginTop: 24 }}>
-                <NewsletterForm showLabel />
-              </div>
+              {/* [DEAKTIVIERT 2026-09: newsletter] <NewsletterForm showLabel /> */}
             </div>
             <div className="zh-footer-cols">
               <div className="zh-footer-col">
@@ -89,7 +87,7 @@ export default function RootLayout({ children }) {
                   <li><Link href="/profiles">Schrauber</Link></li>
                   <li><Link href="/vehicles">Bikes</Link></li>
                   <li><Link href="/schrauberhalle">Schrauberhalle</Link></li>
-                  <li><Link href="/forum">Forum</Link></li>
+                  {/* [DEAKTIVIERT 2026-09: forum] */}
                   <li><Link href="/auth/register">Registrieren</Link></li>
                 </ul>
               </div>

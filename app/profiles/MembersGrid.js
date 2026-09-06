@@ -226,7 +226,8 @@ export default function MembersGrid({ members }) {
             const distLabel = m.distance_km !== null && m.distance_km !== undefined
               ? `${m.distance_km} km`
               : (hasCoords ? '?' : null)
-            const isOnline = m.last_seen && (Date.now() - new Date(m.last_seen).getTime()) < 10 * 60 * 1000
+            // [DEAKTIVIERT 2026-09: presence] Online-Status wird nicht mehr angezeigt.
+            const isOnline = false
 
             return (
               <Link key={m.id} href={`/profile/${m.id}`} className="zh-member-card" style={{ textDecoration: 'none' }}>

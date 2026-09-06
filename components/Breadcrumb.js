@@ -10,9 +10,9 @@ const SECTION_MAP = {
   vehicles:       { label: 'Bikes',         href: '/vehicles' },
   profiles:       { label: 'Schrauber',     href: '/profiles' },
   profile:        { label: 'Schrauber',     href: '/profiles' },
-  messages:       { label: 'Nachrichten',   href: '/messages' },
+  // [DEAKTIVIERT 2026-09: messages] messages: { label: 'Nachrichten', href: '/messages' },
   schrauberhalle: { label: 'Schrauberhalle',href: '/schrauberhalle' },
-  forum:          { label: 'Forum',         href: '/forum' },
+  // [DEAKTIVIERT 2026-09: forum] forum: { label: 'Forum', href: '/forum' },
   music:          { label: 'Poster-Generator', href: '/music' },
 }
 

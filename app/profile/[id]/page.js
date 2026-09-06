@@ -40,23 +40,15 @@ export default async function ProfilePage({ params }) {
     { data: garage },
     { data: garageSkills },
   ] = await Promise.all([
-    supabase.from('profiles').select('*, plz, last_seen').eq('id', id).single(),
+    supabase.from('profiles').select('*, plz').eq('id', id).single(), // [DEAKTIVIERT 2026-09: presence] last_seen entfernt
     supabase.from('vehicles').select('*').eq('user_id', id).order('created_at', { ascending: false }),
     supabase.from('ride_participants').select('rides(id, title, start_date, location)').eq('user_id', id),
     supabase.from('garage').select('*').eq('user_id', id).single(),
     supabase.from('garage_skills').select('skill').eq('user_id', id),
   ])
 
-  let vehicleLikeCounts = {}
-  if (vehicles?.length > 0) {
-    const vids = vehicles.map(v => v.id)
-    const { data: vlikes } = await supabase
-      .from('likes')
-      .select('target_id')
-      .eq('target_type', 'vehicle')
-      .in('target_id', vids)
-    vlikes?.forEach(l => { vehicleLikeCounts[l.target_id] = (vehicleLikeCounts[l.target_id] || 0) + 1 })
-  }
+  // [DEAKTIVIERT 2026-09: likes] Like-Zähler werden nicht mehr geladen.
+  const vehicleLikeCounts = {}
 
   const now = new Date().toISOString()
   const upcomingEvents = (participations ?? [])
@@ -78,7 +70,8 @@ export default async function ProfilePage({ params }) {
   }
 
   const initial = (profile.name || '?').charAt(0).toUpperCase()
-  const isOnline = profile.last_seen && (Date.now() - new Date(profile.last_seen).getTime()) < 10 * 60 * 1000
+  // [DEAKTIVIERT 2026-09: presence] Online-Status wird nicht mehr ausgewertet.
+  const isOnline = false
   const joinedDate = new Date(profile.created_at).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })
 
   return (

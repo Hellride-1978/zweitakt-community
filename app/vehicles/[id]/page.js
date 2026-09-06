@@ -3,8 +3,8 @@ import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import VehicleGallery from '@/components/VehicleGallery'
 import VehicleOwnerActions from '@/components/VehicleOwnerActions'
-import LikeButton from '@/components/LikeButton'
-import Comments from '@/components/Comments'
+// [DEAKTIVIERT 2026-09: likes] import LikeButton from '@/components/LikeButton'
+// [DEAKTIVIERT 2026-09: comments] import Comments from '@/components/Comments'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -97,16 +97,12 @@ export default async function VehiclePage({ params }) {
             </>
           )}
 
-          {/* Like + Actions */}
+          {/* [DEAKTIVIERT 2026-09: likes] LikeButton entfernt, Besitzer-Aktionen bleiben. */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-            <LikeButton targetType="vehicle" targetId={vehicle.id} />
             <VehicleOwnerActions vehicleId={vehicle.id} ownerId={vehicle.user_id} />
           </div>
 
-          {/* Kommentare */}
-          <div className="zd-card">
-            <Comments targetType="vehicle" targetId={vehicle.id} ownerId={vehicle.user_id} />
-          </div>
+          {/* [DEAKTIVIERT 2026-09: comments] Kommentar-Block entfernt. */}
         </div>
       </div>
     </DesktopLayout>

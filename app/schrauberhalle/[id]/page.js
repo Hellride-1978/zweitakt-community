@@ -3,7 +3,7 @@ import Link from 'next/link'
 import DesktopLayout from '@/components/DesktopLayout'
 import VehicleGallery from '@/components/VehicleGallery'
 import { skillBadgeStyle } from '@/lib/garage'
-import LikeButton from '@/components/LikeButton'
+// [DEAKTIVIERT 2026-09: likes] import LikeButton from '@/components/LikeButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faArrowRight, faWrench } from '@fortawesome/free-solid-svg-icons'
 
@@ -125,9 +125,7 @@ export default async function GarageDetailPage({ params }) {
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <LikeButton targetType="garage" targetId={garage.id} />
-          </div>
+          {/* [DEAKTIVIERT 2026-09: likes] Like-Block entfernt. */}
 
           <Link href="/schrauberhalle" style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             ← Alle Schrauberhallen

@@ -9,7 +9,7 @@ export default async function ProfilesPage() {
   const supabase = createServerClient()
   const { data: members } = await supabase
     .from('profiles')
-    .select('id, name, avatar_url, location, plz, lat, lng, last_seen, created_at, vehicles(id, make, model, title, year)')
+    .select('id, name, avatar_url, location, plz, lat, lng, created_at, vehicles(id, make, model, title, year)') // [DEAKTIVIERT 2026-09: presence] last_seen entfernt
     .order('created_at', { ascending: false })
 
   const mapMembers = (members ?? []).filter(m => {

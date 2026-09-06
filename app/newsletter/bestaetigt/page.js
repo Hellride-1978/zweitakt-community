@@ -3,6 +3,9 @@ import Link from 'next/link'
 export const metadata = { title: 'Newsletter bestätigt – Zweitakthoden' }
 
 export default function NewsletterBestaetigtPage({ searchParams }) {
+  // Bleibt bewusst erreichbar: /api/newsletter/confirm ist weiterhin aktiv,
+  // damit bereits versendete Double-Opt-in-Links nicht ins Leere laufen.
+  // Diese Seite ist deren Landing-Page. [Feature-Kontext: FEATURES.newsletter]
   const error = searchParams?.error
   const already = searchParams?.already
 
@@ -40,7 +43,7 @@ export default function NewsletterBestaetigtPage({ searchParams }) {
             : 'Deine Anmeldung ist bestätigt. Wir haben dir gerade eine Willkommensmail geschickt.'}
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/forum" className="zh-btn">Zum Forum →</Link>
+          <Link href="/events" className="zh-btn">Zu den Terminen →</Link>
           <Link href="/" className="zd-btn outline">Zur Startseite</Link>
         </div>
       </div>

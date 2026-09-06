@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { isEnabled } from '@/lib/features'
 
 function adminClient() {
   return createClient(
@@ -32,6 +33,8 @@ const replySchema = z.object({
 })
 
 export async function createPost(accessToken, prevState, formData) {
+  // [DEAKTIVIERT 2026-09: forum] Server Action ist stillgelegt, siehe lib/features.js.
+  if (!isEnabled('forum')) return { error: 'Das Forum ist nicht mehr verfügbar.' }
   const user = await getVerifiedUser(accessToken)
   if (!user) return { error: 'Du musst eingeloggt sein.' }
 
@@ -67,6 +70,8 @@ export async function createPost(accessToken, prevState, formData) {
 }
 
 export async function createReply(accessToken, prevState, formData) {
+  // [DEAKTIVIERT 2026-09: forum] Server Action ist stillgelegt, siehe lib/features.js.
+  if (!isEnabled('forum')) return { error: 'Das Forum ist nicht mehr verfügbar.' }
   const user = await getVerifiedUser(accessToken)
   if (!user) return { error: 'Du musst eingeloggt sein.' }
 
@@ -102,6 +107,8 @@ export async function createReply(accessToken, prevState, formData) {
 }
 
 export async function deletePost(accessToken, formData) {
+  // [DEAKTIVIERT 2026-09: forum] Server Action ist stillgelegt, siehe lib/features.js.
+  if (!isEnabled('forum')) return { error: 'Das Forum ist nicht mehr verfügbar.' }
   const user = await getVerifiedUser(accessToken)
   if (!user) return { error: 'Nicht eingeloggt' }
 
@@ -119,6 +126,8 @@ export async function deletePost(accessToken, formData) {
 }
 
 export async function updatePost(accessToken, prevState, formData) {
+  // [DEAKTIVIERT 2026-09: forum] Server Action ist stillgelegt, siehe lib/features.js.
+  if (!isEnabled('forum')) return { error: 'Das Forum ist nicht mehr verfügbar.' }
   const user = await getVerifiedUser(accessToken)
   if (!user) return { error: 'Nicht eingeloggt' }
 
@@ -152,6 +161,8 @@ export async function updatePost(accessToken, prevState, formData) {
 }
 
 export async function toggleVote(accessToken, formData) {
+  // [DEAKTIVIERT 2026-09: forum] Server Action ist stillgelegt, siehe lib/features.js.
+  if (!isEnabled('forum')) return { error: 'Das Forum ist nicht mehr verfügbar.' }
   const user = await getVerifiedUser(accessToken)
   if (!user) return { error: 'Du musst eingeloggt sein.' }
 

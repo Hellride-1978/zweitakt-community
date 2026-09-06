@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
 import { createClient } from '@supabase/supabase-js'
 import { requireBearerAuth } from '@/lib/internalApiAuth'
+import { isEnabled } from '@/lib/features'
 
 const transporter = nodemailer.createTransport({
   host: process.env.NOTIFY_SMTP_HOST,
@@ -57,6 +58,8 @@ async function getEmail(supabaseAdmin, userId) {
 }
 
 export async function POST(request) {
+  // [DEAKTIVIERT 2026-09: comments] Route liefert 404, solange das Feature aus ist.
+  if (!isEnabled('comments')) return new Response(null, { status: 404 })
   try {
     const authError = await requireBearerAuth(request)
     if (authError.error) return authError.error

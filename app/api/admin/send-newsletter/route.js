@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import nodemailer from 'nodemailer'
+import { isEnabled } from '@/lib/features'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'martin@delavega.de'
 
@@ -121,6 +122,8 @@ function buildHtml({ headline, blocks, ctaLabel, ctaUrl, unsubscribeUrl, profile
 }
 
 export async function POST(request) {
+  // [DEAKTIVIERT 2026-09: newsletter] Route liefert 404, solange das Feature aus ist.
+  if (!isEnabled('newsletter')) return new Response(null, { status: 404 })
   try {
     const auth = await requireAdmin(request)
     if (auth.error) return auth.error

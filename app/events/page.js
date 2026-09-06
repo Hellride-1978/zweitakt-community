@@ -18,16 +18,9 @@ export default async function EventsPage({ searchParams }) {
 
   const { data: events, error } = await query
 
-  let likeCounts = {}
-  if (!error && events?.length > 0) {
-    const ids = events.map(e => e.id)
-    const { data: likes } = await supabase
-      .from('likes')
-      .select('target_id')
-      .eq('target_type', 'event')
-      .in('target_id', ids)
-    likes?.forEach(l => { likeCounts[l.target_id] = (likeCounts[l.target_id] || 0) + 1 })
-  }
+  // [DEAKTIVIERT 2026-09: likes] Like-Zähler werden nicht mehr geladen.
+  // Bei leerem Objekt rendert EventsList keine Herz-Badges.
+  const likeCounts = {}
 
   return (
     <DesktopLayout>

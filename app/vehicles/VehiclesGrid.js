@@ -1,66 +1,28 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAuth } from '@/lib/useAuth'
-import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
+// [DEAKTIVIERT 2026-09: likes] Nur noch vom Like-Code gebraucht:
+// import { useCallback, useEffect } from 'react'
+// import { useAuth } from '@/lib/useAuth'
+// import { supabase } from '@/lib/supabase'
+// import { useRouter } from 'next/navigation'
 
 const PAGE_SIZE = 10
 
-export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
-  const { user } = useAuth()
-  const router = useRouter()
-  const [counts, setCounts] = useState(initialCounts)
-  const [liked, setLiked] = useState({})
-  const [working, setWorking] = useState({})
+// [DEAKTIVIERT 2026-09: likes] Der Prop `likeCounts` wird nicht mehr ausgewertet,
+// /vehicles übergibt bewusst ein leeres Objekt.
+export default function VehiclesGrid({ vehicles }) {
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [activeMake, setActiveMake] = useState(null)
 
   const makes = [...new Set(vehicles.map(v => v.make).filter(Boolean))].sort()
   const filtered = activeMake ? vehicles.filter(v => v.make === activeMake) : vehicles
 
-  // Load user's own likes on mount
-  useEffect(() => {
-    if (!user || vehicles.length === 0) return
-    const ids = vehicles.map(v => v.id)
-    supabase
-      .from('likes')
-      .select('target_id')
-      .eq('target_type', 'vehicle')
-      .eq('user_id', user.id)
-      .in('target_id', ids)
-      .then(({ data }) => {
-        if (!data) return
-        const map = {}
-        data.forEach(l => { map[l.target_id] = true })
-        setLiked(map)
-      })
-  }, [user, vehicles])
-
-  const toggleLike = useCallback(async (e, vehicleId) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (!user) { router.push('/auth/login'); return }
-    if (working[vehicleId]) return
-
-    const isLiked = !!liked[vehicleId]
-    // Optimistic update
-    setLiked(l => ({ ...l, [vehicleId]: !isLiked }))
-    setCounts(c => ({ ...c, [vehicleId]: Math.max(0, (c[vehicleId] ?? 0) + (isLiked ? -1 : 1)) }))
-    setWorking(w => ({ ...w, [vehicleId]: true }))
-
-    if (isLiked) {
-      await supabase.from('likes').delete()
-        .eq('target_type', 'vehicle')
-        .eq('target_id', vehicleId)
-        .eq('user_id', user.id)
-    } else {
-      await supabase.from('likes').insert({ target_type: 'vehicle', target_id: vehicleId, user_id: user.id })
-    }
-    setWorking(w => ({ ...w, [vehicleId]: false }))
-  }, [user, liked, working, router])
+  // [DEAKTIVIERT 2026-09: likes] Hier lagen der Mount-Effect, der die eigenen
+  // Likes aus der likes-Tabelle lud, und toggleLike (optimistisches UI +
+  // insert/delete auf likes). Siehe Git-History dieser Datei zum Wiederholen.
 
   if (vehicles.length === 0) {
     return (
@@ -112,8 +74,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
 
       <div className="vehicles-overview-grid">
         {filtered.slice(0, visible).map(v => {
-          const isLiked = !!liked[v.id]
-          const count = counts[v.id] ?? 0
+          // [DEAKTIVIERT 2026-09: likes] isLiked / count werden nicht mehr gerendert.
           const owner = v.profiles
           return (
             <div key={v.id} className="vog-card">
@@ -156,22 +117,7 @@ export default function VehiclesGrid({ vehicles, likeCounts: initialCounts }) {
                   </Link>
                 )}
 
-                <button
-                  onClick={e => toggleLike(e, v.id)}
-                  title={user ? (isLiked ? 'Like entfernen' : 'Liken') : 'Zum Liken bitte einloggen'}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '1.2px', textTransform: 'uppercase',
-                    color: isLiked ? 'var(--accent-hot)' : 'var(--ink-muted)',
-                    background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                    transition: 'color .15s',
-                    opacity: working[v.id] ? 0.5 : 1,
-                    flexShrink: 0,
-                  }}
-                >
-                  <span style={{ fontSize: 14, lineHeight: 1 }}>{isLiked ? '♥' : '♡'}</span>
-                  {count > 0 && <span>{count}</span>}
-                </button>
+                {/* [DEAKTIVIERT 2026-09: likes] Like-Button entfernt. */}
               </div>
             </div>
           )

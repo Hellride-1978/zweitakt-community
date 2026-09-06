@@ -6,11 +6,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/useAuth'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faEnvelope, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faComment, faPaperPlane, faChartBar, faMusic } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faBug, faPalette, faCalendarDays, faMotorcycle, faUsers, faUser, faWrench, faListCheck, faChartBar, faMusic } from '@fortawesome/free-solid-svg-icons'
 import IconBurger from './IconBurger'
 import IconBurgerFries from './IconBurgerFries'
 import ThemeToggle from './ThemeToggle'
-import MessagesBadge from './MessagesBadge'
+// [DEAKTIVIERT 2026-09: messages] import MessagesBadge from './MessagesBadge'
 
 export default function Nav() {
   const { user, loading } = useAuth()
@@ -42,14 +42,9 @@ export default function Nav() {
               <li><Link id="tour-bikes"   href="/vehicles"     className={pathname.startsWith('/vehicles')       ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"                       className={pathname.startsWith('/profiles')       ? 'active' : ''}>Schrauber</Link></li>
               <li><Link id="tour-halle" href="/schrauberhalle" className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
-              <li><Link id="tour-forum" href="/forum"          className={pathname.startsWith('/forum')          ? 'active' : ''}>Forum</Link></li>
+              {/* [DEAKTIVIERT 2026-09: forum] Nav-Eintrag entfernt, /forum liefert 404. */}
               <li><Link id="tour-profil"  href={`/profile/${user.id}`} className={pathname.startsWith('/profile/') ? 'active' : ''}>Profil</Link></li>
-              <li>
-                <Link href="/messages" className={`msg-nav-text${pathname.startsWith('/messages') ? ' active' : ''}`} title="Nachrichten">
-                  <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 16 }} />
-                  <MessagesBadge />
-                </Link>
-              </li>
+              {/* [DEAKTIVIERT 2026-09: messages] Nav-Eintrag entfernt, /messages liefert 404. */}
               {user?.email === 'martin@delavega.de' && (
                 <li className="zh-nav-dropdown-wrap">
                   <button
@@ -64,9 +59,7 @@ export default function Nav() {
                     <Link href="/admin/statistiken" onClick={() => setAdminOpen(false)}>
                       <FontAwesomeIcon icon={faChartBar} /> Statistiken
                     </Link>
-                    <Link href="/admin/newsletter" onClick={() => setAdminOpen(false)}>
-                      <FontAwesomeIcon icon={faPaperPlane} /> Newsletter
-                    </Link>
+                    {/* [DEAKTIVIERT 2026-09: newsletter] Admin-Eintrag entfernt, /admin/newsletter liefert 404. */}
                     <Link href="/admin/feedback" onClick={() => setAdminOpen(false)}>
                       <FontAwesomeIcon icon={faBug} /> Feedback
                     </Link>
@@ -89,7 +82,7 @@ export default function Nav() {
               <li><Link href="/vehicles"       className={pathname.startsWith('/vehicles')       ? 'active' : ''}>Bikes</Link></li>
               <li><Link href="/profiles"       className={pathname.startsWith('/profiles')       ? 'active' : ''}>Schrauber</Link></li>
               <li><Link href="/schrauberhalle" className={pathname.startsWith('/schrauberhalle') ? 'active' : ''}>Schrauberhalle</Link></li>
-              <li><Link href="/forum"          className={pathname.startsWith('/forum')          ? 'active' : ''}>Forum</Link></li>
+              {/* [DEAKTIVIERT 2026-09: forum] */}
               <li><Link href="/auth/login"     className={pathname === '/auth/login'             ? 'active' : ''}>Anmelden</Link></li>
             </>
           ) : null}
@@ -119,7 +112,7 @@ export default function Nav() {
             <span className="burger-icon-wrap">
               <IconBurger className="i-burger" />
               <IconBurgerFries className="i-close" />
-              {!loading && user && <MessagesBadge />}
+              {/* [DEAKTIVIERT 2026-09: messages] Ungelesen-Badge entfernt. */}
             </span>
             <span className="burger-label" aria-hidden="true">{open ? 'schließen' : 'menu'}</span>
           </button>
@@ -154,25 +147,14 @@ export default function Nav() {
                 Schrauberhalle
               </span>
             </Link>
-            <Link href="/forum" onClick={close}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <FontAwesomeIcon icon={faComment} style={{ fontSize: 14, width: 16 }} />
-                Forum
-              </span>
-            </Link>
+            {/* [DEAKTIVIERT 2026-09: forum] */}
             <Link href={`/profile/${user.id}`} onClick={close}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FontAwesomeIcon icon={faUser} style={{ fontSize: 14, width: 16 }} />
                 Profil
               </span>
             </Link>
-            <Link href="/messages" onClick={close}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <FontAwesomeIcon icon={faEnvelope} style={{ fontSize: 14, width: 16 }} />
-                Nachrichten
-                <MessagesBadge />
-              </span>
-            </Link>
+            {/* [DEAKTIVIERT 2026-09: messages] */}
             {user?.email === 'martin@delavega.de' && (
               <>
                 <div style={{ fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '2.5px', textTransform: 'uppercase', color: 'var(--ink-muted)', padding: '16px 0 4px', borderTop: '1px solid var(--hairline)', marginTop: 4 }}>
@@ -184,12 +166,7 @@ export default function Nav() {
                     Statistiken
                   </span>
                 </Link>
-                <Link href="/admin/newsletter" onClick={close}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <FontAwesomeIcon icon={faPaperPlane} style={{ fontSize: 14, width: 16 }} />
-                    Newsletter
-                  </span>
-                </Link>
+                {/* [DEAKTIVIERT 2026-09: newsletter] */}
                 <Link href="/admin/feedback" onClick={close}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <FontAwesomeIcon icon={faBug} style={{ fontSize: 14, width: 16 }} />
@@ -226,12 +203,7 @@ export default function Nav() {
             <Link href="/vehicles"       onClick={close}>Bikes</Link>
             <Link href="/profiles"       onClick={close}>Schrauber</Link>
             <Link href="/schrauberhalle" onClick={close}>Schrauberhalle</Link>
-            <Link href="/forum"          onClick={close}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <FontAwesomeIcon icon={faComment} style={{ fontSize: 14, width: 16 }} />
-                Forum
-              </span>
-            </Link>
+            {/* [DEAKTIVIERT 2026-09: forum] */}
             <Link href="/auth/login"     onClick={close}>Anmelden</Link>
             <Link href="/auth/register" onClick={close} className="mm-cta">Dabei sein <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: '18px' }} /></Link>
           </>

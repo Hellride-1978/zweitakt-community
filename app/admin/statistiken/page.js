@@ -469,8 +469,9 @@ export default function AdminStatistikPage() {
       <Section title="Community" />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
         <KpiCard label="Mitglieder" value={cm?.members} sub="registrierte Profile" accent />
-        <KpiCard label="Forum-Threads" value={cm?.forumPosts} />
-        <KpiCard label="Forum-Antworten" value={cm?.forumReplies} />
+        {/* [DEAKTIVIERT 2026-09: forum] Kacheln ausgeblendet — die Zahlen wären eingefroren.
+            <KpiCard label="Forum-Threads" value={cm?.forumPosts} />
+            <KpiCard label="Forum-Antworten" value={cm?.forumReplies} /> */}
         <KpiCard label="Feedbacks" value={cm?.feedbacks} sub="eingegangene Meldungen" />
       </div>
     </div>

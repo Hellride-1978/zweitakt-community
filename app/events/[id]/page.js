@@ -5,8 +5,8 @@ import EventActions from './EventActions'
 import MapTileModal from './MapTileModal'
 import ShareButtons from './ShareButtons'
 import DesktopLayout from '@/components/DesktopLayout'
-import LikeButton from '@/components/LikeButton'
-import Comments from '@/components/Comments'
+// [DEAKTIVIERT 2026-09: likes] import LikeButton from '@/components/LikeButton'
+// [DEAKTIVIERT 2026-09: comments] import Comments from '@/components/Comments'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
@@ -256,10 +256,7 @@ export default async function EventDetailPage({ params }) {
             </div>
           )}
 
-          {/* Kommentare */}
-          <div className="zd-card" style={{ margin: 0 }}>
-            <Comments targetType="event" targetId={event.id} ownerId={event.creator_id} />
-          </div>
+          {/* [DEAKTIVIERT 2026-09: comments] Kommentar-Block entfernt. */}
 
         </div>
 
@@ -321,9 +318,7 @@ export default async function EventDetailPage({ params }) {
           <div className="zd-mono accent" style={{ marginTop: 6 }}>Teilen</div>
           <ShareButtons title={event.title} />
 
-          {/* Likes */}
-          <div className="zd-mono accent" style={{ marginTop: 6 }}>Gefällt mir</div>
-          <LikeButton targetType="event" targetId={event.id} />
+          {/* [DEAKTIVIERT 2026-09: likes] Like-Block entfernt. */}
 
           {/* Actions — am Ende der Spalte */}
           <div style={{ marginTop: 'auto', paddingTop: 8 }}>
