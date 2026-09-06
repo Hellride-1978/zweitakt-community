@@ -32,13 +32,30 @@ grep -rn "DEAKTIVIERT 2026-09" app components lib
 
 | Feature | Flag | Route liefert | Code |
 |---|---|---|---|
-| Forum (Q&A, Votes, Tags, Bilder, Resend-Mails) | `forum` | `/forum/**` → 404 | `app/forum/`, `components/forum/`, `app/api/forum/notify/` |
+| Forum (Q&A, Votes, Tags, Bilder, Resend-Mails) | `forum` | `/forum/**` → **410 Gone** (`proxy.js`) | `app/forum/`, `components/forum/`, `app/api/forum/notify/` |
 | Private Nachrichten | `messages` | `/messages/**` → 404 | `app/messages/`, `components/MessagesBadge.js`, `app/api/messages/send/` |
 | Like-System | `likes` | — (nur UI) | `components/LikeButton.js` |
 | Kommentare (Termine, Fahrzeuge) | `comments` | `/api/notify-comment` → 404 | `components/Comments.js` |
 | Online-Status / Presence | `presence` | — (nur UI) | `components/PresenceUpdater.js` |
 | Onboarding-Tour | `onboarding` | — (nur UI) | `components/OnboardingTour.js` |
 | Newsletter (Anmeldung + Versand) | `newsletter` | `/admin/newsletter`, `/api/newsletter/subscribe`, `/api/admin/send-newsletter` → 404 | `components/NewsletterForm.js`, `components/NewsletterToggle.js`, `app/admin/newsletter/` |
+
+### Warum das Forum 410 statt 404 liefert
+
+`/forum` war öffentlich lesbar und ist bei Google indexiert. Ein 404 heißt für
+Suchmaschinen „vielleicht später wieder da" — solche URLs bleiben monatelang im
+Index. `410 Gone` heißt „dauerhaft entfernt" und führt deutlich schneller zur
+De-Indexierung. Umgesetzt in **`proxy.js`** im Projekt-Root (in Next 16 der
+Nachfolger von `middleware.js`, die alte Konvention ist deprecated). Die Antwort
+ist eine eigenständige HTML-Seite mit Link auf `/events`, theme-aware und ohne
+Abhängigkeit zum App-Router.
+
+Der Layout-Guard in `app/forum/layout.js` bleibt als zweite Absicherung
+bestehen. Steht `FEATURES.forum` wieder auf `true`, greift die 410-Antwort nicht
+mehr — `proxy.js` liest dasselbe Flag.
+
+`/messages` und `/admin/*` brauchen das nicht: sie lagen hinter dem Login und
+standen nie im Index. Dort bleibt es beim 404.
 
 ### Bewusste Ausnahmen beim Newsletter
 
